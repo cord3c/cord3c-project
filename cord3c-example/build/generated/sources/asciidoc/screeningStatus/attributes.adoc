@@ -1,0 +1,28 @@
+[cols="2,4,2,1,1,1,1", options="header"]
+|===
+| Name
+| Description
+| Type
+| Post
+| Patch
+| Sort
+| Filter
+| id
+| Both annotations together bind the status to its screening parent.
+Since we have a one-to-one relationship, both resources have the same identifier.
+Implemented by the single attribute carrying both the relationship and id annotation.
+| UUID
+| &#10003;
+| 
+| &#10003;
+| &#10003;
+
+| description
+| 
+| String
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+|===

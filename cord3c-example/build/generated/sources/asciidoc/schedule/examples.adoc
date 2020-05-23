@@ -1,0 +1,10 @@
+
+anchor:resources_schedule_example_-_create_schedule[]
+
+[discrete]
+### Example - Create Schedule
+
+include::captured_0_create_schedule_curl.adoc[]
+include::captured_0_create_schedule_response.adoc[]
+
+

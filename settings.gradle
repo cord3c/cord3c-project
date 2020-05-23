@@ -1,0 +1,46 @@
+include ':cord3c-example'
+include ':cord3c-server-api'
+include ':cord3c-server-rest'
+include ':cord3c-server-health'
+include ':cord3c-server-metrics'
+include ':cord3c-ssi-api'
+include ':cord3c-ssi-serializer'
+
+gradle.beforeProject { Project project ->
+	project.with {
+
+		ext {
+			dockerHubUser = System.getenv('DOCKER_HUB_USER')
+			dockerHubPass = System.getenv('DOCKER_HUB_PASS')
+		}
+
+		buildscript {
+			repositories {
+				mavenLocal()
+				maven {
+					url('https://plugins.gradle.org/m2')
+				}
+				// get latest crnk builds here:
+				// maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
+			}
+		}
+		repositories {
+			mavenLocal()
+			jcenter()
+
+			maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+			maven { url 'https://plugins.gradle.org/m2/' }
+			maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
+			maven { url 'https://dl.bintray.com/rmee/mavenLatest/' }
+
+			maven { url 'https://software.r3.com/artifactory/corda-dependencies' }
+			maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+
+
+			// get latest crnk builds here:
+			// maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
+		}
+		version = rootProject.version
+		group = rootProject.group
+	}
+}

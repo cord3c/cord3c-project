@@ -1,0 +1,44 @@
+[source,json]
+----
+HTTP/1.1 201 Created
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Content-Length: 1107
+Content-Type: application/json
+Date: Fri, 22 May 2020 06:16:14 GMT
+Expires: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+
+{
+  "data" : {
+    "id" : "aa649334-c24f-3954-82dd-6d9602459bf9",
+    "type" : "movie",
+    "links" : {
+      "self" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9"
+    },
+    "name" : "Avengers: Endgame",
+    "year" : 2019,
+    "version" : 0,
+    "roles" : {
+      "links" : {
+        "self" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/relationships/roles",
+        "related" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/roles"
+      }
+    },
+    "attributeChanges" : {
+      "links" : {
+        "self" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/relationships/attributeChanges",
+        "related" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/attributeChanges"
+      }
+    },
+    "votes" : {
+      "links" : {
+        "self" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/relationships/votes",
+        "related" : "http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/votes"
+      }
+    }
+  }
+}
+----

@@ -1,0 +1,26 @@
+[cols="2,4,2,1,1,1,1", options="header"]
+|===
+| Name
+| Description
+| Opposite
+| Post
+| Patch
+| Sort
+| Filter
+| movie
+| Move this role is associated to.
+| <<resources_movie,movie>>.roles
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+| person
+| Person this role is associated to.
+| <<resources_person,person>>
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+|===

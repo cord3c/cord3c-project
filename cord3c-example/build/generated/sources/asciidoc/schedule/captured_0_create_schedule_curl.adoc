@@ -1,0 +1,14 @@
+[source,bash]
+----
+curl -X POST http://localhost:8080/api/schedule \
+-H "Content-Type: application/json; charset=utf-8" \
+-d  @- << EOF
+{
+  "data" : {
+    "id" : "13",
+    "type" : "schedule",
+    "description" : "My Schedule"
+  }
+}
+EOF
+----

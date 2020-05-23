@@ -1,0 +1,16 @@
+
+anchor:types_secretid[]
+
+## SecretId
+
+
+anchor:types_secretid_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+

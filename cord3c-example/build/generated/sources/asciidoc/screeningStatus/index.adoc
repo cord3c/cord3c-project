@@ -1,0 +1,26 @@
+
+anchor:resources_screeningstatus[]
+
+## ScreeningStatus
+
+include::description.adoc[]
+
+anchor:resources_screeningstatus_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+anchor:resources_screeningstatus_relationships[]
+
+[discrete]
+### Relationships
+
+include::relationships.adoc[]
+
+
+
+

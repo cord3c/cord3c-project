@@ -1,0 +1,1 @@
+Vote from a user for a movie.

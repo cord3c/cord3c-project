@@ -1,0 +1,26 @@
+
+anchor:resources_vote[]
+
+## Vote
+
+include::description.adoc[]
+
+anchor:resources_vote_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+anchor:resources_vote_relationships[]
+
+[discrete]
+### Relationships
+
+include::relationships.adoc[]
+
+
+
+

@@ -1,0 +1,12 @@
+[cols="2,4,2", options="Header"]
+|===
+| Name
+| Description
+| Type
+| id
+| Id of the secret.
+| String
+| loginId
+| Id of the parent login resource.
+| String
+|===

@@ -1,0 +1,27 @@
+
+anchor:resources_login[]
+
+## Login
+
+include::description.adoc[]
+
+anchor:resources_login_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+anchor:resources_login_relationships[]
+
+[discrete]
+### Relationships
+
+include::relationships.adoc[]
+
+
+include::examples.adoc[]
+
+

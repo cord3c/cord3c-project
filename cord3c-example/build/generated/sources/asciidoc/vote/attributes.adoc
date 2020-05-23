@@ -1,0 +1,26 @@
+[cols="2,4,2,1,1,1,1", options="header"]
+|===
+| Name
+| Description
+| Type
+| Post
+| Patch
+| Sort
+| Filter
+| id
+| 
+| UUID
+| &#10003;
+| 
+| &#10003;
+| &#10003;
+
+| starts
+| 
+| Integer
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+|===

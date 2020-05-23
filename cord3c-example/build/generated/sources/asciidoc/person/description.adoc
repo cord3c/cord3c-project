@@ -1,0 +1,1 @@
+Represents a person involed with a movie through roles.

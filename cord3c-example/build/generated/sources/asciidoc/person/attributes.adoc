@@ -1,0 +1,50 @@
+[cols="2,4,2,1,1,1,1", options="header"]
+|===
+| Name
+| Description
+| Type
+| Post
+| Patch
+| Sort
+| Filter
+| id
+| 
+| UUID
+| &#10003;
+| 
+| &#10003;
+| &#10003;
+
+| name
+| Name of subject, e.g. Hans Müller (some UTF8 testing here...)
+| String
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+| year
+| 
+| Integer
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+| version
+| 
+| Integer
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+| properties
+| 
+| Map
+| &#10003;
+| &#10003;
+| &#10003;
+| &#10003;
+
+|===

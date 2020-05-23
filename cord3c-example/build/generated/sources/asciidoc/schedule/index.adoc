@@ -1,0 +1,27 @@
+
+anchor:resources_schedule[]
+
+## Schedule
+
+include::description.adoc[]
+
+anchor:resources_schedule_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+anchor:resources_schedule_relationships[]
+
+[discrete]
+### Relationships
+
+include::relationships.adoc[]
+
+
+include::examples.adoc[]
+
+

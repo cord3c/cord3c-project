@@ -1,0 +1,14 @@
+[source,json]
+----
+POST http://localhost:8080/api/schedule HTTP/1.1
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+{
+  "data" : {
+    "id" : "13",
+    "type" : "schedule",
+    "description" : "My Schedule"
+  }
+}
+----

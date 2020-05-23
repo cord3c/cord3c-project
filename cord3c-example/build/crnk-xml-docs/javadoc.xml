@@ -1,0 +1,1409 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <package name="io.crnk.example.service.config">
+        <class name="ExampleSecurityConfigurer" qualified="io.crnk.example.service.config.ExampleSecurityConfigurer" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Secures resources based on role-based access control. For information have a look at the Security module chapter.</comment>
+            <class qualified="java.lang.Object"/>
+            <interface qualified="io.crnk.spring.setup.boot.security.SecurityModuleConfigurer"/>
+            <constructor name="ExampleSecurityConfigurer" signature="()" qualified="io.crnk.example.service.config.ExampleSecurityConfigurer" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="configure" signature="(io.crnk.security.SecurityConfig.Builder)" qualified="io.crnk.example.service.config.ExampleSecurityConfigurer.configure" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="config">
+                    <type qualified="io.crnk.security.SecurityConfig.Builder"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="ProxyConfiguration" qualified="io.crnk.example.service.config.ProxyConfiguration" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Make use of this if running behind a proxy, e.g. to connect to OAuth Provider</comment>
+            <class qualified="java.lang.Object"/>
+            <interface qualified="org.springframework.beans.factory.InitializingBean"/>
+            <constructor name="ProxyConfiguration" signature="()" qualified="io.crnk.example.service.config.ProxyConfiguration" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="afterPropertiesSet" signature="()" qualified="io.crnk.example.service.config.ProxyConfiguration.afterPropertiesSet" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="void"/>
+                <exception qualified="java.lang.Exception"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="ConfigurationProperties" qualified="org.springframework.boot.context.properties.ConfigurationProperties">
+                <argument name="value" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>proxy</value>
+                </argument>
+            </annotation>
+            <annotation name="EnableConfigurationProperties" qualified="org.springframework.boot.context.properties.EnableConfigurationProperties">
+                <argument name="value" primitive="false" array="true">
+                    <type qualified="java.lang.Class" dimension="[]">
+                        <generic qualified="?">
+                            <wildcard/>
+                        </generic>
+                    </type>
+                    <value>io.crnk.example.service.config.ProxyProperties</value>
+                </argument>
+            </annotation>
+            <field name="LOGGER" qualified="io.crnk.example.service.config.ProxyConfiguration.LOGGER" scope="private" volatile="false" transient="false" static="true" final="true">
+                <type qualified="org.slf4j.Logger"/>
+            </field>
+            <field name="properties" qualified="io.crnk.example.service.config.ProxyConfiguration.properties" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.config.ProxyProperties"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+        </class>
+        <class name="ProxyProperties" qualified="io.crnk.example.service.config.ProxyProperties" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="ProxyProperties" signature="()" qualified="io.crnk.example.service.config.ProxyProperties" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="getHost" signature="()" qualified="io.crnk.example.service.config.ProxyProperties.getHost" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="java.lang.String"/>
+            </method>
+            <method name="setHost" signature="(java.lang.String)" qualified="io.crnk.example.service.config.ProxyProperties.setHost" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="host">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <method name="getPort" signature="()" qualified="io.crnk.example.service.config.ProxyProperties.getPort" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="int"/>
+            </method>
+            <method name="setPort" signature="(int)" qualified="io.crnk.example.service.config.ProxyProperties.setPort" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="port">
+                    <type qualified="int"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <method name="getExclude" signature="()" qualified="io.crnk.example.service.config.ProxyProperties.getExclude" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="java.lang.String"/>
+            </method>
+            <method name="setExclude" signature="(java.lang.String)" qualified="io.crnk.example.service.config.ProxyProperties.setExclude" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="exclude">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <annotation name="ConfigurationProperties" qualified="org.springframework.boot.context.properties.ConfigurationProperties">
+                <argument name="value" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>proxy</value>
+                </argument>
+            </annotation>
+            <field name="host" qualified="io.crnk.example.service.config.ProxyProperties.host" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+            <field name="port" qualified="io.crnk.example.service.config.ProxyProperties.port" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="int"/>
+            </field>
+            <field name="exclude" qualified="io.crnk.example.service.config.ProxyProperties.exclude" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+        </class>
+        <class name="SpringSecurityConfiguration" qualified="io.crnk.example.service.config.SpringSecurityConfiguration" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Spring-related security configuration. By default no security is used. But OAuth can be enabled if desired.
+
+ &lt;ul&gt;
+ &lt;li&gt;https://spring.io/guides/tutorials/spring-boot-oauth2/&lt;/li&gt;
+ &lt;li&gt;http://www.baeldung.com/rest-api-spring-oauth2-angularjs&lt;/li&gt;
+ &lt;li&gt;https://spring.io/guides/gs/securing-web/&lt;/li&gt;
+ &lt;li&gt;https://github.com/spring-projects/spring-security/tree/master/samples/boot/oauth2login&lt;/li&gt;
+ &lt;li&gt;https://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#boot-features-security&lt;/li&gt;
+ &lt;/ul&gt;</comment>
+            <class qualified="org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter"/>
+            <constructor name="SpringSecurityConfiguration" signature="()" qualified="io.crnk.example.service.config.SpringSecurityConfiguration" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="configure" signature="(org.springframework.security.config.annotation.web.builders.HttpSecurity)" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.configure" scope="protected" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="http">
+                    <type qualified="org.springframework.security.config.annotation.web.builders.HttpSecurity"/>
+                </parameter>
+                <return qualified="void"/>
+                <exception qualified="java.lang.Exception"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="oauth2ClientFilterRegistration" signature="(org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter)" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.oauth2ClientFilterRegistration" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="filter">
+                    <type qualified="org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter"/>
+                </parameter>
+                <return qualified="org.springframework.boot.web.servlet.FilterRegistrationBean"/>
+                <annotation name="Bean" qualified="org.springframework.context.annotation.Bean"/>
+                <annotation name="ConditionalOnProperty" qualified="org.springframework.boot.autoconfigure.condition.ConditionalOnProperty">
+                    <argument name="prefix" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>example.security-enabled</value>
+                    </argument>
+                    <argument name="name" primitive="false" array="true">
+                        <type qualified="java.lang.String" dimension="[]"/>
+                        <value>enabled</value>
+                    </argument>
+                    <argument name="havingValue" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>true</value>
+                    </argument>
+                    <argument name="matchIfMissing" primitive="true" array="false">
+                        <type qualified="boolean"/>
+                        <value>true</value>
+                    </argument>
+                </annotation>
+            </method>
+            <method name="github" signature="()" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.github" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources"/>
+                <annotation name="Bean" qualified="org.springframework.context.annotation.Bean"/>
+                <annotation name="ConfigurationProperties" qualified="org.springframework.boot.context.properties.ConfigurationProperties">
+                    <argument name="value" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>github</value>
+                    </argument>
+                </annotation>
+            </method>
+            <method name="ssoFilter" signature="()" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ssoFilter" scope="private" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="org.springframework.web.filter.CompositeFilter"/>
+            </method>
+            <method name="ssoFilter" signature="(io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources, java.lang.String)" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ssoFilter" scope="private" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="client">
+                    <type qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources"/>
+                </parameter>
+                <parameter name="path">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter"/>
+            </method>
+            <annotation name="Configuration" qualified="org.springframework.context.annotation.Configuration"/>
+            <annotation name="EnableGlobalMethodSecurity" qualified="org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity">
+                <argument name="securedEnabled" primitive="true" array="false">
+                    <type qualified="boolean"/>
+                    <value>true</value>
+                </argument>
+                <argument name="jsr250Enabled" primitive="true" array="false">
+                    <type qualified="boolean"/>
+                    <value>true</value>
+                </argument>
+            </annotation>
+            <annotation name="EnableWebSecurity" qualified="org.springframework.security.config.annotation.web.configuration.EnableWebSecurity"/>
+            <annotation name="EnableOAuth2Client" qualified="org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client"/>
+            <field name="properties" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.properties" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.ExampleProperties"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+            <field name="oauth2ClientContext" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.oauth2ClientContext" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="org.springframework.security.oauth2.client.OAuth2ClientContext"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+        </class>
+        <class name="SpringSecurityConfiguration.ClientResources" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources" scope="" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="ClientResources" signature="()" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources" scope="" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="getClient" signature="()" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources.getClient" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails"/>
+            </method>
+            <method name="getResource" signature="()" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources.getResource" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties"/>
+            </method>
+            <field name="client" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources.client" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails"/>
+                <annotation name="NestedConfigurationProperty" qualified="org.springframework.boot.context.properties.NestedConfigurationProperty"/>
+            </field>
+            <field name="resource" qualified="io.crnk.example.service.config.SpringSecurityConfiguration.ClientResources.resource" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties"/>
+                <annotation name="NestedConfigurationProperty" qualified="org.springframework.boot.context.properties.NestedConfigurationProperty"/>
+            </field>
+        </class>
+    </package>
+    <package name="io.crnk.example.service">
+        <class name="ExampleApplication" qualified="io.crnk.example.service.ExampleApplication" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="ExampleApplication" signature="()" qualified="io.crnk.example.service.ExampleApplication" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="main" signature="(java.lang.String[])" qualified="io.crnk.example.service.ExampleApplication.main" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="true" varArgs="false">
+                <parameter name="args">
+                    <type qualified="java.lang.String" dimension="[]"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <annotation name="SpringBootApplication" qualified="org.springframework.boot.autoconfigure.SpringBootApplication"/>
+            <annotation name="Import" qualified="org.springframework.context.annotation.Import">
+                <argument name="value" primitive="false" array="true">
+                    <type qualified="java.lang.Class" dimension="[]">
+                        <generic qualified="?">
+                            <wildcard/>
+                        </generic>
+                    </type>
+                    <value>io.crnk.example.service.ExampleConfiguration</value>
+                </argument>
+            </annotation>
+        </class>
+        <class name="ExampleConfiguration" qualified="io.crnk.example.service.ExampleConfiguration" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="ExampleConfiguration" signature="()" qualified="io.crnk.example.service.ExampleConfiguration" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="Configuration" qualified="org.springframework.context.annotation.Configuration"/>
+            <annotation name="RestController" qualified="org.springframework.web.bind.annotation.RestController"/>
+            <annotation name="EnableAutoConfiguration" qualified="org.springframework.boot.autoconfigure.EnableAutoConfiguration"/>
+            <annotation name="ComponentScan" qualified="org.springframework.context.annotation.ComponentScan">
+                <argument name="value" primitive="false" array="true">
+                    <type qualified="java.lang.String" dimension="[]"/>
+                    <value>io.crnk.example.service</value>
+                </argument>
+            </annotation>
+            <annotation name="Import" qualified="org.springframework.context.annotation.Import">
+                <argument name="value" primitive="false" array="true">
+                    <type qualified="java.lang.Class" dimension="[]">
+                        <generic qualified="?">
+                            <wildcard/>
+                        </generic>
+                    </type>
+                    <value>io.crnk.example.service.TestDataLoader</value>
+                    <value>io.crnk.example.service.config.SpringSecurityConfiguration</value>
+                </argument>
+            </annotation>
+            <annotation name="EnableConfigurationProperties" qualified="org.springframework.boot.context.properties.EnableConfigurationProperties">
+                <argument name="value" primitive="false" array="true">
+                    <type qualified="java.lang.Class" dimension="[]">
+                        <generic qualified="?">
+                            <wildcard/>
+                        </generic>
+                    </type>
+                    <value>io.crnk.example.service.ExampleProperties</value>
+                </argument>
+            </annotation>
+        </class>
+        <class name="ExampleProperties" qualified="io.crnk.example.service.ExampleProperties" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="ExampleProperties" signature="()" qualified="io.crnk.example.service.ExampleProperties" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="isSecurityEnabled" signature="()" qualified="io.crnk.example.service.ExampleProperties.isSecurityEnabled" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="boolean"/>
+            </method>
+            <method name="setSecurityEnabled" signature="(boolean)" qualified="io.crnk.example.service.ExampleProperties.setSecurityEnabled" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="securityEnabled">
+                    <type qualified="boolean"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <annotation name="ConfigurationProperties" qualified="org.springframework.boot.context.properties.ConfigurationProperties">
+                <argument name="value" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>example</value>
+                </argument>
+            </annotation>
+            <field name="securityEnabled" qualified="io.crnk.example.service.ExampleProperties.securityEnabled" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="boolean"/>
+            </field>
+        </class>
+        <class name="TestDataLoader" qualified="io.crnk.example.service.TestDataLoader" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="TestDataLoader" signature="()" qualified="io.crnk.example.service.TestDataLoader" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="setup" signature="()" qualified="io.crnk.example.service.TestDataLoader.setup" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="void"/>
+                <annotation name="PostConstruct" qualified="javax.annotation.PostConstruct"/>
+            </method>
+            <method name="createScreening" signature="(io.crnk.example.service.model.MovieEntity)" qualified="io.crnk.example.service.TestDataLoader.createScreening" scope="private" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="movie">
+                    <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <method name="configureJackson" signature="()" qualified="io.crnk.example.service.TestDataLoader.configureJackson" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="void"/>
+                <annotation name="PostConstruct" qualified="javax.annotation.PostConstruct"/>
+            </method>
+            <method name="createMovie" signature="(java.lang.String, int, java.util.List&lt;java.lang.String&gt;)" qualified="io.crnk.example.service.TestDataLoader.createMovie" scope="protected" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="title">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <parameter name="year">
+                    <type qualified="int"/>
+                </parameter>
+                <parameter name="actors">
+                    <type qualified="java.util.List">
+                        <generic qualified="java.lang.String"/>
+                    </type>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.MovieEntity"/>
+            </method>
+            <method name="createPerson" signature="(java.lang.String)" qualified="io.crnk.example.service.TestDataLoader.createPerson" scope="protected" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="title">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.PersonEntity"/>
+            </method>
+            <method name="createLocation" signature="(java.lang.String)" qualified="io.crnk.example.service.TestDataLoader.createLocation" scope="protected" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.Location"/>
+            </method>
+            <annotation name="Configuration" qualified="org.springframework.context.annotation.Configuration"/>
+            <field name="nextId" qualified="io.crnk.example.service.TestDataLoader.nextId" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="long"/>
+            </field>
+            <field name="em" qualified="io.crnk.example.service.TestDataLoader.em" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="javax.persistence.EntityManager"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+            <field name="transactionRunner" qualified="io.crnk.example.service.TestDataLoader.transactionRunner" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.core.engine.transaction.TransactionRunner"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+            <field name="objectMapper" qualified="io.crnk.example.service.TestDataLoader.objectMapper" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="com.fasterxml.jackson.databind.ObjectMapper"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+            <field name="voteRepository" qualified="io.crnk.example.service.TestDataLoader.voteRepository" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.repository.VoteRepository"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+            <field name="locationRepository" qualified="io.crnk.example.service.TestDataLoader.locationRepository" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.repository.LocationRepository"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+            <field name="screeningRepository" qualified="io.crnk.example.service.TestDataLoader.screeningRepository" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.repository.ScreeningRepository"/>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </field>
+        </class>
+    </package>
+    <package name="io.crnk.example.service.exception">
+        <class name="CustomException" qualified="io.crnk.example.service.exception.CustomException" scope="public" abstract="false" error="false" exception="true" externalizable="false" included="true" serializable="true">
+            <class qualified="java.lang.RuntimeException"/>
+            <constructor name="CustomException" signature="()" qualified="io.crnk.example.service.exception.CustomException" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+        </class>
+        <class name="CustomExceptionMapper" qualified="io.crnk.example.service.exception.CustomExceptionMapper" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <interface qualified="io.crnk.core.engine.error.ExceptionMapper">
+                <generic qualified="io.crnk.example.service.exception.CustomException"/>
+            </interface>
+            <constructor name="CustomExceptionMapper" signature="()" qualified="io.crnk.example.service.exception.CustomExceptionMapper" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="toErrorResponse" signature="(io.crnk.example.service.exception.CustomException)" qualified="io.crnk.example.service.exception.CustomExceptionMapper.toErrorResponse" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="e">
+                    <type qualified="io.crnk.example.service.exception.CustomException"/>
+                </parameter>
+                <return qualified="io.crnk.core.engine.error.ErrorResponse"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="fromErrorResponse" signature="(io.crnk.core.engine.error.ErrorResponse)" qualified="io.crnk.example.service.exception.CustomExceptionMapper.fromErrorResponse" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="errorResponse">
+                    <type qualified="io.crnk.core.engine.error.ErrorResponse"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.exception.CustomException"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="accepts" signature="(io.crnk.core.engine.error.ErrorResponse)" qualified="io.crnk.example.service.exception.CustomExceptionMapper.accepts" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="errorResponse">
+                    <type qualified="io.crnk.core.engine.error.ErrorResponse"/>
+                </parameter>
+                <return qualified="boolean"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+            <field name="CUSTOM_ERROR_STATUS_CODE" qualified="io.crnk.example.service.exception.CustomExceptionMapper.CUSTOM_ERROR_STATUS_CODE" scope="private" volatile="false" transient="false" static="true" final="true">
+                <type qualified="int"/>
+                <constant>599</constant>
+            </field>
+        </class>
+    </package>
+    <package name="io.crnk.example.service.model">
+        <class name="AttributeChange" qualified="io.crnk.example.service.model.AttributeChange" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Represents the change of an attribute.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="AttributeChange" signature="()" qualified="io.crnk.example.service.model.AttributeChange" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>attributeChange</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="RESOURCE_TYPE" qualified="io.crnk.example.service.model.AttributeChange.RESOURCE_TYPE" scope="public" volatile="false" transient="false" static="true" final="true">
+                <type qualified="java.lang.String"/>
+                <constant>"attributeChange"</constant>
+            </field>
+            <field name="id" qualified="io.crnk.example.service.model.AttributeChange.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="attribute" qualified="io.crnk.example.service.model.AttributeChange.attribute" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Name of field undergoing the change.</comment>
+            </field>
+            <field name="newValue" qualified="io.crnk.example.service.model.AttributeChange.newValue" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>New value after changge.</comment>
+            </field>
+            <field name="oldValue" qualified="io.crnk.example.service.model.AttributeChange.oldValue" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Old value before change.</comment>
+            </field>
+            <field name="changeTime" qualified="io.crnk.example.service.model.AttributeChange.changeTime" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.time.LocalDateTime"/>
+                <comment>Time of change.</comment>
+            </field>
+        </class>
+        <class name="Location" qualified="io.crnk.example.service.model.Location" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="Location" signature="()" qualified="io.crnk.example.service.model.Location" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>location</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.Location.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="screenings" qualified="io.crnk.example.service.model.Location.screenings" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.Set">
+                    <generic qualified="io.crnk.example.service.model.Screening"/>
+                </type>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation">
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>location</value>
+                    </argument>
+                </annotation>
+            </field>
+        </class>
+        <class name="Login" qualified="io.crnk.example.service.model.Login" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Represents user login information of the user.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="Login" signature="()" qualified="io.crnk.example.service.model.Login" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>login</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.Login.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Constant &amp;qout;me&amp;qout;</comment>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="userName" qualified="io.crnk.example.service.model.Login.userName" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Name of the logged in user</comment>
+            </field>
+            <field name="votes" qualified="io.crnk.example.service.model.Login.votes" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.Set">
+                    <generic qualified="io.crnk.example.service.model.Vote"/>
+                </type>
+                <comment>Votes of the logged in user.</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation">
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>user</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="secrets" qualified="io.crnk.example.service.model.Login.secrets" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.Set">
+                    <generic qualified="io.crnk.example.service.model.Secret"/>
+                </type>
+                <comment>Login secrets of this user.</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation">
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>login</value>
+                    </argument>
+                </annotation>
+            </field>
+        </class>
+        <class name="MovieEntity" qualified="io.crnk.example.service.model.MovieEntity" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Represents a &lt;b&gt;movie&lt;/b&gt;. This comment also demonstrates some HTML-to-asciidoc conversion within crnk-asciidoc.
+
+ This is a list:
+ &lt;ul&gt;
+     &lt;li&gt;Some&lt;/li&gt;
+     &lt;li&gt;List&lt;/li&gt;
+     &lt;li&gt;Elements&lt;/li&gt;
+ &lt;/ul&gt;
+ This is a new &lt;br&gt; line.
+ &lt;p&gt;This is a paragraph&lt;/p&gt;
+ This is a link: &lt;a href="http://www.google.com"&gt;Google&lt;/a&gt;</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="MovieEntity" signature="()" qualified="io.crnk.example.service.model.MovieEntity" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>movie</value>
+                </argument>
+            </annotation>
+            <annotation name="Entity" qualified="javax.persistence.Entity"/>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.MovieEntity.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <annotation name="Id" qualified="javax.persistence.Id"/>
+            </field>
+            <field name="name" qualified="io.crnk.example.service.model.MovieEntity.name" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <annotation name="JsonProperty" qualified="com.fasterxml.jackson.annotation.JsonProperty"/>
+                <annotation name="NotEmpty" qualified="org.hibernate.validator.constraints.NotEmpty"/>
+            </field>
+            <field name="year" qualified="io.crnk.example.service.model.MovieEntity.year" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="int"/>
+                <annotation name="Facet" qualified="io.crnk.data.facet.annotation.Facet"/>
+            </field>
+            <field name="roles" qualified="io.crnk.example.service.model.MovieEntity.roles" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.List">
+                    <generic qualified="io.crnk.example.service.model.RoleEntity"/>
+                </type>
+                <annotation name="OneToMany" qualified="javax.persistence.OneToMany">
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>movie</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="votes" qualified="io.crnk.example.service.model.MovieEntity.votes" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.List">
+                    <generic qualified="io.crnk.example.service.model.Vote"/>
+                </type>
+                <comment>A link to a non-JPA resource. Served from the other side through the mappedBy-declartion.
+ Must be transient to not get persisted.</comment>
+                <annotation name="Transient" qualified="javax.persistence.Transient"/>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation">
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>movie</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="version" qualified="io.crnk.example.service.model.MovieEntity.version" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.Integer"/>
+                <annotation name="Version" qualified="javax.persistence.Version"/>
+            </field>
+        </class>
+        <class name="PersonEntity" qualified="io.crnk.example.service.model.PersonEntity" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Represents a person involed with a movie through roles.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="PersonEntity" signature="()" qualified="io.crnk.example.service.model.PersonEntity" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="getProperties" signature="()" qualified="io.crnk.example.service.model.PersonEntity.getProperties" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="java.util.Map">
+                    <generic qualified="java.lang.String"/>
+                    <generic qualified="java.lang.String"/>
+                </return>
+                <annotation name="JsonAnyGetter" qualified="com.fasterxml.jackson.annotation.JsonAnyGetter"/>
+            </method>
+            <method name="setProperties" signature="(java.util.Map&lt;java.lang.String, java.lang.String&gt;)" qualified="io.crnk.example.service.model.PersonEntity.setProperties" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="properties">
+                    <type qualified="java.util.Map">
+                        <generic qualified="java.lang.String"/>
+                        <generic qualified="java.lang.String"/>
+                    </type>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <method name="setProperties" signature="(java.lang.String, java.lang.String)" qualified="io.crnk.example.service.model.PersonEntity.setProperties" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="propertyName">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <parameter name="propertyValue">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="JsonAnySetter" qualified="com.fasterxml.jackson.annotation.JsonAnySetter"/>
+            </method>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>person</value>
+                </argument>
+            </annotation>
+            <annotation name="Entity" qualified="javax.persistence.Entity"/>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.PersonEntity.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <annotation name="Id" qualified="javax.persistence.Id"/>
+            </field>
+            <field name="name" qualified="io.crnk.example.service.model.PersonEntity.name" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Name of subject, e.g. Hans MÃ¼ller (some UTF8 testing here...)</comment>
+                <annotation name="JsonProperty" qualified="com.fasterxml.jackson.annotation.JsonProperty"/>
+            </field>
+            <field name="year" qualified="io.crnk.example.service.model.PersonEntity.year" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="int"/>
+            </field>
+            <field name="roles" qualified="io.crnk.example.service.model.PersonEntity.roles" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.List">
+                    <generic qualified="io.crnk.example.service.model.RoleEntity"/>
+                </type>
+                <annotation name="OneToMany" qualified="javax.persistence.OneToMany">
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>movie</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="version" qualified="io.crnk.example.service.model.PersonEntity.version" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.Integer"/>
+                <annotation name="Version" qualified="javax.persistence.Version"/>
+            </field>
+            <field name="properties" qualified="io.crnk.example.service.model.PersonEntity.properties" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.Map">
+                    <generic qualified="java.lang.String"/>
+                    <generic qualified="java.lang.String"/>
+                </type>
+                <annotation name="ElementCollection" qualified="javax.persistence.ElementCollection"/>
+            </field>
+        </class>
+        <class name="RoleEntity" qualified="io.crnk.example.service.model.RoleEntity" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Role within a movie.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="RoleEntity" signature="()" qualified="io.crnk.example.service.model.RoleEntity" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>role</value>
+                </argument>
+            </annotation>
+            <annotation name="Entity" qualified="javax.persistence.Entity"/>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.RoleEntity.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.Long"/>
+                <comment>Unique identifier of the role</comment>
+                <annotation name="Id" qualified="javax.persistence.Id"/>
+            </field>
+            <field name="name" qualified="io.crnk.example.service.model.RoleEntity.name" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Name of the role.</comment>
+                <annotation name="JsonProperty" qualified="com.fasterxml.jackson.annotation.JsonProperty">
+                    <argument name="value" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>role</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="description" qualified="io.crnk.example.service.model.RoleEntity.description" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Description of role.</comment>
+                <annotation name="Size" qualified="javax.validation.constraints.Size">
+                    <argument name="max" primitive="true" array="false">
+                        <type qualified="int"/>
+                        <value>20</value>
+                    </argument>
+                    <argument name="message" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>Description may not exceed {max} characters.</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="someId" qualified="io.crnk.example.service.model.RoleEntity.someId" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.Long"/>
+                <annotation name="JsonIgnore" qualified="com.fasterxml.jackson.annotation.JsonIgnore"/>
+            </field>
+            <field name="movie" qualified="io.crnk.example.service.model.RoleEntity.movie" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                <comment>Move this role is associated to.</comment>
+                <annotation name="ManyToOne" qualified="javax.persistence.ManyToOne"/>
+            </field>
+            <field name="person" qualified="io.crnk.example.service.model.RoleEntity.person" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.PersonEntity"/>
+                <comment>Person this role is associated to.</comment>
+                <annotation name="ManyToOne" qualified="javax.persistence.ManyToOne"/>
+            </field>
+        </class>
+        <class name="ScheduleEntity" qualified="io.crnk.example.service.model.ScheduleEntity" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Release schedule of a movie.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="ScheduleEntity" signature="()" qualified="io.crnk.example.service.model.ScheduleEntity" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>schedule</value>
+                </argument>
+            </annotation>
+            <annotation name="Entity" qualified="javax.persistence.Entity"/>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.ScheduleEntity.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.Long"/>
+                <annotation name="Id" qualified="javax.persistence.Id"/>
+            </field>
+            <field name="description" qualified="io.crnk.example.service.model.ScheduleEntity.description" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+            <field name="movie" qualified="io.crnk.example.service.model.ScheduleEntity.movie" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                <annotation name="ManyToOne" qualified="javax.persistence.ManyToOne"/>
+            </field>
+        </class>
+        <class name="Screening" qualified="io.crnk.example.service.model.Screening" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Screening of a movie at a particular location.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="Screening" signature="()" qualified="io.crnk.example.service.model.Screening" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>screening</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.Screening.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="movieId" qualified="io.crnk.example.service.model.Screening.movieId" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <annotation name="JsonApiRelationId" qualified="io.crnk.core.resource.annotations.JsonApiRelationId"/>
+            </field>
+            <field name="movie" qualified="io.crnk.example.service.model.Screening.movie" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                <comment>relationship that is backed by a simple movieId attribute carrying the @JsonApiRelationId annotation.</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation"/>
+            </field>
+            <field name="location" qualified="io.crnk.example.service.model.Screening.location" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.Location"/>
+                <comment>relationship that is backed by the ScreeningLocationRepository. ID of location always
+ included response.</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation">
+                    <argument name="serialize" primitive="false" array="false">
+                        <type qualified="io.crnk.core.resource.annotations.SerializeType"/>
+                        <value>ONLY_ID</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="status" qualified="io.crnk.example.service.model.Screening.status" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.ScreeningStatus"/>
+                <comment>Current status of a screening implemented as nested resource.</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation">
+                    <argument name="serialize" primitive="false" array="false">
+                        <type qualified="io.crnk.core.resource.annotations.SerializeType"/>
+                        <value>EAGER</value>
+                    </argument>
+                    <argument name="mappedBy" primitive="false" array="false">
+                        <type qualified="java.lang.String"/>
+                        <value>screening</value>
+                    </argument>
+                </annotation>
+            </field>
+            <field name="time" qualified="io.crnk.example.service.model.Screening.time" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.time.OffsetDateTime"/>
+                <comment>Time of screening.</comment>
+            </field>
+        </class>
+        <class name="ScreeningStatus" qualified="io.crnk.example.service.model.ScreeningStatus" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Status of a screening.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="ScreeningStatus" signature="()" qualified="io.crnk.example.service.model.ScreeningStatus" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>screeningStatus</value>
+                </argument>
+                <argument name="nested" primitive="true" array="false">
+                    <type qualified="boolean"/>
+                    <value>true</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="screeningId" qualified="io.crnk.example.service.model.ScreeningStatus.screeningId" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <comment>Both annotations together bind the status to its screening parent.
+ Since we have a one-to-one relationship, both resources have the same identifier.
+ Implemented by the single attribute carrying both the relationship and id annotation.</comment>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+                <annotation name="JsonApiRelationId" qualified="io.crnk.core.resource.annotations.JsonApiRelationId"/>
+            </field>
+            <field name="screening" qualified="io.crnk.example.service.model.ScreeningStatus.screening" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.Screening"/>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation"/>
+            </field>
+            <field name="description" qualified="io.crnk.example.service.model.ScreeningStatus.description" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+        </class>
+        <class name="Secret" qualified="io.crnk.example.service.model.Secret" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Login secret for the user. Implemented as nested resource of login.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="Secret" signature="()" qualified="io.crnk.example.service.model.Secret" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>secret</value>
+                </argument>
+                <argument name="nested" primitive="true" array="false">
+                    <type qualified="boolean"/>
+                    <value>true</value>
+                </argument>
+            </annotation>
+            <annotation name="JsonApiExposed" qualified="io.crnk.core.resource.annotations.JsonApiExposed">
+                <argument name="value" primitive="true" array="false">
+                    <type qualified="boolean"/>
+                    <value>false</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.Secret.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.SecretId"/>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="name" qualified="io.crnk.example.service.model.Secret.name" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+            <field name="value" qualified="io.crnk.example.service.model.Secret.value" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+            <field name="login" qualified="io.crnk.example.service.model.Secret.login" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.Login"/>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation"/>
+            </field>
+        </class>
+        <class name="SecretId" qualified="io.crnk.example.service.model.SecretId" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Identifier for nested Secret resource.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="SecretId" signature="()" qualified="io.crnk.example.service.model.SecretId" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <constructor name="SecretId" signature="(java.lang.String)" qualified="io.crnk.example.service.model.SecretId" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="idString">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+            </constructor>
+            <method name="hashCode" signature="()" qualified="io.crnk.example.service.model.SecretId.hashCode" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="int"/>
+            </method>
+            <method name="equals" signature="(java.lang.Object)" qualified="io.crnk.example.service.model.SecretId.equals" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="object">
+                    <type qualified="java.lang.Object"/>
+                </parameter>
+                <return qualified="boolean"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="toString" signature="()" qualified="io.crnk.example.service.model.SecretId.toString" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="java.lang.String"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="JsonApiEmbeddable" qualified="io.crnk.core.resource.annotations.JsonApiEmbeddable"/>
+            <annotation name="JsonSerialize" qualified="com.fasterxml.jackson.databind.annotation.JsonSerialize">
+                <argument name="using" primitive="false" array="false">
+                    <type qualified="java.lang.Class">
+                        <generic qualified="?">
+                            <wildcard>
+<extendsBound qualified="com.fasterxml.jackson.databind.JsonSerializer"/>
+                            </wildcard>
+                        </generic>
+                    </type>
+                    <value>com.fasterxml.jackson.databind.ser.std.ToStringSerializer</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.SecretId.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Id of the secret.</comment>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="loginId" qualified="io.crnk.example.service.model.SecretId.loginId" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+                <comment>Id of the parent login resource.</comment>
+                <annotation name="JsonApiRelationId" qualified="io.crnk.core.resource.annotations.JsonApiRelationId"/>
+            </field>
+        </class>
+        <class name="Vote" qualified="io.crnk.example.service.model.Vote" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Vote from a user for a movie.</comment>
+            <class qualified="java.lang.Object"/>
+            <constructor name="Vote" signature="()" qualified="io.crnk.example.service.model.Vote" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="JsonApiResource" qualified="io.crnk.core.resource.annotations.JsonApiResource">
+                <argument name="type" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>vote</value>
+                </argument>
+            </annotation>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="id" qualified="io.crnk.example.service.model.Vote.id" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.util.UUID"/>
+                <annotation name="JsonApiId" qualified="io.crnk.core.resource.annotations.JsonApiId"/>
+            </field>
+            <field name="movie" qualified="io.crnk.example.service.model.Vote.movie" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                <comment>Voted movie.</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation"/>
+            </field>
+            <field name="user" qualified="io.crnk.example.service.model.Vote.user" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.model.Login"/>
+                <comment>User that published the vote. TODO create seperate "user" and "login"</comment>
+                <annotation name="JsonApiRelation" qualified="io.crnk.core.resource.annotations.JsonApiRelation"/>
+            </field>
+            <field name="starts" qualified="io.crnk.example.service.model.Vote.starts" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="int"/>
+            </field>
+        </class>
+    </package>
+    <package name="io.crnk.example.service.repository.change">
+        <class name="AttributeChangeFieldProvider" qualified="io.crnk.example.service.repository.change.AttributeChangeFieldProvider" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Warning: rather an advanced use case where resources are modified on-the-fly by adding further fields to it.
+ &lt;p&gt;
+ In practive one rather explicitly defines a @JsonApiRelation . This
+ is simpler and recommended, but may not always be possible if the resource cannot be change.
+ &lt;p&gt;
+ FIXME lookup ResourceFieldContributor during crnk boot process</comment>
+            <class qualified="java.lang.Object"/>
+            <interface qualified="io.crnk.core.engine.information.contributor.ResourceFieldContributor"/>
+            <constructor name="AttributeChangeFieldProvider" signature="()" qualified="io.crnk.example.service.repository.change.AttributeChangeFieldProvider" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="getResourceFields" signature="(io.crnk.core.engine.information.contributor.ResourceFieldContributorContext)" qualified="io.crnk.example.service.repository.change.AttributeChangeFieldProvider.getResourceFields" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="context">
+                    <type qualified="io.crnk.core.engine.information.contributor.ResourceFieldContributorContext"/>
+                </parameter>
+                <return qualified="java.util.List">
+                    <generic qualified="io.crnk.core.engine.information.resource.ResourceField"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="AttributeChangeRelationshipRepository" qualified="io.crnk.example.service.repository.change.AttributeChangeRelationshipRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Generic repository that introduces a history relationship for project and task resource without touching
+ those resources.
+
+ &lt;p&gt;
+ Mock implementation not doing much. Actual history has to be fetched
+ in real-world implementations
+ &lt;/p&gt;</comment>
+            <class qualified="io.crnk.core.repository.ReadOnlyRelationshipRepositoryBase">
+                <generic qualified="java.lang.Object"/>
+                <generic qualified="java.io.Serializable"/>
+                <generic qualified="io.crnk.example.service.model.AttributeChange"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="AttributeChangeRelationshipRepository" signature="()" qualified="io.crnk.example.service.repository.change.AttributeChangeRelationshipRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="getMatcher" signature="()" qualified="io.crnk.example.service.repository.change.AttributeChangeRelationshipRepository.getMatcher" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="io.crnk.core.repository.RelationshipMatcher"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="findManyTargets" signature="(java.io.Serializable, java.lang.String, io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.change.AttributeChangeRelationshipRepository.findManyTargets" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="sourceId">
+                    <type qualified="java.io.Serializable"/>
+                </parameter>
+                <parameter name="fieldName">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.AttributeChange"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="AttributeChangeResourceRepository" qualified="io.crnk.example.service.repository.change.AttributeChangeResourceRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>See AttributeChangeRelationshipRepository for more information/actual use case
+ &lt;p&gt;
+ Mock implementation not doing much. Actual history has to be fetched
+ in real-world implementations
+ &lt;/p&gt;</comment>
+            <class qualified="io.crnk.core.repository.ResourceRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.AttributeChange"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="AttributeChangeResourceRepository" signature="()" qualified="io.crnk.example.service.repository.change.AttributeChangeResourceRepository" scope="protected" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="findOne" signature="(java.util.UUID, io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.change.AttributeChangeResourceRepository.findOne" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.util.UUID"/>
+                </parameter>
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.AttributeChange"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="findAll" signature="(java.util.Collection&lt;java.util.UUID&gt;, io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.change.AttributeChangeResourceRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="ids">
+                    <type qualified="java.util.Collection">
+                        <generic qualified="java.util.UUID"/>
+                    </type>
+                </parameter>
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.AttributeChange"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.change.AttributeChangeResourceRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.AttributeChange"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+    </package>
+    <package name="io.crnk.example.service.repository">
+        <interface name="MovieRepository" qualified="io.crnk.example.service.repository.MovieRepository" scope="public" included="true">
+            <comment>Interface to a list of movies with type-safe access to links and meta data. Can be used
+ by Crnk-client or any other internal consumer of the repository.</comment>
+            <interface qualified="io.crnk.core.repository.ResourceRepository">
+                <generic qualified="io.crnk.example.service.model.MovieEntity"/>
+                <generic qualified="java.util.UUID"/>
+            </interface>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.MovieRepository.findAll" scope="public" abstract="true" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.repository.MovieRepository.MovieList"/>
+            </method>
+        </interface>
+        <class name="LocationRepository" qualified="io.crnk.example.service.repository.LocationRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Showcases a simple in-memory repository.</comment>
+            <class qualified="io.crnk.core.repository.InMemoryResourceRepository">
+                <generic qualified="io.crnk.example.service.model.Location"/>
+                <generic qualified="java.lang.String"/>
+            </class>
+            <constructor name="LocationRepository" signature="()" qualified="io.crnk.example.service.repository.LocationRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="MovieRepository.MovieList" qualified="io.crnk.example.service.repository.MovieRepository.MovieList" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="io.crnk.core.resource.list.ResourceListBase">
+                <generic qualified="io.crnk.example.service.model.MovieEntity"/>
+                <generic qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListMeta"/>
+                <generic qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListLinks"/>
+            </class>
+            <constructor name="MovieList" signature="()" qualified="io.crnk.example.service.repository.MovieRepository.MovieList" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+        </class>
+        <class name="MovieRepository.ScheduleListLinks" qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListLinks" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="io.crnk.core.resource.links.DefaultPagedLinksInformation"/>
+            <interface qualified="io.crnk.core.resource.links.LinksInformation"/>
+            <constructor name="ScheduleListLinks" signature="()" qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListLinks" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="externalLink" qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListLinks.externalLink" scope="public" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.String"/>
+            </field>
+        </class>
+        <class name="MovieRepository.ScheduleListMeta" qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListMeta" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>With the use of {@link HasMoreResourcesMetaInformation} we do not offer a last page link,
+ only first, previous and next. This allows to skip total row count computation with a second,
+ potentially expensive query.</comment>
+            <class qualified="java.lang.Object"/>
+            <interface qualified="io.crnk.core.resource.meta.HasMoreResourcesMetaInformation"/>
+            <constructor name="ScheduleListMeta" signature="()" qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListMeta" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="Data" qualified="lombok.Data"/>
+            <field name="hasMoreResources" qualified="io.crnk.example.service.repository.MovieRepository.ScheduleListMeta.hasMoreResources" scope="public" volatile="false" transient="false" static="false" final="false">
+                <type qualified="java.lang.Boolean"/>
+            </field>
+        </class>
+        <class name="MovieRepositoryImpl" qualified="io.crnk.example.service.repository.MovieRepositoryImpl" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="io.crnk.data.jpa.JpaEntityRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.MovieEntity"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <interface qualified="io.crnk.example.service.repository.MovieRepository"/>
+            <constructor name="MovieRepositoryImpl" signature="()" qualified="io.crnk.example.service.repository.MovieRepositoryImpl" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="save" signature="(io.crnk.example.service.model.MovieEntity)" qualified="io.crnk.example.service.repository.MovieRepositoryImpl.save" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="entity">
+                    <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.MovieEntity"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="create" signature="(io.crnk.example.service.model.MovieEntity)" qualified="io.crnk.example.service.repository.MovieRepositoryImpl.create" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="entity">
+                    <type qualified="io.crnk.example.service.model.MovieEntity"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.MovieEntity"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="delete" signature="(java.util.UUID)" qualified="io.crnk.example.service.repository.MovieRepositoryImpl.delete" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.util.UUID"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.MovieRepositoryImpl.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.repository.MovieRepository.MovieList"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="PersonRepository" qualified="io.crnk.example.service.repository.PersonRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="io.crnk.data.jpa.JpaEntityRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.PersonEntity"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="PersonRepository" signature="()" qualified="io.crnk.example.service.repository.PersonRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="save" signature="(io.crnk.example.service.model.PersonEntity)" qualified="io.crnk.example.service.repository.PersonRepository.save" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="entity">
+                    <type qualified="io.crnk.example.service.model.PersonEntity"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.PersonEntity"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="create" signature="(io.crnk.example.service.model.PersonEntity)" qualified="io.crnk.example.service.repository.PersonRepository.create" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="entity">
+                    <type qualified="io.crnk.example.service.model.PersonEntity"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.PersonEntity"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="delete" signature="(java.util.UUID)" qualified="io.crnk.example.service.repository.PersonRepository.delete" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.util.UUID"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="RoleRepository" qualified="io.crnk.example.service.repository.RoleRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="io.crnk.data.jpa.JpaEntityRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.RoleEntity"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="RoleRepository" signature="()" qualified="io.crnk.example.service.repository.RoleRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="ScreeningLocationRepository" qualified="io.crnk.example.service.repository.ScreeningLocationRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Establishes a custom relationship between screenings and location.</comment>
+            <class qualified="io.crnk.core.repository.OneRelationshipRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.Screening"/>
+                <generic qualified="java.util.UUID"/>
+                <generic qualified="io.crnk.example.service.model.Location"/>
+                <generic qualified="java.lang.String"/>
+            </class>
+            <constructor name="ScreeningLocationRepository" signature="(io.crnk.example.service.repository.LocationRepository)" qualified="io.crnk.example.service.repository.ScreeningLocationRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="locationRepository">
+                    <type qualified="io.crnk.example.service.repository.LocationRepository"/>
+                </parameter>
+                <annotation name="Autowired" qualified="org.springframework.beans.factory.annotation.Autowired"/>
+            </constructor>
+            <method name="getMatcher" signature="()" qualified="io.crnk.example.service.repository.ScreeningLocationRepository.getMatcher" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="io.crnk.core.repository.RelationshipMatcher"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="setRelation" signature="(io.crnk.example.service.model.Screening, java.lang.String, java.lang.String)" qualified="io.crnk.example.service.repository.ScreeningLocationRepository.setRelation" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="source">
+                    <type qualified="io.crnk.example.service.model.Screening"/>
+                </parameter>
+                <parameter name="targetId">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <parameter name="fieldName">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="findOneRelations" signature="(java.util.Collection&lt;java.util.UUID&gt;, java.lang.String, io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.ScreeningLocationRepository.findOneRelations" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="sourceIds">
+                    <type qualified="java.util.Collection">
+                        <generic qualified="java.util.UUID"/>
+                    </type>
+                </parameter>
+                <parameter name="fieldName">
+                    <type qualified="java.lang.String"/>
+                </parameter>
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="java.util.Map">
+                    <generic qualified="java.util.UUID"/>
+                    <generic qualified="io.crnk.example.service.model.Location"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+            <field name="locationRepository" qualified="io.crnk.example.service.repository.ScreeningLocationRepository.locationRepository" scope="private" volatile="false" transient="false" static="false" final="false">
+                <type qualified="io.crnk.example.service.repository.LocationRepository"/>
+            </field>
+        </class>
+        <class name="ScreeningRepository" qualified="io.crnk.example.service.repository.ScreeningRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Showcases a simple in-memory repository.</comment>
+            <class qualified="io.crnk.core.repository.InMemoryResourceRepository">
+                <generic qualified="io.crnk.example.service.model.Screening"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="ScreeningRepository" signature="()" qualified="io.crnk.example.service.repository.ScreeningRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.ScreeningRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.Screening"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="save" signature="(S)" qualified="io.crnk.example.service.repository.ScreeningRepository.save" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="entity">
+                    <type qualified="S"/>
+                </parameter>
+                <return qualified="S"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="delete" signature="(java.util.UUID)" qualified="io.crnk.example.service.repository.ScreeningRepository.delete" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.util.UUID"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="ScreeningStatusRepository" qualified="io.crnk.example.service.repository.ScreeningStatusRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Showcases a simple in-memory repository.</comment>
+            <class qualified="io.crnk.core.repository.ResourceRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.ScreeningStatus"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="ScreeningStatusRepository" signature="()" qualified="io.crnk.example.service.repository.ScreeningStatusRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.ScreeningStatusRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <comment>Retrieve status if ID has been passed in QuerySpec. Does not allow generic findAll without filters (for the time being).
+ Sufficient to retrieve the status for a screening.</comment>
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.ScreeningStatus"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="toCollection" signature="(java.lang.Object)" qualified="io.crnk.example.service.repository.ScreeningStatusRepository.toCollection" scope="private" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="value">
+                    <type qualified="java.lang.Object"/>
+                </parameter>
+                <return qualified="java.util.Collection">
+                    <generic qualified="java.util.UUID"/>
+                </return>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="VoteRepository" qualified="io.crnk.example.service.repository.VoteRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Showcases a simple in-memory repository with some artificial slow
+ down to simulate expensive requests and show loading indicators
+ in the frontend.
+ &lt;p&gt;
+ Real-world application may rather make use of the existing {@link InMemoryResourceRepository}.</comment>
+            <class qualified="io.crnk.core.repository.ResourceRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.Vote"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="VoteRepository" signature="()" qualified="io.crnk.example.service.repository.VoteRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.VoteRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.Vote"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="save" signature="(S)" qualified="io.crnk.example.service.repository.VoteRepository.save" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="entity">
+                    <type qualified="S"/>
+                </parameter>
+                <return qualified="S"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="delete" signature="(java.util.UUID)" qualified="io.crnk.example.service.repository.VoteRepository.delete" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.util.UUID"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="slowDown" signature="()" qualified="io.crnk.example.service.repository.VoteRepository.slowDown" scope="private" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="void"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+            <field name="votes" qualified="io.crnk.example.service.repository.VoteRepository.votes" scope="public" volatile="false" transient="false" static="true" final="false">
+                <type qualified="java.util.Map">
+                    <generic qualified="java.util.UUID"/>
+                    <generic qualified="io.crnk.example.service.model.Vote"/>
+                </type>
+            </field>
+        </class>
+    </package>
+    <package name="io.crnk.example.service.repository.schedule">
+        <class name="ScheduleDecorator" qualified="io.crnk.example.service.repository.schedule.ScheduleDecorator" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>The decorator is registered through ScheduleDecoratorFactory. It intercepts all calls to
+ ScheduleRepository and updates the name to upper case.</comment>
+            <class qualified="io.crnk.core.repository.decorate.WrappedResourceRepository">
+                <generic qualified="io.crnk.example.service.model.ScheduleEntity"/>
+                <generic qualified="java.lang.Long"/>
+            </class>
+            <constructor name="ScheduleDecorator" signature="(io.crnk.example.service.repository.schedule.ScheduleRepository)" qualified="io.crnk.example.service.repository.schedule.ScheduleDecorator" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="repository">
+                    <type qualified="io.crnk.example.service.repository.schedule.ScheduleRepository"/>
+                </parameter>
+            </constructor>
+            <method name="findOne" signature="(java.lang.Long, io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.schedule.ScheduleDecorator.findOne" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="java.lang.Long"/>
+                </parameter>
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.example.service.model.ScheduleEntity"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.schedule.ScheduleDecorator.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.ScheduleEntity"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+        </class>
+        <class name="ScheduleDecoratorFactory" qualified="io.crnk.example.service.repository.schedule.ScheduleDecoratorFactory" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>sets up an ScheduleDecorator to intercepts and modifies any request for ScheduleEntity.
+ with a further value. Can be used to intercept and modify
+ requests in an arbitrary fashion.</comment>
+            <class qualified="java.lang.Object"/>
+            <interface qualified="io.crnk.core.repository.decorate.RepositoryDecoratorFactory"/>
+            <constructor name="ScheduleDecoratorFactory" signature="()" qualified="io.crnk.example.service.repository.schedule.ScheduleDecoratorFactory" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="decorateRepository" signature="(java.lang.Object)" qualified="io.crnk.example.service.repository.schedule.ScheduleDecoratorFactory.decorateRepository" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="repository">
+                    <type qualified="java.lang.Object"/>
+                </parameter>
+                <return qualified="java.lang.Object"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="ScheduleRepository" qualified="io.crnk.example.service.repository.schedule.ScheduleRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="io.crnk.data.jpa.JpaEntityRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.ScheduleEntity"/>
+                <generic qualified="java.lang.Long"/>
+            </class>
+            <constructor name="ScheduleRepository" signature="()" qualified="io.crnk.example.service.repository.schedule.ScheduleRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+    </package>
+    <package name="io.crnk.example.service.repository.security">
+        <class name="LoginRepository" qualified="io.crnk.example.service.repository.security.LoginRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Makes logged-in user available as JSON API resource.</comment>
+            <class qualified="io.crnk.core.repository.ResourceRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.Login"/>
+                <generic qualified="java.lang.String"/>
+            </class>
+            <constructor name="LoginRepository" signature="()" qualified="io.crnk.example.service.repository.security.LoginRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.security.LoginRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.Login"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+        <class name="SecretRepository" qualified="io.crnk.example.service.repository.security.SecretRepository" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>Showcases throwing a forbidden exception.</comment>
+            <class qualified="io.crnk.core.repository.ResourceRepositoryBase">
+                <generic qualified="io.crnk.example.service.model.Secret"/>
+                <generic qualified="java.util.UUID"/>
+            </class>
+            <constructor name="SecretRepository" signature="()" qualified="io.crnk.example.service.repository.security.SecretRepository" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="findAll" signature="(io.crnk.core.queryspec.QuerySpec)" qualified="io.crnk.example.service.repository.security.SecretRepository.findAll" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="querySpec">
+                    <type qualified="io.crnk.core.queryspec.QuerySpec"/>
+                </parameter>
+                <return qualified="io.crnk.core.resource.list.ResourceList">
+                    <generic qualified="io.crnk.example.service.model.Secret"/>
+                </return>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="Component" qualified="org.springframework.stereotype.Component"/>
+        </class>
+    </package>
+</root>

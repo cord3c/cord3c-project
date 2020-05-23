@@ -1,0 +1,4 @@
+[source,bash]
+----
+POST http://localhost:59788/api/schedule
+----

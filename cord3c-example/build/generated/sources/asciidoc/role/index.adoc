@@ -1,0 +1,26 @@
+
+anchor:resources_role[]
+
+## Role
+
+include::description.adoc[]
+
+anchor:resources_role_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+anchor:resources_role_relationships[]
+
+[discrete]
+### Relationships
+
+include::relationships.adoc[]
+
+
+
+

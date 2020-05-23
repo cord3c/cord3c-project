@@ -1,0 +1,42 @@
+[source,json]
+----
+HTTP/1.1 200 OK
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Content-Length: 801
+Content-Type: application/json
+Date: Fri, 22 May 2020 06:16:14 GMT
+Expires: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+
+{
+  "data" : {
+    "id" : "me",
+    "type" : "login",
+    "links" : {
+      "self" : "http://localhost:59788/api/login/me"
+    },
+    "userName" : "anonymousUser",
+    "attributeChanges" : {
+      "links" : {
+        "self" : "http://localhost:59788/api/login/me/relationships/attributeChanges",
+        "related" : "http://localhost:59788/api/login/me/attributeChanges"
+      }
+    },
+    "votes" : {
+      "links" : {
+        "self" : "http://localhost:59788/api/login/me/relationships/votes",
+        "related" : "http://localhost:59788/api/login/me/votes"
+      }
+    },
+    "secrets" : {
+      "links" : {
+        "self" : "http://localhost:59788/api/login/me/relationships/secrets",
+        "related" : "http://localhost:59788/api/login/me/secrets"
+      }
+    }
+  }
+}
+----

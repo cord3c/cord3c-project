@@ -1,0 +1,26 @@
+
+anchor:resources_screening[]
+
+## Screening
+
+include::description.adoc[]
+
+anchor:resources_screening_attributes[]
+
+[discrete]
+### Attributes
+
+include::attributes.adoc[]
+
+
+
+anchor:resources_screening_relationships[]
+
+[discrete]
+### Relationships
+
+include::relationships.adoc[]
+
+
+
+

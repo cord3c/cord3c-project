@@ -1,0 +1,18 @@
+Represents a *movie*. This comment also demonstrates some HTML-to-asciidoc conversion within crnk-asciidoc.
+
+This is a list:
+
+
+- Some
+- List
+- Elements
+
+
+This is a new 
+line.
+
+
+This is a paragraph
+
+
+This is a link: http://www.google.com[Google]
