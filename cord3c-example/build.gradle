@@ -1,105 +1,95 @@
-apply plugin: 'java'
-tasks.withType(Jar) { jar ->
-    jar.version = null
-}
-version = "1" // helm version not allowed to too long (not needed currently)
-
+apply plugin: JavaDefaultsPlugin
 
 apply plugin: 'application'
 
 mainClassName = "io.crnk.example.service.ExampleApplication"
 
 dependencies {
-	implementation platform('org.springframework.boot:spring-boot-dependencies:2.1.0.RELEASE')
-	implementation platform("io.crnk:crnk-bom:$CRNK_VERSION")
-	annotationProcessor platform("io.crnk:crnk-bom:$CRNK_VERSION")
+	compileOnly 'io.crnk:crnk-gen-java' // Intellij classpath workaround, not necessary for Gradle
 
-    compileOnly 'io.crnk:crnk-gen-java' // Intellij classpath workaround, not necessary for Gradle
-    annotationProcessor 'io.crnk:crnk-gen-java'
+	implementation "io.crnk:crnk-setup-spring-boot2"
+	implementation "io.crnk:crnk-data-jpa"
+	implementation "io.crnk:crnk-data-facet"
+	implementation "io.crnk:crnk-format-plain-json"
+	implementation "io.crnk:crnk-validation"
+	implementation "io.crnk:crnk-home"
+	implementation "io.crnk:crnk-ui"
+	implementation "io.crnk:crnk-operations"
+	implementation "io.crnk:crnk-security"
 
-    implementation "io.crnk:crnk-setup-spring-boot2"
-    implementation "io.crnk:crnk-data-jpa"
-    implementation "io.crnk:crnk-data-facet"
-    implementation "io.crnk:crnk-format-plain-json"
-    implementation "io.crnk:crnk-validation"
-    implementation "io.crnk:crnk-home"
-    implementation "io.crnk:crnk-ui"
-    implementation "io.crnk:crnk-operations"
-    implementation "io.crnk:crnk-security"
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-json'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.1.RELEASE'
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-json'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.1.RELEASE'
+	implementation 'org.hibernate:hibernate-core'
+	implementation 'com.h2database:h2'
+	implementation 'commons-io:commons-io:1.3.2'
+	implementation 'com.google.guava:guava:18.0'
 
-    implementation 'org.hibernate:hibernate-core'
-    implementation 'com.h2database:h2'
-    implementation 'commons-io:commons-io:1.3.2'
-    implementation 'com.google.guava:guava:18.0'
-
-    testImplementation "io.crnk:crnk-gen-asciidoc"
+	testImplementation "io.crnk:crnk-gen-asciidoc"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "io.crnk:crnk-client"
 	testImplementation 'com.squareup.okhttp3:okhttp:3.4.1'
 	testImplementation 'com.jayway.restassured:rest-assured:2.9.0'
 	testImplementation 'com.jayway.restassured:json-schema-validator:2.9.0'
 
-    compileOnly "org.projectlombok:lombok:$LOMBOK_VERSION"
-    testCompileOnly "org.projectlombok:lombok:$LOMBOK_VERSION"
-    annotationProcessor "org.projectlombok:lombok:$LOMBOK_VERSION"
-    testAnnotationProcessor "org.projectlombok:lombok:$LOMBOK_VERSION"
+	compileOnly "org.projectlombok:lombok:$LOMBOK_VERSION"
+	testCompileOnly "org.projectlombok:lombok:$LOMBOK_VERSION"
+	annotationProcessor "org.projectlombok:lombok:$LOMBOK_VERSION"
+	testAnnotationProcessor "org.projectlombok:lombok:$LOMBOK_VERSION"
 }
 
 
 apply plugin: 'org.asciidoctor.convert'
 
 asciidoctor {
-    sourceDir = file('build/generated/sources/asciidoc')
-    backends = ['html5']
-    attributes 'source-highlighter': 'coderay'
-    sources {
-        include 'index.adoc'
-    }
+	sourceDir = file('build/generated/sources/asciidoc')
+	backends = ['html5']
+	attributes 'source-highlighter': 'coderay'
+	sources {
+		include 'index.adoc'
+	}
 }
 
 apply plugin: 'com.google.cloud.tools.jib'
 jib {
-    from {
-        image = 'adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim'
-    }
-    container {
-        ports = ['8080']
-    }
-    to {
-        image = "crnk/example"
-        auth {
-            username = dockerHubUser
-            password = dockerHubPass
-        }
-        tags = ['latest']
-    }
+	from {
+		image = 'adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim'
+	}
+	container {
+		ports = ['8080']
+	}
+	to {
+		image = "crnk/example"
+		auth {
+			username = dockerHubUser
+			password = dockerHubPass
+		}
+		tags = ['latest']
+	}
 }
 
 apply plugin: 'crnk-gen'
 crnkGen {
-    runtime {
-        configuration = 'test'
-    }
+	runtime {
+		configuration = 'test'
+	}
 
-    forked = false
-    resourcePackages = ['io.crnk.example']
+	forked = false
+	resourcePackages = ['io.crnk.example']
 
-    asciidoc {
-        enabled = true
-    }
+	asciidoc {
+		enabled = true
+	}
 }
 crnkGen.init()
 
 // compile generated asciidoc files
 tasks.test.doFirst {
-    delete 'build/generated/sources/asciidoc'
+	delete 'build/generated/sources/asciidoc'
 }
 check.dependsOn tasks.asciidoctor
 tasks.generateAsciidoc.dependsOn test
@@ -112,40 +102,40 @@ apply plugin: 'kubectl'
 apply plugin: 'gcloud'
 apply plugin: 'helm'
 gcloud {
-    keyFile = file("$projectDir/secrets/gcloud.key")
-    region = System.getenv("CRNK_GCLOUD_REGION")
-    project = System.getenv("CRNK_GCLOUD_PROJECT")
-    gke {
-        clusterName =  System.getenv("CRNK_GCLOUD_CLUSTER")
-    }
-    client {
-        imageName = 'google/cloud-sdk'
-        version = '224.0.0'
-    }
+	keyFile = file("$projectDir/secrets/gcloud.key")
+	region = System.getenv("CRNK_GCLOUD_REGION")
+	project = System.getenv("CRNK_GCLOUD_PROJECT")
+	gke {
+		clusterName = System.getenv("CRNK_GCLOUD_CLUSTER")
+	}
+	client {
+		imageName = 'google/cloud-sdk'
+		version = '224.0.0'
+	}
 }
 gcloudSetProject.dependsOn gcloudActivateServiceAccount
 gcloudGetKubernetesCredentials.dependsOn gcloudSetProject
 
 task deploy() {
-    dependsOn gcloudGetKubernetesCredentials, helmPackage, tasks.jib
-    doFirst {
-        kubectl.exec({ commandLine = "kubectl apply -f=${file('src/main/kubernetes/example-namespace.yaml')}" })
+	dependsOn gcloudGetKubernetesCredentials, helmPackage, tasks.jib
+	doFirst {
+		kubectl.exec({ commandLine = "kubectl apply -f=${file('src/main/kubernetes/example-namespace.yaml')}" })
 
-        File yamlFile = file("build/helm/crnk-example.yaml")
-        yamlFile.parentFile.mkdirs()
+		File yamlFile = file("build/helm/crnk-example.yaml")
+		yamlFile.parentFile.mkdirs()
 
-        String imageId = file("build/jib-image.id").text
-        if (imageId.startsWith("sha256:")) {
-            imageId = imageId.substring(7);
-        }
-        imageId = imageId.trim()
+		String imageId = file("build/jib-image.id").text
+		if (imageId.startsWith("sha256:")) {
+			imageId = imageId.substring(7);
+		}
+		imageId = imageId.trim()
 
-        helm.exec({
-            commandLine = "helm template --name=crnk --set image.tag=${imageId} ${helmPackageCrnkExample.outputs.files.singleFile} --namespace=default"
-            stdoutFile = yamlFile
-        })
+		helm.exec({
+			commandLine = "helm template --name=crnk --set image.tag=${imageId} ${helmPackageCrnkExample.outputs.files.singleFile} --namespace=default"
+			stdoutFile = yamlFile
+		})
 
-        kubectl.exec({ commandLine = "kubectl apply -f=${yamlFile} -n=default" })
-    }
+		kubectl.exec({ commandLine = "kubectl apply -f=${yamlFile} -n=default" })
+	}
 }
 

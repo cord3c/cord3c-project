@@ -1,0 +1,49 @@
+import io.corda3c.gradle.CordappPlugin
+
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+
+dependencies {
+	implementation 'org.eclipse.jetty:jetty-server:9.4.3.v20170317'
+	implementation 'org.eclipse.jetty:jetty-servlet:9.4.3.v20170317'
+
+	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
+	compileOnly "net.corda:corda-node:${CORDA_VERSION}"
+}
+
+
+apply plugin: 'com.github.johnrengelman.shadow'
+shadowJar {
+	archiveClassifier = 'cordapp'
+	archiveBaseName = 'cord3c-server-rest'
+	// relocate 'test', 'test2'
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+		shadow(MavenPublication) {
+			project.shadow.component(it)
+			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+		}
+	}
+}
+
+apply plugin: CordappPlugin
+cordapp {
+	shading = true
+	targetPlatformVersion 4
+	minimumPlatformVersion 4
+	workflow {
+		name 'Cord3c rest serve'
+		vendor 'Cord3c'
+		licence 'TDB'
+		versionId 1
+	}
+	signing {
+		enabled false
+	}
+}
+

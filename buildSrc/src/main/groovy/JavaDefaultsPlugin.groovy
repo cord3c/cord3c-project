@@ -57,6 +57,10 @@ class JavaDefaultsPlugin implements Plugin<Project> {
 			}
 
 			dependencies {
+				implementation platform("org.springframework.boot:spring-boot-dependencies:$SPRING_BOOT_VERSION")
+				implementation platform("io.crnk:crnk-bom:$CRNK_VERSION")
+				annotationProcessor platform("io.crnk:crnk-bom:$CRNK_VERSION")
+
 				// https://github.com/mapstruct/mapstruct/issues/1581 -> order matters: mapstruct before lombok
 				compileOnly "org.mapstruct:mapstruct-processor:$MAPSTRUCT_VERSION"
 				annotationProcessor "org.mapstruct:mapstruct-processor:$MAPSTRUCT_VERSION"

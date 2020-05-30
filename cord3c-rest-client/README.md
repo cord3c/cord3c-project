@@ -1,0 +1,1 @@
+Client to access cord3c-rest-server in a type-safe manner from Java.

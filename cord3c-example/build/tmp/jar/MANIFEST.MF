@@ -1,2 +1,4 @@
 Manifest-Version: 1.0
+Implementation-Title: cord3c-example
+Implementation-Vendor: Cord3c
 

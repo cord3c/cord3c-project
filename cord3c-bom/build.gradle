@@ -1,0 +1,31 @@
+description = "cord3c BOM"
+
+apply plugin: 'java-platform'
+apply plugin: PublishingDefaultsPlugin
+
+dependencies {
+	constraints {
+		api project(':cord3c-monitor-health')
+		api project(':cord3c-monitor-metrics')
+		api project(':cord3c-monitor-ping')
+		api project(':cord3c-rest-client')
+		api project(':cord3c-rest-server')
+		api project(':cord3c-ssi-api')
+		api project(':cord3c-ssi-serializer')
+		api project(':cord3c-ssi-networkmap-adapter')
+	}
+}
+
+sonarqube {
+	skipProject = true
+}
+
+publishing {
+	publications {
+		myPlatform(MavenPublication) {
+			from components.javaPlatform
+		}
+	}
+}
+
+

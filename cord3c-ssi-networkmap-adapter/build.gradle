@@ -1,0 +1,83 @@
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+
+configurations {
+	cordaBinary.extendsFrom bom
+	cordaExtraJars.extendsFrom bom
+	cordaJaas.extendsFrom bom
+}
+
+dependencies {
+	implementation project(':cord3c-ssi-api')
+
+	implementation 'com.squareup.okhttp3:okhttp:4.2.2' // used by network map client
+	api "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
+
+	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
+
+	implementation "net.corda:corda-core:${CORDA_VERSION}"
+	implementation "net.corda:corda-rpc:${CORDA_VERSION}"
+	implementation "net.corda:corda-serialization:${CORDA_VERSION}"
+	implementation "net.corda:corda-node-api:${CORDA_VERSION}"
+	implementation("net.corda:corda-node:${CORDA_VERSION}") {
+		transitive = false
+	}
+
+	implementation 'org.springframework:spring-web'
+	implementation 'org.springframework:spring-context'
+	implementation 'org.springframework:spring-beans'
+	implementation 'org.springframework.boot:spring-boot-autoconfigure'
+	implementation 'org.springframework.boot:spring-boot'
+
+	implementation "com.github.rmee.boot:rmee-boot-cli:$RMEE_GRADLE_VERSION"
+	implementation "info.picocli:picocli:4.1.4"
+
+	api 'io.crnk:crnk-core'
+	api 'io.crnk:crnk-validation'
+	api 'io.crnk:crnk-home'
+	api 'io.crnk:crnk-meta'
+	api 'io.crnk:crnk-setup-spring-boot2'
+	api 'io.crnk:crnk-security'
+	api 'io.crnk:crnk-format-plain-json'
+	api 'io.crnk:crnk-monitor-opentracing'
+
+	api 'javax.servlet:javax.servlet-api'
+	compileOnly 'org.slf4j:slf4j-api'
+	compileOnly 'javax.validation:validation-api'
+	compileOnly 'org.hibernate.validator:hibernate-validator'
+
+	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
+	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
+}
+
+//////////////////////////////////////////////////////////////////
+// Helm
+//////////////////////////////////////////////////////////////////
+/*
+apply plugin: HelmDefaultsPlugin
+helmVersions {
+	jibImage(project, 'cord3c-ssi--networkmap', 'tag')
+}
+*/
+//////////////////////////////////////////////////////////////////
+// Docker
+//////////////////////////////////////////////////////////////////
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+}
+
+/*
+apply plugin: JavaImageDefaultsPlugin
+javaImage {
+	mainClass = 'io.cord3c.ssi.networkmap.adapter.CordaVCNetworkMapMain'
+	ports = ['20000-20010', '8080']
+	image = "$DOCKER_REGISTRY/corda-vc-networkmap:$project.version"
+	java8 = true
+}
+tasks.publish.dependsOn tasks.jib
+ */

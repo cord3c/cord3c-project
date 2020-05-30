@@ -1,13 +1,14 @@
 # cord3c-project
 
+**Here you find W3C DID/VC, REST, HTTP, and monitoring support for R3 Corda!**
+
 Corda is an open source blockchain/DLT project  with a strong focus on
 privacy and scalability while addressing the needs of enterprises. More information
 are available in https://github.com/corda/corda/. A focus area of Corda are business-to-business
 transactions in finance and insurance markets. However, its model and strong privacy guarantees
 also make it applicable to a wide range of other markets. This project aims add
 unlocking some of that potential with a number of extensions. Primary focus
-lies on bringing some open standards as defined by
-RFCs and W3C specifications to Corda to:
+lies bringing various RFCs and W3C specifications to Corda with the goal to:
 
 - avoid the lock-in to any single vendor.
 - gain interoperability across different kinds of devices.
@@ -18,7 +19,7 @@ RFCs and W3C specifications to Corda to:
 - simplify some development and operational aspects.
 
 This is achieved due to the flexible nature of the Corda flow framework and some further internal APIs.
-The concrete steps to achieve this are:
+Our steps are:
 
 - *Native support for W3C [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) (VCs)
   and [Decentralized Identifiers](https://www.w3.org/TR/did-core/)* (DIDs) to make identities and claims about those identities

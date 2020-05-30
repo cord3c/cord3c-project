@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: cord3c-ssi-networkmap-adapter
+  liquibase:
+    enabled: false
+  jpa:
+    database: H2
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+
+datasource:
+  url: jdbc:h2:tcp://127.0.0.1:20005/node
+  username: sa
+  driverClassName: org.h2.Driver
+  initialize: never
+  hikari:
+    maximum-pool-size: 2
+
+management:
+  health:
+    jms:
+      enabled: false
+    db:
+      enabled: false
+
+crnk:
+  path-prefix: api

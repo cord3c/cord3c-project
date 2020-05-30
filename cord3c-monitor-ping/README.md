@@ -1,0 +1,1 @@
+A simple ping/pong flow to check connectivity between Corda nodes.

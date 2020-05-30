@@ -1,10 +1,13 @@
 include ':cord3c-example'
-include ':cord3c-server-api'
-include ':cord3c-server-rest'
-include ':cord3c-server-health'
-include ':cord3c-server-metrics'
+include ':cord3c-rest-client'
+include ':cord3c-rest-server'
+include ':cord3c-server-http'
+include ':cord3c-monitor-ping'
+include ':cord3c-monitor-health'
+include ':cord3c-monitor-metrics'
 include ':cord3c-ssi-api'
 include ':cord3c-ssi-serializer'
+include ':cord3c-ssi-networkmap-adapter'
 
 gradle.beforeProject { Project project ->
 	project.with {

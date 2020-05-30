@@ -1,0 +1,1 @@
+Adds a health endpoint to Corda node to verify readiness and liveness.

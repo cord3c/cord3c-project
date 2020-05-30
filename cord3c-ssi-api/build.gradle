@@ -1,0 +1,23 @@
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+
+dependencies {
+	implementation 'com.nimbusds:nimbus-jose-jwt:8.3'
+	implementation "com.fasterxml.jackson.core:jackson-databind:$JACKSON_VERSION"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
+	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
+
+	compileOnly "net.corda:corda-core:$CORDA_VERSION"
+
+	implementation "org.bouncycastle:bcpkix-jdk15on:$BOUNCYCASTLE_VERSION"
+
+	testImplementation "net.corda:corda-core:$CORDA_VERSION"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+}

@@ -1,0 +1,1 @@
+Adds a prometheus endpoint to Corda node to allow fetching metrics through HTTP.

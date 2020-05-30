@@ -1,0 +1,4 @@
+apiVersion: v1
+description: networkmap-to-VC adapter
+name: cord3c-corda-vc-networkmap
+version: 0.1.0

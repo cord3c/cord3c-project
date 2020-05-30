@@ -1,0 +1,15 @@
+{
+  "@context" : "https://www.w3.org/ns/did/v1",
+  "id" : "did:web:test:03087bcf-0f9e-411f-83e9-7c0f9b376e7b",
+  "publicKeys" : [ {
+    "id" : "did:web:test:03087bcf-0f9e-411f-83e9-7c0f9b376e7b#keys-1",
+    "controller" : "did:web:test:03087bcf-0f9e-411f-83e9-7c0f9b376e7b",
+    "type" : "EC",
+    "publicKeyBase58" : "PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCzZUVpjUw6r9YeWCpdDRw2TcW4wdqSxVTxM4Pos73kuK91gb9a1cs4B2LksuYrfHYrGYa2Nkx6ZxqyMJ8Hfu8wAMV"
+  } ],
+  "authentication" : [ {
+    "type" : "EcdsaSecp256k1VerificationKey2019",
+    "publicKey" : [ "did:web:test:03087bcf-0f9e-411f-83e9-7c0f9b376e7b#keys-1" ]
+  } ],
+  "service" : [ ]
+}
