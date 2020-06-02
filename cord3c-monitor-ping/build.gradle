@@ -1,9 +1,13 @@
 apply plugin: JavaDefaultsPlugin
 apply plugin: PublishingDefaultsPlugin
+apply plugin: net.corda.plugins.QuasarPlugin
 
 dependencies {
 	compileOnly "net.corda:corda-core:$CORDA_VERSION"
 	compileOnly 'org.slf4j:slf4j-api'
+
+	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
+	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
 }
 
 publishing {

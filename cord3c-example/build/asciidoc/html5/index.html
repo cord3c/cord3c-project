@@ -880,58 +880,6 @@ line.
 </tbody>
 </table>
 <div class="paragraph">
-<p><a id="resources_login_example_-_get_login_information"></a></p>
-</div>
-<h4 id="_example_get_login_information" class="discrete">Example - Get Login Information</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl http://localhost:8080/api/login/me</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="json"><span class="error">H</span><span class="error">T</span><span class="error">T</span><span class="error">P</span><span class="error">/</span><span class="float">1.1</span> <span class="integer">200</span> <span class="error">O</span><span class="error">K</span>
-<span class="error">C</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span><span class="error">-</span><span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">r</span><span class="error">o</span><span class="error">l</span>: <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">c</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span>, <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">s</span><span class="error">t</span><span class="error">o</span><span class="error">r</span><span class="error">e</span>, <span class="error">m</span><span class="error">a</span><span class="error">x</span><span class="error">-</span><span class="error">a</span><span class="error">g</span><span class="error">e</span><span class="error">=</span><span class="integer">0</span>, <span class="error">m</span><span class="error">u</span><span class="error">s</span><span class="error">t</span><span class="error">-</span><span class="error">r</span><span class="error">e</span><span class="error">v</span><span class="error">a</span><span class="error">l</span><span class="error">i</span><span class="error">d</span><span class="error">a</span><span class="error">t</span><span class="error">e</span>
-<span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">L</span><span class="error">e</span><span class="error">n</span><span class="error">g</span><span class="error">t</span><span class="error">h</span>: <span class="integer">801</span>
-<span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">T</span><span class="error">y</span><span class="error">p</span><span class="error">e</span>: <span class="error">a</span><span class="error">p</span><span class="error">p</span><span class="error">l</span><span class="error">i</span><span class="error">c</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">/</span><span class="error">j</span><span class="error">s</span><span class="error">o</span><span class="error">n</span>
-<span class="error">D</span><span class="error">a</span><span class="error">t</span><span class="error">e</span>: <span class="error">F</span><span class="error">r</span><span class="error">i</span>, <span class="integer">22</span> <span class="error">M</span><span class="error">a</span><span class="error">y</span> <span class="integer">2020</span> <span class="integer">0</span><span class="integer">6</span>:<span class="integer">16</span>:<span class="integer">14</span> <span class="error">G</span><span class="error">M</span><span class="error">T</span>
-<span class="error">E</span><span class="error">x</span><span class="error">p</span><span class="error">i</span><span class="error">r</span><span class="error">e</span><span class="error">s</span>: <span class="integer">0</span>
-<span class="error">P</span><span class="error">r</span><span class="error">a</span><span class="error">g</span><span class="error">m</span><span class="error">a</span>: <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">c</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span>
-<span class="error">X</span><span class="error">-</span><span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">T</span><span class="error">y</span><span class="error">p</span><span class="error">e</span><span class="error">-</span><span class="error">O</span><span class="error">p</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">s</span>: <span class="error">n</span><span class="error">o</span><span class="error">s</span><span class="error">n</span><span class="error">i</span><span class="error">f</span><span class="error">f</span>
-<span class="error">X</span><span class="error">-</span><span class="error">F</span><span class="error">r</span><span class="error">a</span><span class="error">m</span><span class="error">e</span><span class="error">-</span><span class="error">O</span><span class="error">p</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">s</span>: <span class="error">D</span><span class="error">E</span><span class="error">N</span><span class="error">Y</span>
-<span class="error">X</span><span class="error">-</span><span class="error">X</span><span class="error">S</span><span class="error">S</span><span class="error">-</span><span class="error">P</span><span class="error">r</span><span class="error">o</span><span class="error">t</span><span class="error">e</span><span class="error">c</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span>: <span class="integer">1</span><span class="error">;</span> <span class="error">m</span><span class="error">o</span><span class="error">d</span><span class="error">e</span><span class="error">=</span><span class="error">b</span><span class="error">l</span><span class="error">o</span><span class="error">c</span><span class="error">k</span>
-
-{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span> : {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">me</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">login</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me</span><span class="delimiter">&quot;</span></span>
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">userName</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">anonymousUser</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributeChanges</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me/relationships/attributeChanges</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me/attributeChanges</span><span class="delimiter">&quot;</span></span>
-      }
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">votes</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me/relationships/votes</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me/votes</span><span class="delimiter">&quot;</span></span>
-      }
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">secrets</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me/relationships/secrets</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/login/me/secrets</span><span class="delimiter">&quot;</span></span>
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
 <p><a id="resources_movie"></a></p>
 </div>
 </div>
@@ -1077,71 +1025,6 @@ Must be transient to not get persisted.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="resources_movie_example_-_get_login_information"></a></p>
-</div>
-<h4 id="_example_get_login_information_2" class="discrete">Example - Get Login Information</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl -X POST http://localhost:8080/api/movie \
--H &quot;Content-Type: application/json; charset=utf-8&quot; \
--d  @- &lt;&lt; EOF
-{
-  &quot;data&quot; : {
-    &quot;id&quot; : &quot;aa649334-c24f-3954-82dd-6d9602459bf9&quot;,
-    &quot;type&quot; : &quot;movie&quot;,
-    &quot;name&quot; : &quot;Avengers: Endgame&quot;,
-    &quot;year&quot; : 2019
-  }
-}
-EOF</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="json"><span class="error">H</span><span class="error">T</span><span class="error">T</span><span class="error">P</span><span class="error">/</span><span class="float">1.1</span> <span class="integer">201</span> <span class="error">C</span><span class="error">r</span><span class="error">e</span><span class="error">a</span><span class="error">t</span><span class="error">e</span><span class="error">d</span>
-<span class="error">C</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span><span class="error">-</span><span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">r</span><span class="error">o</span><span class="error">l</span>: <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">c</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span>, <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">s</span><span class="error">t</span><span class="error">o</span><span class="error">r</span><span class="error">e</span>, <span class="error">m</span><span class="error">a</span><span class="error">x</span><span class="error">-</span><span class="error">a</span><span class="error">g</span><span class="error">e</span><span class="error">=</span><span class="integer">0</span>, <span class="error">m</span><span class="error">u</span><span class="error">s</span><span class="error">t</span><span class="error">-</span><span class="error">r</span><span class="error">e</span><span class="error">v</span><span class="error">a</span><span class="error">l</span><span class="error">i</span><span class="error">d</span><span class="error">a</span><span class="error">t</span><span class="error">e</span>
-<span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">L</span><span class="error">e</span><span class="error">n</span><span class="error">g</span><span class="error">t</span><span class="error">h</span>: <span class="integer">1107</span>
-<span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">T</span><span class="error">y</span><span class="error">p</span><span class="error">e</span>: <span class="error">a</span><span class="error">p</span><span class="error">p</span><span class="error">l</span><span class="error">i</span><span class="error">c</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">/</span><span class="error">j</span><span class="error">s</span><span class="error">o</span><span class="error">n</span>
-<span class="error">D</span><span class="error">a</span><span class="error">t</span><span class="error">e</span>: <span class="error">F</span><span class="error">r</span><span class="error">i</span>, <span class="integer">22</span> <span class="error">M</span><span class="error">a</span><span class="error">y</span> <span class="integer">2020</span> <span class="integer">0</span><span class="integer">6</span>:<span class="integer">16</span>:<span class="integer">14</span> <span class="error">G</span><span class="error">M</span><span class="error">T</span>
-<span class="error">E</span><span class="error">x</span><span class="error">p</span><span class="error">i</span><span class="error">r</span><span class="error">e</span><span class="error">s</span>: <span class="integer">0</span>
-<span class="error">P</span><span class="error">r</span><span class="error">a</span><span class="error">g</span><span class="error">m</span><span class="error">a</span>: <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">c</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span>
-<span class="error">X</span><span class="error">-</span><span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">T</span><span class="error">y</span><span class="error">p</span><span class="error">e</span><span class="error">-</span><span class="error">O</span><span class="error">p</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">s</span>: <span class="error">n</span><span class="error">o</span><span class="error">s</span><span class="error">n</span><span class="error">i</span><span class="error">f</span><span class="error">f</span>
-<span class="error">X</span><span class="error">-</span><span class="error">F</span><span class="error">r</span><span class="error">a</span><span class="error">m</span><span class="error">e</span><span class="error">-</span><span class="error">O</span><span class="error">p</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">s</span>: <span class="error">D</span><span class="error">E</span><span class="error">N</span><span class="error">Y</span>
-<span class="error">X</span><span class="error">-</span><span class="error">X</span><span class="error">S</span><span class="error">S</span><span class="error">-</span><span class="error">P</span><span class="error">r</span><span class="error">o</span><span class="error">t</span><span class="error">e</span><span class="error">c</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span>: <span class="integer">1</span><span class="error">;</span> <span class="error">m</span><span class="error">o</span><span class="error">d</span><span class="error">e</span><span class="error">=</span><span class="error">b</span><span class="error">l</span><span class="error">o</span><span class="error">c</span><span class="error">k</span>
-
-{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span> : {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">aa649334-c24f-3954-82dd-6d9602459bf9</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">movie</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9</span><span class="delimiter">&quot;</span></span>
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">Avengers: Endgame</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">year</span><span class="delimiter">&quot;</span></span> : <span class="integer">2019</span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">version</span><span class="delimiter">&quot;</span></span> : <span class="integer">0</span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">roles</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/relationships/roles</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/roles</span><span class="delimiter">&quot;</span></span>
-      }
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributeChanges</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/relationships/attributeChanges</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/attributeChanges</span><span class="delimiter">&quot;</span></span>
-      }
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">votes</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/relationships/votes</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/movie/aa649334-c24f-3954-82dd-6d9602459bf9/votes</span><span class="delimiter">&quot;</span></span>
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
 <div class="paragraph">
 <p><a id="resources_person"></a></p>
 </div>
@@ -1463,63 +1346,6 @@ EOF</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="resources_schedule_example_-_create_schedule"></a></p>
-</div>
-<h4 id="_example_create_schedule" class="discrete">Example - Create Schedule</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl -X POST http://localhost:8080/api/schedule \
--H &quot;Content-Type: application/json; charset=utf-8&quot; \
--d  @- &lt;&lt; EOF
-{
-  &quot;data&quot; : {
-    &quot;id&quot; : &quot;13&quot;,
-    &quot;type&quot; : &quot;schedule&quot;,
-    &quot;description&quot; : &quot;My Schedule&quot;
-  }
-}
-EOF</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="json"><span class="error">H</span><span class="error">T</span><span class="error">T</span><span class="error">P</span><span class="error">/</span><span class="float">1.1</span> <span class="integer">201</span> <span class="error">C</span><span class="error">r</span><span class="error">e</span><span class="error">a</span><span class="error">t</span><span class="error">e</span><span class="error">d</span>
-<span class="error">C</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span><span class="error">-</span><span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">r</span><span class="error">o</span><span class="error">l</span>: <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">c</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span>, <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">s</span><span class="error">t</span><span class="error">o</span><span class="error">r</span><span class="error">e</span>, <span class="error">m</span><span class="error">a</span><span class="error">x</span><span class="error">-</span><span class="error">a</span><span class="error">g</span><span class="error">e</span><span class="error">=</span><span class="integer">0</span>, <span class="error">m</span><span class="error">u</span><span class="error">s</span><span class="error">t</span><span class="error">-</span><span class="error">r</span><span class="error">e</span><span class="error">v</span><span class="error">a</span><span class="error">l</span><span class="error">i</span><span class="error">d</span><span class="error">a</span><span class="error">t</span><span class="error">e</span>
-<span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">L</span><span class="error">e</span><span class="error">n</span><span class="error">g</span><span class="error">t</span><span class="error">h</span>: <span class="integer">641</span>
-<span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">T</span><span class="error">y</span><span class="error">p</span><span class="error">e</span>: <span class="error">a</span><span class="error">p</span><span class="error">p</span><span class="error">l</span><span class="error">i</span><span class="error">c</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">/</span><span class="error">j</span><span class="error">s</span><span class="error">o</span><span class="error">n</span>
-<span class="error">D</span><span class="error">a</span><span class="error">t</span><span class="error">e</span>: <span class="error">F</span><span class="error">r</span><span class="error">i</span>, <span class="integer">22</span> <span class="error">M</span><span class="error">a</span><span class="error">y</span> <span class="integer">2020</span> <span class="integer">0</span><span class="integer">6</span>:<span class="integer">16</span>:<span class="integer">14</span> <span class="error">G</span><span class="error">M</span><span class="error">T</span>
-<span class="error">E</span><span class="error">x</span><span class="error">p</span><span class="error">i</span><span class="error">r</span><span class="error">e</span><span class="error">s</span>: <span class="integer">0</span>
-<span class="error">P</span><span class="error">r</span><span class="error">a</span><span class="error">g</span><span class="error">m</span><span class="error">a</span>: <span class="error">n</span><span class="error">o</span><span class="error">-</span><span class="error">c</span><span class="error">a</span><span class="error">c</span><span class="error">h</span><span class="error">e</span>
-<span class="error">X</span><span class="error">-</span><span class="error">C</span><span class="error">o</span><span class="error">n</span><span class="error">t</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">-</span><span class="error">T</span><span class="error">y</span><span class="error">p</span><span class="error">e</span><span class="error">-</span><span class="error">O</span><span class="error">p</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">s</span>: <span class="error">n</span><span class="error">o</span><span class="error">s</span><span class="error">n</span><span class="error">i</span><span class="error">f</span><span class="error">f</span>
-<span class="error">X</span><span class="error">-</span><span class="error">F</span><span class="error">r</span><span class="error">a</span><span class="error">m</span><span class="error">e</span><span class="error">-</span><span class="error">O</span><span class="error">p</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">s</span>: <span class="error">D</span><span class="error">E</span><span class="error">N</span><span class="error">Y</span>
-<span class="error">X</span><span class="error">-</span><span class="error">X</span><span class="error">S</span><span class="error">S</span><span class="error">-</span><span class="error">P</span><span class="error">r</span><span class="error">o</span><span class="error">t</span><span class="error">e</span><span class="error">c</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span>: <span class="integer">1</span><span class="error">;</span> <span class="error">m</span><span class="error">o</span><span class="error">d</span><span class="error">e</span><span class="error">=</span><span class="error">b</span><span class="error">l</span><span class="error">o</span><span class="error">c</span><span class="error">k</span>
-
-{
-  <span class="key"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span> : {
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">id</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">13</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">schedule</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/schedule/13</span><span class="delimiter">&quot;</span></span>
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">description</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">My Schedule</span><span class="delimiter">&quot;</span></span>,
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">movie</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/schedule/13/relationships/movie</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/schedule/13/movie</span><span class="delimiter">&quot;</span></span>
-      },
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">data</span><span class="delimiter">&quot;</span></span> : <span class="value">null</span>
-    },
-    <span class="key"><span class="delimiter">&quot;</span><span class="content">attributeChanges</span><span class="delimiter">&quot;</span></span> : {
-      <span class="key"><span class="delimiter">&quot;</span><span class="content">links</span><span class="delimiter">&quot;</span></span> : {
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">self</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/schedule/13/relationships/attributeChanges</span><span class="delimiter">&quot;</span></span>,
-        <span class="key"><span class="delimiter">&quot;</span><span class="content">related</span><span class="delimiter">&quot;</span></span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:59788/api/schedule/13/attributeChanges</span><span class="delimiter">&quot;</span></span>
-      }
-    }
-  }
-}</code></pre>
-</div>
-</div>
 <div class="paragraph">
 <p><a id="resources_screening"></a></p>
 </div>
@@ -1993,7 +1819,7 @@ Implemented by the single attribute carrying both the relationship and id annota
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-22 08:16:16 +02:00
+Last updated 2020-06-02 08:55:39 +02:00
 </div>
 </div>
 </body>

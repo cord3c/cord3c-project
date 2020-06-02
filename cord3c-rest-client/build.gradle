@@ -2,8 +2,9 @@ apply plugin: JavaDefaultsPlugin
 apply plugin: PublishingDefaultsPlugin
 
 dependencies {
-	implementation "io.crnk:crnk-core:${CRNK_VERSION}"
-	implementation "io.crnk:crnk-client:${CRNK_VERSION}"
+	api "io.crnk:crnk-core:${CRNK_VERSION}"
+	api "io.crnk:crnk-client:${CRNK_VERSION}"
+	api "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
 
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 }

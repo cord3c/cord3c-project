@@ -1,14 +1,14 @@
 package io.cord3c.monitor.metrics.internal;
 
 import com.google.auto.service.AutoService;
-import io.cord3c.server.rest.ServletFactory;
+import io.cord3c.server.http.HttpServletFactory;
 import net.corda.core.node.AppServiceHub;
 
 import javax.servlet.http.HttpServlet;
 
 
-@AutoService(ServletFactory.class)
-public class MetricServletFactory implements ServletFactory {
+@AutoService(HttpServletFactory.class)
+public class MetricServletFactory implements HttpServletFactory {
 
 	private static AppServiceHub serviceHub;
 

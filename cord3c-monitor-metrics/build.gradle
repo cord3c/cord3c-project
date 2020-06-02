@@ -7,7 +7,6 @@ apply plugin: net.corda.plugins.QuasarPlugin
 dependencies {
 
 	compileOnly project(':cord3c-server-http')
-	implementation project(':cord3c-monitor-ping')
 
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation "io.dropwizard.metrics:metrics-core"
@@ -15,6 +14,12 @@ dependencies {
 	compileOnly "net.corda:corda-core:$CORDA_VERSION"
 	compileOnly "net.corda:corda-node:$CORDA_VERSION"
 	compileOnly 'javax.servlet:javax.servlet-api'
+
+	testImplementation project(':cord3c-server-http')
+	testImplementation project(':cord3c-monitor-ping')
+	testImplementation "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
+	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
+	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
 }
 
 jar {

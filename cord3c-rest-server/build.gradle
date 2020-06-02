@@ -2,21 +2,28 @@ import io.corda3c.gradle.CordappPlugin
 
 apply plugin: JavaDefaultsPlugin
 apply plugin: PublishingDefaultsPlugin
+apply plugin: net.corda.plugins.QuasarPlugin
 
 dependencies {
 	api project(':cord3c-rest-client')
 	compileOnly project(':cord3c-server-http')
 
-	compileOnly "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
+	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 
 	implementation "io.crnk:crnk-core:${CRNK_VERSION}"
 	implementation "io.crnk:crnk-setup-servlet:${CRNK_VERSION}"
 	implementation "io.crnk:crnk-data-jpa:${CRNK_VERSION}"
 	implementation "io.crnk:crnk-client:${CRNK_VERSION}"
+	implementation "io.crnk:crnk-home:${CRNK_VERSION}"
 
 	api 'javax.servlet:javax.servlet-api'
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-node:${CORDA_VERSION}"
+
+	testImplementation project(':cord3c-server-http')
+	testImplementation project(':cord3c-monitor-ping')
+	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
+	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
 }
 
 
@@ -45,8 +52,8 @@ cordapp {
 	targetPlatformVersion 4
 	minimumPlatformVersion 4
 	workflow {
-		name 'Cord3c rest serve'
-		vendor 'Cord3c'
+		name 'cord3c rest endpoint'
+		vendor 'cord3c'
 		licence 'TDB'
 		versionId 1
 	}

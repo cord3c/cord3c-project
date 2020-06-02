@@ -1,47 +1,54 @@
 package io.cord3c.monitor.ping;
 
 import co.paralleluniverse.fibers.Suspendable;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
-import net.corda.core.flows.FlowException;
-import net.corda.core.flows.FlowLogic;
-import net.corda.core.flows.FlowSession;
-import net.corda.core.flows.InitiatedBy;
-import net.corda.core.flows.InitiatingFlow;
-import net.corda.core.flows.StartableByRPC;
+import lombok.extern.slf4j.Slf4j;
+import net.corda.core.flows.*;
+import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.CordaSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @UtilityClass
 public class PingFlow {
 
+
 	@InitiatingFlow
 	@StartableByRPC
-	public static class PingFlowInitiator extends FlowLogic<Void> {
+	@RequiredArgsConstructor
+	@StartableByService
+	@Slf4j
+	public static class PingFlowInitiator extends FlowLogic<PingMessage> {
 
-		private static final Logger LOGGER = LoggerFactory.getLogger(PingFlowInitiator.class);
 
-		private final Party otherParty;
-
-		public PingFlowInitiator(Party otherParty) {
-			this.otherParty = otherParty;
-		}
+		private final PingInput input;
 
 		@Suspendable
 		@Override
-		public Void call() throws FlowException {
-			FlowSession otherPartySession = initiateFlow(otherParty);
-			LOGGER.debug("Pinging: {}", otherParty);
-			otherPartySession.sendAndReceive(String.class, "ping").unwrap(s -> s);
+		public PingMessage call() throws FlowException {
+			log.debug("performing ping: {}", input);
+			CordaX500Name otherPartyName = CordaX500Name.parse(input.getOtherParty());
+			Party party = getServiceHub().getIdentityService().wellKnownPartyFromX500Name(otherPartyName);
+			FlowSession otherPartySession = initiateFlow(party);
 
-			return null;
+			PingMessage message = new PingMessage();
+			message.setMessage(input.getMessage());
+			message.setData(input.getData());
+			PingMessage pong = otherPartySession.sendAndReceive(PingMessage.class, message).unwrap(it -> it);
+			log.debug("received pong: {}", pong);
+			return pong;
 		}
 	}
 
 	@InitiatedBy(PingFlowInitiator.class)
+	@Slf4j
 	public static class PingFlowAcceptor extends FlowLogic<Void> {
-
-		private static final Logger LOGGER = LoggerFactory.getLogger(PingFlowAcceptor.class);
 
 		private final FlowSession otherPartySession;
 
@@ -52,12 +59,14 @@ public class PingFlow {
 		@Suspendable
 		@Override
 		public Void call() throws FlowException {
-			otherPartySession.receive(String.class).unwrap(s -> {
-				LOGGER.debug("Received {} from: {}", s, otherPartySession.getCounterparty());
-				return s;
+			PingMessage request = otherPartySession.receive(PingMessage.class).unwrap(it -> {
+				log.debug("received ping {} from {}", it, otherPartySession.getCounterparty());
+				return it;
 			});
-			otherPartySession.send("pong");
 
+			PingMessage response = new PingMessage();
+			response.setMessage(request.getMessage().toUpperCase());
+			otherPartySession.send(response);
 			return null;
 		}
 	}

@@ -22,6 +22,5 @@ anchor:resources_movie_relationships[]
 include::relationships.adoc[]
 
 
-include::examples.adoc[]
 
 

@@ -1,5 +1,0 @@
-[source,json]
-----
-GET http://localhost:8080/api/login/me HTTP/1.1
-Accept: application/json
-----

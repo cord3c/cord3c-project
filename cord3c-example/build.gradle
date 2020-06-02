@@ -86,6 +86,7 @@ crnkGen {
 	}
 }
 crnkGen.init()
+tasks.crnkJavaDocToXml.options.noTimestamp = false
 
 // compile generated asciidoc files
 tasks.test.doFirst {

@@ -3,7 +3,6 @@
 -doclet 'com.github.markusbernhardt.xmldoclet.XmlDoclet'
 -docletpath 'C:\\Users\\remom\\.gradle\\caches\\modules-2\\files-2.1\\com.github.markusbernhardt\\xml-doclet\\1.0.5\\ddc9008a49bde5c05205f26bdb03aade90563d4c\\xml-doclet-1.0.5.jar;C:\\Users\\remom\\.gradle\\caches\\modules-2\\files-2.1\\commons-cli\\commons-cli\\1.2\\2bf96b7aa8b611c177d329452af1dc933e14501c\\commons-cli-1.2.jar;C:\\Users\\remom\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\1.7.12\\8e20852d05222dc286bf1c71d78d0531e177c317\\slf4j-api-1.7.12.jar'
 -private 
--notimestamp 
 -quiet 
 'C:\\projects\\oss\\cord3c-project\\cord3c-example\\src\\main\\java\\io\\crnk\\example\\service\\config\\ExampleSecurityConfigurer.java'
 'C:\\projects\\oss\\cord3c-project\\cord3c-example\\src\\main\\java\\io\\crnk\\example\\service\\config\\ProxyConfiguration.java'

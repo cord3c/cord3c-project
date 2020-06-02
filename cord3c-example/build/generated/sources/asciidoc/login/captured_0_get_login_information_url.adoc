@@ -1,4 +1,0 @@
-[source,bash]
-----
-GET http://localhost:59788/api/login/me
-----
