@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.cord3c.ssi.api.vc.DIDDocument;
+import io.cord3c.ssi.api.did.DIDDocument;
 import io.cord3c.ssi.networkmap.adapter.VCNetworkMapProperties;
 import io.cord3c.ssi.networkmap.adapter.repository.VCNetworkMapUtils;
 import lombok.RequiredArgsConstructor;

@@ -1,43 +1,8 @@
-package io.cord3c.ssi.serialization.credential;
+package io.cord3c.ssi.serialization.internal.mapper;
 
-import com.google.common.base.Verify;
-import io.cord3c.ssi.api.vc.Proof;
-import io.cord3c.ssi.api.vc.VerifiableCredential;
-import io.cord3c.ssi.api.vc.W3CHelper;
-import io.cord3c.ssi.serialization.annotations.Claim;
-import io.cord3c.ssi.serialization.annotations.VerifiableCredentialType;
-import lombok.SneakyThrows;
-import org.apache.commons.lang3.reflect.FieldUtils;
-
-import java.lang.reflect.Field;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.util.*;
-
-public class StateToVerifiableCredentialHelper {
-
-	public static VerifiableCredential toUnsignedVerifiableCredential(Object state) {
-		VerifiableCredentialHelper.assertIsVerifiableCredential(state);
-
-		List<String> contexts = getDefaultContexts();
-		String issuerDid = VerifiableCredentialHelper.getIssuer(state);
-		String claimId = deriveClaimId(state);
-		List<String> types = deriveTypes(state);
-		Map<String, Object> claims = deriveClaims(state);
-		Proof unsignedProof = new Proof(W3CHelper.SECP256K1_SIGNATURE);
-
-		return new VerifiableCredential(contexts, claimId, types, issuerDid, getTimestamp(state), claims, unsignedProof);
-	}
+public class RepositoryUtils {
 
 
-	public static VerifiableCredential addJwsProof(VerifiableCredential verifiableCredential, Instant timestamp, String jwsToken) {
-		Verify.verify(!verifiableCredential.isSigned(), "Verifiable Credential is already signed");
-
-		Proof proof = new Proof(W3CHelper.SECP256K1_SIGNATURE, timestamp, W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD, verifiableCredential.getIssuer(), jwsToken);
-
-		verifiableCredential.setProof(proof);
-		return verifiableCredential;
-	}
 
 	/*
 		public static List<VerifiableCredential> toUnsignedVerifiableCredential(List states) {
@@ -116,61 +81,4 @@ public class StateToVerifiableCredentialHelper {
 		return (EventEntityBase) entities.get(0);
 	}
 */
-	private static List<String> getDefaultContexts() {
-		List<String> contexts = new ArrayList<>();
-		contexts.add(W3CHelper.DEFAULT_VC_CONTEXT_1);
-		contexts.add(W3CHelper.DEFAULT_VC_CONTEXT_2);
-		return contexts;
-	}
-
-	private static String deriveClaimId(Object state) {
-		return W3CHelper.DEFAULT_VC_CONTEXT_1 + "/" + getTypes(state) + "/" + getTimestamp(state);
-	}
-
-	private static Instant getTimestamp(Object state) {
-		if (state instanceof EventState) {
-			OffsetDateTime timestamp = ((EventState) state).getTimestamp();
-			return timestamp != null ? timestamp.toInstant() : null;
-		}
-		throw new IllegalStateException();
-	}
-
-	private static List<String> deriveTypes(Object state) {
-		List<String> types = new ArrayList<>();
-		types.add(W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL);
-		types.addAll(getTypes(state));
-		return types;
-	}
-
-	private static List<String> getTypes(Object state) {
-		if (state instanceof TypedCredential) {
-			return ((TypedCredential) state).getTypes();
-		}
-		VerifiableCredentialType annotation = state.getClass().getAnnotation(VerifiableCredentialType.class);
-		String type = annotation.type();
-		return Arrays.asList(type);
-	}
-
-	@SneakyThrows(IllegalAccessException.class)
-	private static Map<String, Object> deriveClaims(Object state) {
-		Map<String, Object> map = new LinkedHashMap<>();
-
-		String subjectId = VerifiableCredentialHelper.getSubject(state);
-		map.put(W3CHelper.CLAIM_SUBJECT_ID, subjectId);
-
-		Verify.verify(nbOfClaimFields(state) >= 1, "Object of type '" + EventState.class.getSimpleName() + "' should contain at least one field annotated with '@" + Claim.class.getSimpleName() + "'");
-
-		for (Field field : state.getClass().getDeclaredFields()) {
-			if (field.getAnnotation(Claim.class) != null) {
-				Object val = FieldUtils.readField(field, state, true);
-				map.put(field.getName(), val);
-			}
-		}
-
-		return map;
-	}
-
-	private static int nbOfClaimFields(Object state) {
-		return (int) Arrays.stream(state.getClass().getDeclaredFields()).map(field -> field.getAnnotation(Claim.class)).filter(Objects::nonNull).count();
-	}
 }

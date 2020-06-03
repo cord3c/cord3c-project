@@ -3,7 +3,7 @@ package io.cord3c.ssi.networkmap.adapter.repository;
 import java.io.Writer;
 import javax.servlet.http.HttpServletResponse;
 
-import io.cord3c.ssi.api.vc.DIDDocument;
+import io.cord3c.ssi.api.did.DIDDocument;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

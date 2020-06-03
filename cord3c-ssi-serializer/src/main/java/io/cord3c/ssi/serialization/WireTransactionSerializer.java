@@ -31,10 +31,13 @@ public class WireTransactionSerializer extends StdSerializer<WireTransaction> {
 
 	private String serverUrl;
 
-	protected WireTransactionSerializer(String networkMapHost, String serverUrl) {
+	private VerifiableCredentialMapper mapper;
+
+	protected WireTransactionSerializer(String networkMapHost, String serverUrl, VerifiableCredentialMapper mapper) {
 		super(WireTransaction.class);
 		this.networkMapHost = networkMapHost;
 		this.serverUrl = serverUrl;
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -46,7 +49,7 @@ public class WireTransactionSerializer extends StdSerializer<WireTransaction> {
 			// we serialize transaction as single credentials
 			TransactionCredential txCredential = (TransactionCredential) outputStates.get(0);
 			toTransactionCredential(txCredential, tx);
-			credentials.add(toCredential(txCredential));
+			credentials.add(mapper.toCredential(txCredential));
 		} else {
 			// we serialize transaction as a set of credentials
 			GenericTransactionCredential genericCredential = new GenericTransactionCredential();
@@ -54,8 +57,8 @@ public class WireTransactionSerializer extends StdSerializer<WireTransaction> {
 			addNotary(genericCredential, tx);
 			addCommands(genericCredential, tx);
 			toTransactionCredential(genericCredential, tx);
-			credentials.add(toCredential(genericCredential));
-			outputStates.stream().map(it -> toCredential(it)).forEach(credentials::add);
+			credentials.add(mapper.toCredential(genericCredential));
+			outputStates.stream().map(it -> mapper.toCredential(it)).forEach(credentials::add);
 		}
 
 		Verify.verify(!credentials.isEmpty(), "not yet supported");
@@ -69,10 +72,6 @@ public class WireTransactionSerializer extends StdSerializer<WireTransaction> {
 	private void addCommands(GenericTransactionCredential credential, WireTransaction tx) {
 		List<Command<?>> commands = tx.getCommands();
 		commands.forEach(it -> credential.getTypes().add(toType(it)));
-	}
-
-	private VerifiableCredential toCredential(Object state) {
-		return StateToVerifiableCredentialHelper.toUnsignedVerifiableCredential(state);
 	}
 
 	private void toTransactionCredential(TransactionCredential credential, WireTransaction tx) {

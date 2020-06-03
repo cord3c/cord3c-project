@@ -1,4 +1,4 @@
-package io.cord3c.ssi.api.vc;
+package io.cord3c.ssi.api.did;
 
 import java.io.File;
 import java.io.IOException;

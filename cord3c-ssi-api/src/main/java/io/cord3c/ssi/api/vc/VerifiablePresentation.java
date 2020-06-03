@@ -83,7 +83,7 @@ public class VerifiablePresentation {
 	private static void checkVerifiablePresentation(VerifiablePresentation verifiablePresentation) {
 		// @context
 		Verify.verify(!verifiablePresentation.getContexts().isEmpty(), "'@context' property MUST be one or more URIs");
-		Verify.verify(verifiablePresentation.getContexts().get(0).equals(W3CHelper.DEFAULT_VC_CONTEXT_1), "'@context' property's first value MUST be " + W3CHelper.DEFAULT_VC_CONTEXT_1);
+		Verify.verify(verifiablePresentation.getContexts().get(0).equals(W3CHelper.VC_CONTEXT_V1), "'@context' property's first value MUST be " + W3CHelper.VC_CONTEXT_V1);
 
 		// type
 		Verify.verify(!verifiablePresentation.getTypes().isEmpty(), "'type' property MUST be one or more URIs");

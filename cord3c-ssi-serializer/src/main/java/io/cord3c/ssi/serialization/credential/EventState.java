@@ -1,5 +1,6 @@
 package io.cord3c.ssi.serialization.credential;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -9,9 +10,9 @@ import net.corda.core.identity.Party;
 
 public interface EventState extends ContractState {
 
-	OffsetDateTime getTimestamp();
+	Instant getTimestamp();
 
-	void setTimestamp(OffsetDateTime offsetDateTime);
+	void setTimestamp(Instant timestamp);
 
 	Party getIssuerNode();
 

@@ -1,13 +1,14 @@
-package io.cord3c.ssi.serialization.credential;
+package io.cord3c.ssi.serialization.internal;
 
 import com.google.common.base.Verify;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.serialization.annotations.Claim;
-import io.cord3c.ssi.serialization.annotations.Issuer;
 import io.cord3c.ssi.serialization.annotations.Subject;
 import io.cord3c.ssi.serialization.annotations.VerifiableCredentialType;
+import io.cord3c.ssi.serialization.credential.EventState;
+import io.cord3c.ssi.serialization.internal.information.ReflectionValueAccessor;
+import io.cord3c.ssi.serialization.internal.information.ValueAccessor;
 import lombok.extern.slf4j.Slf4j;
-import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.Party;
 import net.corda.core.node.services.vault.CriteriaExpression;
 import net.corda.core.node.services.vault.QueryCriteria;
@@ -17,10 +18,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
-public class VerifiableCredentialHelper {
+public class VerifiableCredentialUtils {
+
+
+	public static <T> ValueAccessor<T> getValueForAnnotation(Class annotationClass, Class<T> stateImplementationClass, Object state) {
+		assertIsVerifiableCredential(state);
+		for (Field field : getAllFields(state)) {
+			if (field.getAnnotation(annotationClass) != null) {
+				return (ValueAccessor<T>) new ReflectionValueAccessor(stateImplementationClass, field.getName(), field.getType());
+			}
+		}
+		throw new IllegalStateException("Class annotated with '@" + VerifiableCredential.class.getSimpleName() + "' must contain at least one field annotated with '@" + annotationClass.getSimpleName() + "'");
+	}
+
+
+	/////////////////////// FIXME
 
 	public static VerifiableCredentialType assertIsVerifiableCredential(Object state) {
 		VerifiableCredentialType annotation = state.getClass().getAnnotation(VerifiableCredentialType.class);
@@ -28,48 +42,6 @@ public class VerifiableCredentialHelper {
 		return annotation;
 	}
 
-	public static String getIssuer(Object state) {
-		return getValueForAnnotation(Issuer.class, state);
-	}
-
-	public static String getSubject(Object state) {
-		return getValueForAnnotation(Subject.class, state);
-	}
-
-	private static String getValueForAnnotation(Class annotationClass, Object state) {
-		assertIsVerifiableCredential(state);
-
-		for (Field field : getAllFields(state)) {
-			if (field.getAnnotation(annotationClass) != null) {
-				Object val;
-				try {
-					val = FieldUtils.readField(field, state, true);
-				} catch (IllegalAccessException e) {
-					throw new IllegalStateException("Could not access field '" + field.getName() + "' of class '" + state.getClass() + "'", e);
-				}
-				if (val instanceof UniqueIdentifier || val instanceof UUID) {
-					log.info("converting {} to String using .toString() method", val.getClass().getSimpleName());
-					val = val.toString();
-				}
-				if (val == null) {
-					return null;
-				}
-				if (val instanceof Party) {
-					Party party = (Party) val;
-					return toDid(party);
-				} else {
-					Verify.verify(val instanceof String, "Field annotated with '@" + annotationClass.getSimpleName() + "' must be a String");
-					return (String) val;
-				}
-			}
-		}
-
-		throw new IllegalStateException("Class annotated with '@" + VerifiableCredential.class.getSimpleName() + "' must contain at least one field annotated with '@" + annotationClass.getSimpleName() + "'");
-	}
-
-	private static String toDid(Party party) {
-		return "did:FIXME:" + party.getName().toString();
-	}
 
 	public static String getSubjectFieldName(EventState state) {
 		assertIsVerifiableCredential(state);
@@ -217,6 +189,7 @@ public class VerifiableCredentialHelper {
 	 * @param state annotated with {@link VerifiableCredential}
 	 * @return a short {@link String} description of the {@link VerifiableCredential}
 	 */
+	/*
 	public static <T extends EventState> String getVerifiableCredentialsDescription(T state) {
 		assertIsVerifiableCredential(state);
 
@@ -250,5 +223,7 @@ public class VerifiableCredentialHelper {
 
 		return builder.toString();
 	}
+
+	 */
 
 }

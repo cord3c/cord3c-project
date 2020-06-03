@@ -1,4 +1,4 @@
-package io.cord3c.ssi.api.vc;
+package io.cord3c.ssi.api.did;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Authentication {
+public class Secp256K1PublicKey {
+
+	private String id;
+
+	private String controller;
 
 	private String type;
 
-	private String[] publicKey;
+	private String publicKeyBase58;
 }

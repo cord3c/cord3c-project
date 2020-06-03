@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import io.cord3c.ssi.api.did.Authentication;
+import io.cord3c.ssi.api.did.DIDDocument;
+import io.cord3c.ssi.api.did.Secp256K1PublicKey;
+import io.cord3c.ssi.api.did.Service;
 import io.cord3c.ssi.api.internal.DIDGenerator;
 import io.cord3c.ssi.api.vc.*;
 import net.corda.core.crypto.Base58;
@@ -42,7 +46,7 @@ public class DIDDocumentTest implements WithAssertions {
 		authentications.add(new Authentication(W3CHelper.SECP256K1_VERIFICATION_KEY, new String[]{publicKeys.get(0).getId()}));
 		List<Service> services = new ArrayList<>();
 
-		DIDDocument didDocument = new DIDDocument(W3CHelper.DEFAULT_DID_CONTEXT, did, publicKeys, authentications, services);
+		DIDDocument didDocument = new DIDDocument(W3CHelper.DID_CONTEXT_V1, did, publicKeys, authentications, services);
 
 		// Write DIDDocument to JSON
 		File jsonFile = new File(tempDir, FILE_NAME);

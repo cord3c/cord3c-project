@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.cord3c.ssi.networkmap.adapter.repository.NodeInfoRepository;
-import io.cord3c.ssi.api.vc.DIDDocument;
+import io.cord3c.ssi.api.did.DIDDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

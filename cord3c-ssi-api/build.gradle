@@ -6,6 +6,7 @@ dependencies {
 	implementation "com.fasterxml.jackson.core:jackson-databind:$JACKSON_VERSION"
 	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
 	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
+	implementation 'commons-io:commons-io:1.3.2'
 
 	compileOnly "net.corda:corda-core:$CORDA_VERSION"
 

@@ -11,7 +11,7 @@ import net.corda.core.contracts.TimeWindow;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
 @VerifiableCredentialType
 public class GenericTransactionCredential implements EventState, InputReferenceCredential, TimeWindowCredential, TransactionCredential, TypedCredential {
 
-	private OffsetDateTime timestamp;
+	private Instant timestamp;
 
 	@Issuer
 	private Party issuerNode;
