@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.base.Verify;
+import io.cord3c.ssi.api.internal.hashlink.HashLink;
+import io.cord3c.ssi.api.internal.hashlink.Multibase;
+import io.cord3c.ssi.api.internal.hashlink.Multihash;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +25,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.*;
 
@@ -156,4 +161,15 @@ public class VerifiableCredential {
 		credential.expirationDate = expirationDate;
 		return credential;
 	}
+
+	/**
+	 * See https://tools.ietf.org/html/draft-sporny-hashlink-04 and https://www.w3.org/TR/vc-data-model/#content-integrity-protection
+	 *
+	 * @return url protected with a hash link, e.g. https://www.w3.org/2018/credentials/examples/v1?hl=z8guWNzUBnZBu3aq31
+	 */
+	@SneakyThrows
+	public String toHashLink() {
+		return id + "?hl=" + HashLink.create(toJsonString());
+	}
+
 }

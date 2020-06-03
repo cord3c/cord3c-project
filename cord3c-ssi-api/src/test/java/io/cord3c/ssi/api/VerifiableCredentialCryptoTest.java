@@ -43,14 +43,14 @@ public class VerifiableCredentialCryptoTest implements WithAssertions {
 
 	@Test
 	public void encodeAndVerifyVerifiableCredential() {
-		VerifiableCredential verifiableCredential = generateSignedNetworkMembershipRoleVerifiableCredential();
+		VerifiableCredential verifiableCredential = generateMockCredentials();
 
 		assertThatCode(() -> crypto.verify(verifiableCredential, publicKey)).doesNotThrowAnyException();
 	}
 
 	@Test
 	public void encodeAndVerifyVerifiableCredentialWithWrongPublicKey() {
-		VerifiableCredential verifiableCredential = generateSignedNetworkMembershipRoleVerifiableCredential();
+		VerifiableCredential verifiableCredential = generateMockCredentials();
 
 		ECPublicKey someOtherPublicKey = (ECPublicKey) KeyFactoryHelper.generateKeyPair().getPublic();
 
@@ -59,14 +59,14 @@ public class VerifiableCredentialCryptoTest implements WithAssertions {
 
 	@Test
 	public void encodeTamperAndVerifyVerifiableCredentialFails() {
-		VerifiableCredential verifiableCredential = generateSignedNetworkMembershipRoleVerifiableCredential();
+		VerifiableCredential verifiableCredential = generateMockCredentials();
 
 		verifiableCredential.getClaims().put("hello", factory.getClaimMapper().valueToTree("new world"));
 
 		assertThatThrownBy(() -> crypto.verify(verifiableCredential, publicKey)).isExactlyInstanceOf(SignatureVerificationException.class).hasMessageContaining("Payloads don't match");
 	}
 
-	private VerifiableCredential generateSignedNetworkMembershipRoleVerifiableCredential() {
+	private VerifiableCredential generateMockCredentials() {
 		Map<String, JsonNode> claims = new HashMap<>();
 		claims.put("hello", factory.getClaimMapper().valueToTree("world"));
 		claims.put(W3CHelper.CLAIM_SUBJECT_ID, factory.getClaimMapper().valueToTree("jane"));

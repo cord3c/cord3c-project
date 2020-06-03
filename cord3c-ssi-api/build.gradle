@@ -8,6 +8,8 @@ dependencies {
 	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
 	implementation 'commons-io:commons-io:1.3.2'
 
+	implementation 'co.nstant.in:cbor:0.9'
+
 	compileOnly "net.corda:corda-core:$CORDA_VERSION"
 
 	implementation "org.bouncycastle:bcpkix-jdk15on:$BOUNCYCASTLE_VERSION"

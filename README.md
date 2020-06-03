@@ -25,6 +25,9 @@ Our steps are:
   and [Decentralized Identifiers](https://www.w3.org/TR/did-core/)* (DIDs) to make identities and claims about those identities
   first-class citizen in Corda (aka native SSI for Corda). Possibilities are endless by modelling the world
   from people to objects and relationships among them with DIDs and VCs.
+- Support for [hashlink](https://tools.ietf.org/html/draft-sporny-hashlink-04) to implement
+  [content integrity protection](https://www.w3.org/TR/vc-data-model/#content-integrity-protection)
+  for W3C VCs.
 - Letting every Corda Party gain a DID and make it discoverable through the Corda network using
   [universal resolvers](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c).
 - Allow *end-users and IoT devices carry a DID to participate in transactions*.
