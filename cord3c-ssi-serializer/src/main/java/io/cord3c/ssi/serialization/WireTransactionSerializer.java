@@ -31,9 +31,9 @@ public class WireTransactionSerializer extends StdSerializer<WireTransaction> {
 
 	private String serverUrl;
 
-	private VerifiableCredentialMapper mapper;
+	private VCMapper mapper;
 
-	protected WireTransactionSerializer(String networkMapHost, String serverUrl, VerifiableCredentialMapper mapper) {
+	protected WireTransactionSerializer(String networkMapHost, String serverUrl, VCMapper mapper) {
 		super(WireTransaction.class);
 		this.networkMapHost = networkMapHost;
 		this.serverUrl = serverUrl;

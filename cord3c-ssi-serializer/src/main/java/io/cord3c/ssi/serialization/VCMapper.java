@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class VerifiableCredentialMapper {
+public class VCMapper {
 
 	private final VerifiableCredentialRegistry registry;
 

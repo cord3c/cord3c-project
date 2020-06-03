@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import io.cord3c.ssi.serialization.internal.party.CordaPartyRegistry;
 import io.cord3c.ssi.serialization.internal.party.PartyRegistry;
 import io.cord3c.ssi.serialization.setup.TestParty;
 import io.cord3c.ssi.serialization.setup.VCTestCommands;
@@ -35,6 +36,7 @@ import net.corda.testing.node.StartedMockNode;
 import net.corda.testing.node.TestCordapp;
 import net.corda.testing.node.internal.CustomCordapp;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
@@ -61,7 +63,7 @@ public class VCTransactionSerializationTest {
 		association.addToNetwork(network);
 	}
 
-	@org.junit.jupiter.api.Test
+	@Test
 	public void test() throws TransactionResolutionException, AttachmentResolutionException, MissingContractAttachments, NotSerializableException {
 		StartedMockNode node = association.getNode();
 		ServiceHub services = node.getServices();
@@ -88,11 +90,12 @@ public class VCTransactionSerializationTest {
 
 		System.out.println(wireTransaction);
 
-		PartyRegistry partyRegistry = null;
-		String baseUrl = null;
+		PartyRegistry partyRegistry = new CordaPartyRegistry("mock-networkmap.org", node.getServices().getIdentityService());
+		String baseUrl = "http://localhost";
 		VCSerializationScheme scheme = new VCSerializationScheme(partyRegistry, baseUrl);
 		SerializedBytes serialize = scheme.serialize(wireTransaction, context);
 		System.out.println(serialize);
+		System.out.println("Hallo");
 
 	}
 }

@@ -5,6 +5,7 @@ import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.api.vc.W3CHelper;
 import io.cord3c.ssi.serialization.internal.party.CordaPartyRegistry;
 import io.cord3c.ssi.serialization.setup.VCTestState;
+import lombok.extern.slf4j.Slf4j;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import org.assertj.core.api.WithAssertions;
@@ -17,9 +18,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class VerifiableCredentialMapperTest implements WithAssertions {
+@Slf4j
+public class VCMapperTest implements WithAssertions {
 
-	private VerifiableCredentialMapper mapper;
+	private VCMapper mapper;
 
 	private Party party0;
 
@@ -49,6 +51,7 @@ public class VerifiableCredentialMapperTest implements WithAssertions {
 		state.setValue(12);
 
 		VerifiableCredential credential = mapper.toCredential(state);
+		log.info("{}", credential);
 		assertThat(credential.getIssuanceDate()).isEqualTo(state.getTimestamp());
 		assertThat(credential.getClaims().get("value").intValue()).isEqualTo(12);
 		assertThat(credential.getIssuer()).isEqualTo(partyRegistry.toDid(party0));
