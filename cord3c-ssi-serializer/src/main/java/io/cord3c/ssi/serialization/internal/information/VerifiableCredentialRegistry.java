@@ -1,6 +1,10 @@
 package io.cord3c.ssi.serialization.internal.information;
 
+import com.google.common.base.Verify;
 import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.serialization.annotations.Subject;
+import io.cord3c.ssi.serialization.internal.party.PartyAdapterAccessor;
+import io.cord3c.ssi.serialization.internal.party.PartyRegistry;
 import io.cord3c.ssi.serialization.annotations.Claim;
 import io.cord3c.ssi.serialization.annotations.Issuer;
 import io.cord3c.ssi.serialization.annotations.VerifiableCredentialType;
@@ -10,6 +14,7 @@ import io.crnk.core.engine.information.bean.BeanAttributeInformation;
 import io.crnk.core.engine.information.bean.BeanInformation;
 import io.crnk.core.engine.internal.utils.UrlUtils;
 import lombok.RequiredArgsConstructor;
+import net.corda.core.identity.Party;
 
 import java.time.Instant;
 import java.util.*;
@@ -22,12 +27,15 @@ public class VerifiableCredentialRegistry {
 
 	private Map<Class, VerifiableCredentialInformation> credentials = new ConcurrentHashMap<>();
 
+	private final PartyRegistry partyRegistry;
 
 	public VerifiableCredentialInformation get(Class implementationClass) {
 		if (!credentials.containsKey(implementationClass)) {
 			credentials.put(implementationClass, constructInformation(implementationClass));
 		}
-		return credentials.get(implementationClass);
+		VerifiableCredentialInformation information = credentials.get(implementationClass);
+		Verify.verifyNotNull(information);
+		return information;
 	}
 
 	public VerifiableCredentialInformation get(List<String> types) {
@@ -41,7 +49,8 @@ public class VerifiableCredentialRegistry {
 		information.getTypes().addAll(deriveTypes(implementationClass));
 		information.setTimestampAccessor(createTimestampAccessor());
 		information.getContexts().addAll(createContexts());
-		information.setIssuerAccessor(createIssuerAccessor(implementationClass));
+		information.setIssuerAccessor(createPartyAccessor(Issuer.class, implementationClass));
+		information.setSubjectAccessor(createPartyAccessor(Subject.class, implementationClass));
 		information.setIdAccessor(createIdAccessor(information));
 
 		BeanInformation beanInformation = BeanInformation.get(implementationClass);
@@ -51,7 +60,7 @@ public class VerifiableCredentialRegistry {
 				ClaimInformation claimInformation = new ClaimInformation();
 				claimInformation.setJsonName(attribute.getJsonName());
 				claimInformation.setName(name);
-				claimInformation.setAccessor(new ReflectionValueAccessor(implementationClass, name, attribute.getImplementationClass()));
+				claimInformation.setAccessor(new ReflectionValueAccessor(attribute));
 				information.getClaims().put(name, claimInformation);
 			}
 		}
@@ -60,6 +69,7 @@ public class VerifiableCredentialRegistry {
 		subjectInformation.setJsonName(W3CHelper.CLAIM_SUBJECT_ID);
 		subjectInformation.setName(W3CHelper.CLAIM_SUBJECT_ID);
 		subjectInformation.setAccessor(information.getSubjectAccessor());
+		information.getClaims().put(subjectInformation.getName(), subjectInformation);
 		return information;
 	}
 
@@ -73,7 +83,7 @@ public class VerifiableCredentialRegistry {
 
 			@Override
 			public void setValue(Object state, String fieldValue) {
-				throw new UnsupportedOperationException("id is read-only");
+				// ignore, maybe at some point some objects like to have it
 			}
 
 			@Override
@@ -83,9 +93,14 @@ public class VerifiableCredentialRegistry {
 		};
 	}
 
-	private static ValueAccessor<String> createIssuerAccessor(Class implementationClass) {
-		return VerifiableCredentialUtils.getValueForAnnotation(Issuer.class, implementationClass, String.class);
+	private ValueAccessor<String> createPartyAccessor(Class annotation, Class implementationClass) {
+		ValueAccessor accessor = VerifiableCredentialUtils.getAccessorForAnnotation(annotation, implementationClass);
+		if (accessor.getImplementationClass() == Party.class) {
+			accessor = new PartyAdapterAccessor(accessor, partyRegistry);
+		}
+		return accessor;
 	}
+
 
 	private static List<String> createContexts() {
 		List<String> contexts = new ArrayList<>();

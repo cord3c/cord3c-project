@@ -37,7 +37,7 @@ public class VerifiableCredentialMapper {
 	}
 
 	@SneakyThrows
-	public Object fromCredential(VerifiableCredential credential) {
+	public <T> T fromCredential(VerifiableCredential credential) {
 		VerifiableCredentialInformation information = registry.get(credential.getTypes());
 
 		Object state = information.getImplementationType().newInstance();
@@ -56,7 +56,7 @@ public class VerifiableCredentialMapper {
 			Object value = valueReader.readValue(claim.getValue());
 			claimInformation.getAccessor().setValue(state, value);
 		}
-		return state;
+		return (T) state;
 	}
 
 	private void addTypes(VerifiableCredential credential, VerifiableCredentialInformation information, Object state) {
@@ -69,11 +69,13 @@ public class VerifiableCredentialMapper {
 	private Map<String, JsonNode> toClaims(VerifiableCredentialInformation information, Object state) {
 		Map<String, JsonNode> map = new LinkedHashMap<>();
 
-		JsonNode jsonNode = claimMapper.valueToTree(state);
 		for (ClaimInformation claimInformation : information.getClaims().values()) {
-			JsonNode valueNode = jsonNode.get(claimInformation.getJsonName());
-			if (valueNode != null) {
-				map.put(claimInformation.getJsonName(), valueNode);
+			Object value = claimInformation.getAccessor().getValue(state);
+			if (value != null) {
+				JsonNode valueNode = claimMapper.valueToTree(value);
+				if (valueNode != null) {
+					map.put(claimInformation.getJsonName(), valueNode);
+				}
 			}
 		}
 		return map;

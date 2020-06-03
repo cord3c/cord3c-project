@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.base.Verify;
-import com.nimbusds.jose.Payload;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,15 +33,20 @@ public class VerifiableCredential {
 
 	// allu/03-02-2020: don't use the default PrettyPrinter because of CR-LF issues
 	// note that it is safe  to have a private mapper, no reconfiguration necessary (no new data types), mostly...
-	private static ObjectMapper mapper = new ObjectMapper().enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS).findAndRegisterModules();
+	private static ObjectMapper mapper = new ObjectMapper()
+			.enable(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)
+			.findAndRegisterModules();
+
+	private static ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+
 
 	@JsonProperty(value = "@context")
-	private List<String> contexts;
+	private List<String> contexts = new ArrayList<>();
 
 	private String id;
 
 	@JsonProperty(value = "type")
-	private List<String> types;
+	private List<String> types = new ArrayList<>();
 
 	private String issuer;
 
@@ -53,7 +58,7 @@ public class VerifiableCredential {
 	private Instant expirationDate;
 
 	@JsonProperty(value = "credentialSubject")
-	private Map<String, JsonNode> claims;
+	private Map<String, JsonNode> claims = new LinkedHashMap<>();
 
 	@JsonInclude(Include.NON_NULL)
 	@Setter
@@ -109,19 +114,19 @@ public class VerifiableCredential {
 		}
 	}
 
-	@SneakyThrows
-	public void writeJsonToFile(File file) {
-		mapper.writeValue(file, this);
-	}
 
 	@SneakyThrows
 	public String toJsonString() {
-		return mapper.writeValueAsString(this);
+		return format(writer.writeValueAsString(this));
 	}
 
-	@SneakyThrows
-	public String toPrettyJsonString() {
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+	@Override
+	public String toString() {
+		return toJsonString();
+	}
+
+	private String format(String json) {
+		return json.replace("\r", "");
 	}
 
 	@SneakyThrows

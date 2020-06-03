@@ -1,5 +1,6 @@
 package io.cord3c.ssi.serialization.setup;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import net.corda.core.identity.Party;
 @VerifiableCredentialType(type = "test")
 public class VCTestState implements EventState {
 
-	private OffsetDateTime timestamp;
+	private Instant timestamp;
 
 	@Issuer
 	private Party issuerNode;

@@ -10,8 +10,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.cord3c.ssi.api.SSIFactory;
 import io.cord3c.ssi.serialization.internal.information.VerifiableCredentialRegistry;
+import io.cord3c.ssi.serialization.internal.party.CordaPartyRegistry;
+import io.cord3c.ssi.serialization.internal.party.PartyRegistry;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.corda.core.node.AppServiceHub;
 import net.corda.core.serialization.SerializationContext;
 import net.corda.core.serialization.SerializedBytes;
 import net.corda.core.transactions.WireTransaction;
@@ -25,19 +28,24 @@ public class VCSerializationScheme implements SerializationScheme {
 
 	private static final byte[] MAGIC = "W3CVC".getBytes();
 
-	private ObjectMapper objectMapper = new ObjectMapper();
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public VCSerializationScheme() {
-		String baseUrl = "http://localhost";
+	private final VerifiableCredentialMapper credentialMapper;
+
+	public VCSerializationScheme(PartyRegistry partyRegistry, String baseUrl) {
 		SSIFactory factory = new SSIFactory();
-		VerifiableCredentialRegistry registry = new VerifiableCredentialRegistry(baseUrl);
+		VerifiableCredentialRegistry registry = new VerifiableCredentialRegistry(baseUrl, partyRegistry);
 		ObjectMapper claimMapper = factory.getClaimMapper();
-		VerifiableCredentialMapper credentialMapper = new VerifiableCredentialMapper(registry, claimMapper);
+		credentialMapper = new VerifiableCredentialMapper(registry, claimMapper);
 
 		SimpleModule cordaModule = new SimpleModule("corda");
 		cordaModule.addSerializer(new WireTransactionSerializer("networkmap.local", baseUrl, credentialMapper));
 		cordaModule.addDeserializer(WireTransaction.class, new WireTransactionDeserializer());
 		objectMapper.registerModule(cordaModule);
+	}
+
+	public VerifiableCredentialMapper getCredentialMapper() {
+		return credentialMapper;
 	}
 
 	@Override

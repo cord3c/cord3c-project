@@ -8,6 +8,8 @@ import io.cord3c.ssi.serialization.annotations.VerifiableCredentialType;
 import io.cord3c.ssi.serialization.credential.EventState;
 import io.cord3c.ssi.serialization.internal.information.ReflectionValueAccessor;
 import io.cord3c.ssi.serialization.internal.information.ValueAccessor;
+import io.crnk.core.engine.information.bean.BeanAttributeInformation;
+import io.crnk.core.engine.information.bean.BeanInformation;
 import lombok.extern.slf4j.Slf4j;
 import net.corda.core.identity.Party;
 import net.corda.core.node.services.vault.CriteriaExpression;
@@ -23,11 +25,13 @@ import java.util.List;
 public class VerifiableCredentialUtils {
 
 
-	public static <T> ValueAccessor<T> getValueForAnnotation(Class annotationClass, Class<T> stateImplementationClass, Object state) {
-		assertIsVerifiableCredential(state);
-		for (Field field : getAllFields(state)) {
-			if (field.getAnnotation(annotationClass) != null) {
-				return (ValueAccessor<T>) new ReflectionValueAccessor(stateImplementationClass, field.getName(), field.getType());
+	public static <T> ValueAccessor<T> getAccessorForAnnotation(Class annotationClass, Class<T> stateImplementationClass) {
+		assertIsVerifiableCredential(stateImplementationClass);
+		BeanInformation beanInformation = BeanInformation.get(stateImplementationClass);
+		for (String attributeName : beanInformation.getAttributeNames()) {
+			BeanAttributeInformation attribute = beanInformation.getAttribute(attributeName);
+			if (attribute.getAnnotation(annotationClass).isPresent()) {
+				return (ValueAccessor<T>) new ReflectionValueAccessor(attribute);
 			}
 		}
 		throw new IllegalStateException("Class annotated with '@" + VerifiableCredential.class.getSimpleName() + "' must contain at least one field annotated with '@" + annotationClass.getSimpleName() + "'");
@@ -36,56 +40,10 @@ public class VerifiableCredentialUtils {
 
 	/////////////////////// FIXME
 
-	public static VerifiableCredentialType assertIsVerifiableCredential(Object state) {
-		VerifiableCredentialType annotation = state.getClass().getAnnotation(VerifiableCredentialType.class);
-		Verify.verify(annotation != null, "State must be annotated with '@" + VerifiableCredential.class.getSimpleName() + "'");
+	public static VerifiableCredentialType assertIsVerifiableCredential(Class stateClass) {
+		VerifiableCredentialType annotation = (VerifiableCredentialType) stateClass.getAnnotation(VerifiableCredentialType.class);
+		Verify.verify(annotation != null, "state %s must be annotated with '@" + VerifiableCredentialType.class.getSimpleName() + "'", stateClass);
 		return annotation;
-	}
-
-
-	public static String getSubjectFieldName(EventState state) {
-		assertIsVerifiableCredential(state);
-
-		for (Field field : getAllFields(state)) {
-			if (field.getAnnotation(Subject.class) != null) {
-				// FIXME
-				if (field.getName().endsWith("Id")) {
-					int separation = field.getName().indexOf("Id");
-					return field.getName().substring(0, separation) + "." + field.getName().substring(separation).toLowerCase();
-				} else {
-					return field.getName();
-				}
-			}
-		}
-
-		throw new IllegalStateException("Class annotated with '@" + VerifiableCredential.class.getSimpleName() + "' must contain at least one field annotated with '@" + Subject.class.getSimpleName() + "'");
-	}
-
-	public static Class getSubjectFieldClass(EventState state) {
-		assertIsVerifiableCredential(state);
-
-		for (Field field : getAllFields(state)) {
-			if (field.getAnnotation(Subject.class) != null) {
-				try {
-					return FieldUtils.readField(field, state, true).getClass();
-				} catch (IllegalAccessException e) {
-					throw new IllegalStateException("Could not access field '" + field.getName() + "' of class '" + state.getClass() + "'", e);
-				}
-			}
-		}
-
-		throw new IllegalStateException("Class annotated with '@" + VerifiableCredential.class.getSimpleName() + "' must contain at least one field annotated with '@" + Subject.class.getSimpleName() + "'");
-	}
-
-	private static List<Field> getAllFields(Object state) {
-		List<Field> fields = new ArrayList<>();
-		Class clazz = state.getClass();
-		do {
-			fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-			clazz = clazz.getSuperclass();
-		} while (clazz != null);
-
-		return fields;
 	}
 
 
@@ -98,6 +56,7 @@ public class VerifiableCredentialUtils {
 	 * @param state2 annotated with {@link VerifiableCredential}
 	 * @return true if both states are "equivalent", false otherwise
 	 */
+	/*
 	public static boolean compareVerifiableCredentials(EventState state1, EventState state2) {
 		assertIsVerifiableCredential(state1);
 		assertIsVerifiableCredential(state2);
@@ -111,7 +70,7 @@ public class VerifiableCredentialUtils {
 				throw new IllegalStateException("Could not access field '" + f.getName() + "' while comparing claims", e);
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Make use of the {@link Claim} annotation to create a {@link QueryCriteria}.

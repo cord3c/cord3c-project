@@ -2,6 +2,7 @@ package io.cord3c.ssi.serialization;
 
 import java.io.NotSerializableException;
 import java.security.PublicKey;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import io.cord3c.ssi.serialization.internal.party.PartyRegistry;
 import io.cord3c.ssi.serialization.setup.TestParty;
 import io.cord3c.ssi.serialization.setup.VCTestCommands;
 import io.cord3c.ssi.serialization.setup.VCTestState;
@@ -65,7 +67,7 @@ public class VCTransactionSerializationTest {
 		ServiceHub services = node.getServices();
 
 		VCTestState state = new VCTestState();
-		state.setTimestamp(OffsetDateTime.now());
+		state.setTimestamp(Instant.now());
 		state.setValue(42);
 		state.setIssuerNode(association.getParty());
 		state.setSubjectNode(association.getParty());
@@ -86,7 +88,9 @@ public class VCTransactionSerializationTest {
 
 		System.out.println(wireTransaction);
 
-		VCSerializationScheme scheme = new VCSerializationScheme();
+		PartyRegistry partyRegistry = null;
+		String baseUrl = null;
+		VCSerializationScheme scheme = new VCSerializationScheme(partyRegistry, baseUrl);
 		SerializedBytes serialize = scheme.serialize(wireTransaction, context);
 		System.out.println(serialize);
 
