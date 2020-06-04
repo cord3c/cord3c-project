@@ -26,12 +26,17 @@ Our steps are:
 - *Native support for W3C [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) (VCs)
   and [Decentralized Identifiers](https://www.w3.org/TR/did-core/)* (DIDs) to make identities and claims about those identities
   first-class citizen in Corda (aka native SSI for Corda). Possibilities are endless by modelling the world
-  from people to objects and relationships among them with DIDs and VCs.
+  from people to objects and relationships among them with DIDs and VCs. VCs can be created,
+  signed, exchanged, verified, and saved in a vault not unlike Corda transactions.
+- Focus on W3C standards to (over time)  support a wide range of SSI implementations (soverin,  uport, etc.).
+- Support for [did:web method](https://w3c-ccg.github.io/did-method-web/) to bootstrap DIDs with
+  HTTPS to ease development and avoid relying on other more complex SSI implementation from start.
 - Support for [hashlink](https://tools.ietf.org/html/draft-sporny-hashlink-04) to implement
   [content integrity protection](https://www.w3.org/TR/vc-data-model/#content-integrity-protection)
   for W3C VCs.
-- Letting every Corda Party gain a DID and make it discoverable through the Corda network using
+- Letting every Corda Party gain a DID and make it discoverable using
   [universal resolvers](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c).
+  An adapter service thereby bridges between network maps and universal resolvers.
 - Allow *end-users and IoT devices carry a DID to participate in transactions*.
 - *JSON as simpler data format* for states and transactions. Renders Corda transactions human-readable!
   Non-Java application can start creating, retrieving and verifying data with little effort.
@@ -41,14 +46,16 @@ Our steps are:
   transactions by any device*, from a Corda server to browsers, mobiles and IoT devices.
 - Blurring the boundaries between Corda transactions/states and W3C VCs by modelling the former with the later.
   The benefits are two-fold: let W3C VCs gain Corda functionality and let W3C VC implementations consume transactions.
-- A *REST API* complementing the proprietary Corda RPC protocol to ease working with Corda across a wider range of clients.
-- A monitoring endpoint offering  health checking and Prometheus-based metrics.
+- A *REST API* following the open [JSON:API](https://jsonapi.org/) specification complementing the proprietary
+  Corda RPC protocol to ease working with Corda across a wider range of clients.
+- A monitoring endpoint offering health checking and Prometheus-based metrics.
 
 This project is under early but active development. Feedback very welcomed.
 
 It is important to note that all extensions are complementary to the existing Corda features
 and can be used together or individually with any Corda server. The extensions do not break
-existing features.
+existing features. Further, we focus on implementing W3C standards rather than working with
+any single
 
 
 
