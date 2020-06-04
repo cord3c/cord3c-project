@@ -6,13 +6,15 @@ Corda is an open source blockchain/DLT project  with a strong focus on
 privacy and scalability while addressing the needs of enterprises. More information
 are available in https://github.com/corda/corda/. A focus area of Corda are business-to-business
 transactions in finance and insurance markets. However, its model and strong privacy guarantees
-also make it applicable to a wide range of other markets. This project aims add
+also make it applicable to a wide range of other markets. This project aims at
 unlocking some of that potential with a number of extensions. Primary focus
 lies bringing various RFCs and W3C specifications to Corda with the goal to:
 
 - avoid the lock-in to any single vendor.
+- involve end-users and IoT devices in business processes-
+- give ownership of data back to users with self-sovereign identity (SSI)
+  to improve security and privacy.
 - gain interoperability across different kinds of devices.
-- involve end-users and IoT devices in business processes to further improve security.
 - simplify transactions and state data formats to ease their use, exchange, maintenance and upgrade.
 - target the non-Java developer community.
 - improve speed and reduce storage requirements to process transactions.

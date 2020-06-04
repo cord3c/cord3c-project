@@ -2,28 +2,22 @@ package io.cord3c.rest.server.internal;
 
 import io.cord3c.rest.client.RunningFlowDTO;
 import io.cord3c.rest.client.VaultStateDTO;
-import io.cord3c.rest.client.map.NetworkParametersDTO;
 import io.cord3c.rest.client.map.NodeDTO;
 import io.cord3c.rest.client.map.NotaryDTO;
 import io.cord3c.rest.client.map.PartyDTO;
-import io.cord3c.ssi.serialization.internal.party.PartyToDIDMapper;
+import io.cord3c.ssi.corda.internal.party.PartyToDIDMapper;
 import lombok.Getter;
 import lombok.Setter;
 import net.corda.core.crypto.CryptoUtils;
-import net.corda.core.crypto.SecureHash;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.identity.PartyAndCertificate;
 import net.corda.core.messaging.StateMachineTransactionMapping;
-import net.corda.core.node.NetworkParameters;
 import net.corda.core.node.NodeInfo;
 import net.corda.core.node.NotaryInfo;
 import net.corda.node.services.vault.VaultSchemaV1;
-import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.stream.Collectors;
 
 @Mapper
 public abstract class CordaMapper {

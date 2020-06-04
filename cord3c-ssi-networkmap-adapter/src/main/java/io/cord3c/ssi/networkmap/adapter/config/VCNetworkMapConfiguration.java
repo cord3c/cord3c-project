@@ -16,7 +16,7 @@ import io.cord3c.ssi.networkmap.adapter.repository.NotaryMapRepositoryImpl;
 import io.cord3c.ssi.networkmap.adapter.repository.PartyMapRepositoryImpl;
 import io.cord3c.ssi.networkmap.adapter.repository.NetworkParametersRepositoryImpl;
 import io.cord3c.ssi.networkmap.adapter.repository.NodeMapRepositoryImpl;
-import io.cord3c.ssi.serialization.internal.party.PartyToDIDMapper;
+import io.cord3c.ssi.corda.internal.party.PartyToDIDMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.corda.client.rpc.CordaRPCClient;
