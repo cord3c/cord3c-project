@@ -25,7 +25,7 @@ public class VerifiableCredentialES256KCrypto {
 		String token = jwsObject.serialize();
 
 
-		Proof proof = new Proof(W3CHelper.SECP256K1_SIGNATURE, OffsetDateTime.now().toInstant(), W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD, credential.getIssuer(), token);
+		Proof proof = new Proof(W3CHelper.JsonWebSignature2020, OffsetDateTime.now().toInstant(), W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD, credential.getIssuer(), token);
 
 		VerifiableCredential clone = credential.clone();
 		clone.setProof(proof);

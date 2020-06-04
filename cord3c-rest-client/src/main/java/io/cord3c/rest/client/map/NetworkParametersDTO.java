@@ -1,25 +1,27 @@
-package io.cord3c.ssi.networkmap.adapter.repository;
+package io.cord3c.rest.client.map;
+
+import io.crnk.core.resource.annotations.JsonApiId;
+import io.crnk.core.resource.annotations.JsonApiRelation;
+import io.crnk.core.resource.annotations.JsonApiResource;
+import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
-import io.crnk.core.resource.annotations.JsonApiId;
-import io.crnk.core.resource.annotations.JsonApiResource;
-import lombok.Data;
-import net.corda.core.crypto.SecureHash;
-import net.corda.core.node.NodeInfo;
-
 @Data
 @JsonApiResource(type = "networkParameter")
-public class NetworkParametersResource {
+@FieldNameConstants
+public class NetworkParametersDTO {
 
 	@JsonApiId
-	private SecureHash id;
+	private String id;
 
 	private Integer minimumPlatformVersion;
 
-	private List<NodeInfo> notaries;
+	@JsonApiRelation
+	private List<NotaryDTO> notaries;
 
 	private Integer maxMessageSize;
 

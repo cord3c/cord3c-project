@@ -1,5 +1,6 @@
 package io.cord3c.rest.client;
 
+import io.cord3c.rest.client.map.PartyDTO;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import lombok.Data;

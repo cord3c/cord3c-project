@@ -31,14 +31,4 @@ public class VCNetworkMapUtils {
 		private final SecureHash id;
 
 	}
-
-	@SneakyThrows
-	public static void writeDid(HttpServletResponse response, DIDDocument doc) {
-		Writer writer = response.getWriter();
-		doc.writePrettyJsonToWriter(writer);
-		writer.close();
-
-		response.setStatus(200);
-		response.setContentType("application/json");
-	}
 }

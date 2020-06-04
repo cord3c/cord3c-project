@@ -3,14 +3,14 @@ package io.cord3c.ssi.api;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import io.cord3c.ssi.api.did.Authentication;
 import io.cord3c.ssi.api.did.DIDDocument;
-import io.cord3c.ssi.api.did.Secp256K1PublicKey;
+import io.cord3c.ssi.api.did.PublicKey;
 import io.cord3c.ssi.api.did.Service;
 import io.cord3c.ssi.api.internal.DIDGenerator;
 import io.cord3c.ssi.api.vc.*;
@@ -38,12 +38,12 @@ public class DIDDocumentTest implements WithAssertions {
 	@Test
 	public void createDIDDocumentFileAndConvertBack() throws IOException {
 		String did = DIDGenerator.generateRandomDid(TEST_DOMAIN);
-		PublicKey publicKey = KeyFactoryHelper.generateKeyPair().getPublic();
-		List<Secp256K1PublicKey> publicKeys = new ArrayList<>();
+		java.security.PublicKey publicKey = KeyFactoryHelper.generateKeyPair().getPublic();
+		List<PublicKey> publicKeys = new ArrayList<>();
 		String publicKeyHex = Base58.encode(publicKey.getEncoded());
-		publicKeys.add(new Secp256K1PublicKey(did + "#keys-1", did, publicKey.getAlgorithm(), publicKeyHex));
+		publicKeys.add(new PublicKey(did + "#keys-1", did, publicKey.getAlgorithm(), publicKeyHex));
 		List<Authentication> authentications = new ArrayList<>();
-		authentications.add(new Authentication(W3CHelper.SECP256K1_VERIFICATION_KEY, new String[]{publicKeys.get(0).getId()}));
+		authentications.add(new Authentication(W3CHelper.JwsVerificationKey2020, Arrays.asList(publicKeys.get(0).getId())));
 		List<Service> services = new ArrayList<>();
 
 		DIDDocument didDocument = new DIDDocument(W3CHelper.DID_CONTEXT_V1, did, publicKeys, authentications, services);

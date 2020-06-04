@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cord3c.monitor.ping.PingFlow;
 import io.cord3c.monitor.ping.PingInput;
 import io.cord3c.rest.client.*;
+import io.cord3c.rest.client.map.NodeDTO;
+import io.cord3c.rest.client.map.NotaryDTO;
+import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.server.internal.RestServletFactory;
 import io.cord3c.server.http.HttpService;
 import io.crnk.core.queryspec.PathSpec;
 import io.crnk.core.queryspec.QuerySpec;
@@ -38,7 +42,7 @@ public class RestServiceTest implements WithAssertions {
 
 	private StartedMockNode node;
 
-	private RestClient client;
+	private NodeRestClient client;
 
 	private CordaX500Name name;
 
@@ -49,13 +53,15 @@ public class RestServiceTest implements WithAssertions {
 
 	@BeforeAll
 	public void setup() {
+		RestServletFactory.setNetworkMapHost("http://localhost:8080");
+
 		name = new CordaX500Name("STAR Labs", "Central City", "US");
 		final MockNetworkParameters defaultParameters = new MockNetworkParameters().withCordappsForAllNodes(cordapps());
 		network = new MockNetwork(defaultParameters);
 		network.startNodes();
 		node = network.createNode(name);
 
-		client = new RestClient(getUrl());
+		client = new NodeRestClient(getUrl());
 	}
 
 	@Test

@@ -3,6 +3,7 @@ package io.cord3c.rest.server.internal;
 import com.google.auto.service.AutoService;
 import io.cord3c.rest.server.CordaRestModule;
 import io.cord3c.server.http.HttpServletFactory;
+import io.cord3c.ssi.serialization.internal.party.PartyToDIDMapper;
 import io.crnk.core.boot.CrnkBoot;
 import io.crnk.core.engine.transaction.TransactionRunner;
 import io.crnk.core.module.Module;
@@ -11,12 +12,15 @@ import io.crnk.data.jpa.JpaModuleConfig;
 import io.crnk.home.HomeModule;
 import io.crnk.servlet.CrnkServlet;
 import kotlin.jvm.functions.Function1;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import net.corda.core.node.AppServiceHub;
 import net.corda.core.node.services.vault.CordaTransactionSupport;
 import net.corda.core.node.services.vault.SessionScope;
 import org.jetbrains.annotations.NotNull;
+import org.mapstruct.factory.Mappers;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +33,10 @@ import java.util.function.Supplier;
 public class RestServletFactory implements HttpServletFactory {
 
 	private static AppServiceHub serviceHub;
+
+	@Getter
+	@Setter
+	private static String networkMapHost = System.getenv("CORD3C_SSI_NETWORKMAP_HOST");
 
 	@Override
 	public String getPattern() {
@@ -44,9 +52,18 @@ public class RestServletFactory implements HttpServletFactory {
 
 	public static class CordaCrnkServlet extends CrnkServlet {
 
+		private CordaMapper cordaMapper = Mappers.getMapper(CordaMapper.class);
+
 		@Override
 		protected void initCrnk(CrnkBoot boot) {
-			boot.addModule(new CordaRestModule(serviceHub));
+			if (networkMapHost == null) {
+				throw new IllegalStateException("please configure CORD3C_SSI_NETWORKMAP_HOST or set manually on RestServletFactory");
+			}
+
+			PartyToDIDMapper didMapper = new PartyToDIDMapper(networkMapHost);
+			cordaMapper.setDidMapper(didMapper);
+
+			boot.addModule(new CordaRestModule(serviceHub, cordaMapper));
 			boot.addModule(HomeModule.create());
 			boot.addModule(createJpaModule());
 		}

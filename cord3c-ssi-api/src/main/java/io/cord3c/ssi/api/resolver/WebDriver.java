@@ -2,11 +2,12 @@ package io.cord3c.ssi.api.resolver;
 
 import com.google.common.base.Verify;
 import io.cord3c.ssi.api.did.DID;
-import io.cord3c.ssi.api.internal.DIDGenerator;
 import io.cord3c.ssi.api.did.DIDDocument;
+import io.cord3c.ssi.api.internal.DIDGenerator;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,20 +29,22 @@ public class WebDriver implements DIDDriver {
 	@Override
 	@SneakyThrows
 	public DIDDocument resolve(DID did) {
-		HttpURLConnection conn;
 		try {
-			URL url = toUrl(did, true);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-		} catch (IOException e) {
+			return resolve(did, true);
+		} catch (Exception e) {
 			if (allowHttp) {
-				URL url = toUrl(did, false);
-				conn = (HttpURLConnection) url.openConnection();
-				conn.setRequestMethod("GET");
+				return resolve(did, false);
 			} else {
 				throw e;
 			}
 		}
+	}
+
+	@SneakyThrows
+	private DIDDocument resolve(DID did, boolean useHttps) {
+		URL url = toUrl(did, useHttps);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
 
 		Verify.verify(conn.getResponseCode() <= 200);
 		InputStream in = conn.getInputStream();
@@ -56,8 +59,28 @@ public class WebDriver implements DIDDriver {
 	private URL toUrl(DID did, boolean useHttps) {
 		String didString = did.toString();
 		Verify.verify(didString.startsWith(DIDGenerator.DID_WEB_PREFIX + ":"));
-		String path = didString.substring((DIDGenerator.DID_WEB_PREFIX + ":").length());
-		path = path.replace(":", "/");
-		return new URL((useHttps ? "https" : "http") + "://" + path + "/.well-known/did.json");
+		String[] path = didString.substring((DIDGenerator.DID_WEB_PREFIX + ":").length()).split("\\:");
+
+		StringBuilder builder = new StringBuilder();
+		builder.append(useHttps ? "https" : "http");
+		builder.append(":/");
+
+		boolean hasPort = false;
+		for (int i = 0; i < path.length; i++) {
+			String element = path[i];
+			if (i == 1 && NumberUtils.isParsable(element)) {
+				// we have a port
+				hasPort = true;
+				builder.append(":");
+			} else {
+				builder.append("/");
+			}
+			builder.append(element);
+		}
+
+		if (path.length == (hasPort ? 2 : 1)) {
+			builder.append("/.well-known/did.json");
+		}
+		return new URL(builder.toString());
 	}
 }

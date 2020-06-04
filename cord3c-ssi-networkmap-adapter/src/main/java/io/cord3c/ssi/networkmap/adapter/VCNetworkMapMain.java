@@ -1,5 +1,8 @@
 package io.cord3c.ssi.networkmap.adapter;
 
+import io.cord3c.ssi.networkmap.adapter.config.VCNetworkMapConfiguration;
+import org.springframework.boot.SpringApplication;
+
 public class VCNetworkMapMain {
 
 	public static void main(String[] args) {
@@ -7,15 +10,9 @@ public class VCNetworkMapMain {
 		app.run();
 	}
 
-	public VCNetworkMapMain() {
-		int portOffset = 8000;
-		System.setProperty("server.port", Integer.toString(portOffset + 110));
-		System.setProperty("management.server.port", Integer.toString(portOffset + 110));
-		System.setProperty("spring.profiles.active", "dev");
-	}
-
 	public void run() {
 		String[] args = new String[0];
-		VCNetworkMapMain.main(args);
+		SpringApplication app = new SpringApplication(VCNetworkMapConfiguration.class);
+		app.run(args);
 	}
 }

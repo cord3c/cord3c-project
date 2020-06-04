@@ -13,7 +13,7 @@ public class VerfiableCredentialSigner {
 	public static VerifiableCredential addJwsProof(VerifiableCredential verifiableCredential, Instant timestamp, String jwsToken) {
 		Verify.verify(!verifiableCredential.isSigned(), "Verifiable Credential is already signed");
 
-		Proof proof = new Proof(W3CHelper.SECP256K1_SIGNATURE, timestamp, W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD, verifiableCredential.getIssuer(), jwsToken);
+		Proof proof = new Proof(W3CHelper.JsonWebSignature2020, timestamp, W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD, verifiableCredential.getIssuer(), jwsToken);
 
 		verifiableCredential.setProof(proof);
 		return verifiableCredential;

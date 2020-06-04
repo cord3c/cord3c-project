@@ -12,6 +12,8 @@ public class CordaRestModule implements Module {
 
 	private final AppServiceHub serviceHub;
 
+	private final CordaMapper cordaMapper;
+
 	@Override
 	public String getModuleName() {
 		return "cord3c-server-rest";
@@ -20,10 +22,10 @@ public class CordaRestModule implements Module {
 	@Override
 	public void setupModule(ModuleContext context) {
 		ObjectMapper objectMapper = context.getObjectMapper();
-		context.addRepository(new NodeRepositoryImpl(serviceHub));
-		context.addRepository(new NotaryRepositoryImpl(serviceHub));
-		context.addRepository(new PartyRepositoryImpl(serviceHub));
-		context.addRepository(new RunningFlowRepositoryImpl(serviceHub, objectMapper));
-		context.addRepository(new VaultStateRepositoryImpl());
+		context.addRepository(new NodeRepositoryImpl(serviceHub, cordaMapper));
+		context.addRepository(new NotaryRepositoryImpl(serviceHub, cordaMapper));
+		context.addRepository(new PartyRepositoryImpl(serviceHub, cordaMapper));
+		context.addRepository(new RunningFlowRepositoryImpl(serviceHub, objectMapper, cordaMapper));
+		context.addRepository(new VaultStateRepositoryImpl(cordaMapper));
 	}
 }

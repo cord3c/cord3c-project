@@ -9,11 +9,15 @@ configurations {
 
 dependencies {
 	implementation project(':cord3c-ssi-api')
+	implementation project(':cord3c-ssi-serializer')
+	implementation project(':cord3c-rest-server')
 
 	implementation 'com.squareup.okhttp3:okhttp:4.2.2' // used by network map client
 	api "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
 
 	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
+
+	implementation 'ch.qos.logback:logback-classic'
 
 	implementation "net.corda:corda-core:${CORDA_VERSION}"
 	implementation "net.corda:corda-rpc:${CORDA_VERSION}"
@@ -23,6 +27,7 @@ dependencies {
 		transitive = false
 	}
 
+	implementation 'org.springframework.boot:spring-boot-starter-undertow'
 	implementation 'org.springframework:spring-web'
 	implementation 'org.springframework:spring-context'
 	implementation 'org.springframework:spring-beans'
@@ -31,22 +36,19 @@ dependencies {
 
 	implementation "com.github.rmee.boot:rmee-boot-cli:$RMEE_GRADLE_VERSION"
 	implementation "info.picocli:picocli:4.1.4"
+	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 
 	api 'io.crnk:crnk-core'
-	api 'io.crnk:crnk-validation'
 	api 'io.crnk:crnk-home'
-	api 'io.crnk:crnk-meta'
 	api 'io.crnk:crnk-setup-spring-boot2'
-	api 'io.crnk:crnk-security'
 	api 'io.crnk:crnk-format-plain-json'
-	api 'io.crnk:crnk-monitor-opentracing'
+
+	api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
 
 	api 'javax.servlet:javax.servlet-api'
 	compileOnly 'org.slf4j:slf4j-api'
-	compileOnly 'javax.validation:validation-api'
-	compileOnly 'org.hibernate.validator:hibernate-validator'
 
-	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
 	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
 }
 

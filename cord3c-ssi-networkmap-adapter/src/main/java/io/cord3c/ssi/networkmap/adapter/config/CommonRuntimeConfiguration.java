@@ -1,5 +1,6 @@
-package io.cord3c.ssi.networkmap.adapter;
+package io.cord3c.ssi.networkmap.adapter.config;
 
+import io.cord3c.ssi.networkmap.adapter.proxy.ProxyConfiguration;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
 import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration;

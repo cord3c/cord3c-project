@@ -1,19 +1,23 @@
 package io.cord3c.rest.client;
 
+import io.cord3c.rest.client.map.NodeRepository;
+import io.cord3c.rest.client.map.NotaryRepository;
+import io.cord3c.rest.client.map.PartyRepository;
 import io.crnk.client.CrnkClient;
 import lombok.Getter;
 
-public class RestClient {
+public class NodeRestClient {
 
 	@Getter
 	private final CrnkClient client;
 
-	public RestClient(String url) {
+	public NodeRestClient(String url) {
 		this(new CrnkClient(url));
 	}
 
-	public RestClient(CrnkClient client) {
+	public NodeRestClient(CrnkClient client) {
 		this.client = client;
+		client.findModules();
 	}
 
 	public NotaryRepository getNotaries() {

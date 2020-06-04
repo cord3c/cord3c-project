@@ -1,31 +1,51 @@
 package io.cord3c.rest.server.internal;
 
-import io.cord3c.rest.client.NodeDTO;
-import io.cord3c.rest.client.PartyDTO;
 import io.cord3c.rest.client.RunningFlowDTO;
 import io.cord3c.rest.client.VaultStateDTO;
+import io.cord3c.rest.client.map.NetworkParametersDTO;
+import io.cord3c.rest.client.map.NodeDTO;
+import io.cord3c.rest.client.map.NotaryDTO;
+import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.ssi.serialization.internal.party.PartyToDIDMapper;
+import lombok.Getter;
+import lombok.Setter;
 import net.corda.core.crypto.CryptoUtils;
+import net.corda.core.crypto.SecureHash;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.identity.PartyAndCertificate;
 import net.corda.core.messaging.StateMachineTransactionMapping;
+import net.corda.core.node.NetworkParameters;
 import net.corda.core.node.NodeInfo;
+import net.corda.core.node.NotaryInfo;
 import net.corda.node.services.vault.VaultSchemaV1;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.stream.Collectors;
 
 @Mapper
 public abstract class CordaMapper {
 
+	@Getter
+	@Setter
+	protected PartyToDIDMapper didMapper;
+
 	@Mapping(target = "id", expression = "java(getId(nodeInfo))")
 	public abstract NodeDTO map(NodeInfo nodeInfo);
+
+	@Mapping(target = "id", expression = "java(getId(notaryInfo.getIdentity()))")
+	public abstract NotaryDTO map(NotaryInfo notaryInfo);
 
 	public abstract VaultStateDTO map(VaultSchemaV1.VaultStates state);
 
 	@Mapping(target = "id", expression = "java(getId(party))")
+	@Mapping(target = "did", expression = "java(didMapper.toDid(party.getParty().getOwningKey()))")
 	public abstract PartyDTO mapParty(PartyAndCertificate party);
 
 	@Mapping(target = "id", expression = "java(getId(party))")
+	@Mapping(target = "did", expression = "java(didMapper.toDid(party.getOwningKey()))")
 	public abstract PartyDTO mapParty(Party party);
 
 	protected String getId(NodeInfo nodeInfo) {

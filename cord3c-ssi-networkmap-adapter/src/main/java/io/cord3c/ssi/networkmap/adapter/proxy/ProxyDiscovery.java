@@ -1,4 +1,4 @@
-package io.cord3c.ssi.networkmap.adapter;
+package io.cord3c.ssi.networkmap.adapter.proxy;
 
 import java.net.MalformedURLException;
 import java.net.URL;

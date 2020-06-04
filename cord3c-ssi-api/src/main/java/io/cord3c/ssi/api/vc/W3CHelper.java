@@ -14,9 +14,14 @@ public class W3CHelper {
 
 	public static final String PROOF_PURPOSE_ASSERTION_METHOD = "assertionMethod";
 
-	public static final String SECP256K1_VERIFICATION_KEY = "EcdsaSecp256k1VerificationKey2019";
+	// see https://w3c-ccg.github.io/ld-cryptosuite-registry/
+	//public static final String SECP256K1_VERIFICATION_KEY = "EcdsaSecp256k1VerificationKey2019";
+	// public static final String SECP256K1_SIGNATURE = "EcdsaSecp256k1Signature2019";
 
-	public static final String SECP256K1_SIGNATURE = "EcdsaSecp256k1Signature2019";
+	public static final String JsonWebSignature2020 = "JsonWebSignature2020";
+
+	public static final String JwsVerificationKey2020 = "JwsVerificationKey2020";
+
 
 	public static final String CLAIM_SUBJECT_ID = "id";
 

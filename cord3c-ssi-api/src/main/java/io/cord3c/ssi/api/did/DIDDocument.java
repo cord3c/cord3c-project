@@ -3,8 +3,10 @@ package io.cord3c.ssi.api.did;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -22,13 +24,16 @@ public class DIDDocument {
 	private String id;
 
 	@JsonProperty(value = "publicKey")
-	private List<Secp256K1PublicKey> publicKeys;
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<PublicKey> publicKeys = new ArrayList<>();
 
 	@JsonProperty(value = "authentication")
-	private List<Authentication> authentications;
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<Authentication> authentications = new ArrayList<>();
 
 	@JsonProperty(value = "service")
-	private List<Service> services;
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	private List<Service> services = new ArrayList<>();
 
 	private static ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 

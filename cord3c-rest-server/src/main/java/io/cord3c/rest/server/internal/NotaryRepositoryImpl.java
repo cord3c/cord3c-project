@@ -1,13 +1,12 @@
 package io.cord3c.rest.server.internal;
 
-import io.cord3c.rest.client.NotaryDTO;
-import io.cord3c.rest.client.NotaryRepository;
+import io.cord3c.rest.client.map.NotaryDTO;
+import io.cord3c.rest.client.map.NotaryRepository;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ReadOnlyResourceRepositoryBase;
 import io.crnk.core.resource.list.ResourceList;
 import net.corda.core.identity.Party;
 import net.corda.core.node.ServiceHub;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,11 +15,13 @@ public class NotaryRepositoryImpl extends ReadOnlyResourceRepositoryBase<NotaryD
 
 	private final ServiceHub serviceHub;
 
-	private static final CordaMapper MAPPER = Mappers.getMapper(CordaMapper.class);
+	private final CordaMapper cordaMapper;
 
-	public NotaryRepositoryImpl(ServiceHub serviceHub) {
+
+	public NotaryRepositoryImpl(ServiceHub serviceHub, CordaMapper cordaMapper) {
 		super(NotaryDTO.class);
 		this.serviceHub = serviceHub;
+		this.cordaMapper = cordaMapper;
 	}
 
 	@Override
@@ -34,8 +35,8 @@ public class NotaryRepositoryImpl extends ReadOnlyResourceRepositoryBase<NotaryD
 
 	private NotaryDTO toDto(Party party) {
 		NotaryDTO dto = new NotaryDTO();
-		dto.setId(MAPPER.getId(party));
-		dto.setParty(MAPPER.mapParty(party));
+		dto.setId(cordaMapper.getId(party));
+		dto.setIdentity(cordaMapper.mapParty(party));
 		return dto;
 	}
 }

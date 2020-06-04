@@ -28,15 +28,16 @@ public class RunningFlowRepositoryImpl extends ResourceRepositoryBase<RunningFlo
 
 	private final AppServiceHub serviceHub;
 
-	private static final CordaMapper MAPPER = Mappers.getMapper(CordaMapper.class);
+	private final CordaMapper cordaMapper;
 
 	private final ObjectMapper objectMapper;
 
 
-	public RunningFlowRepositoryImpl(AppServiceHub serviceHub, ObjectMapper objectMapper) {
+	public RunningFlowRepositoryImpl(AppServiceHub serviceHub, ObjectMapper objectMapper, CordaMapper cordaMapper) {
 		super(RunningFlowDTO.class);
 		this.serviceHub = serviceHub;
 		this.objectMapper = objectMapper;
+		this.cordaMapper = cordaMapper;
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class RunningFlowRepositoryImpl extends ResourceRepositoryBase<RunningFlo
 		feed.getUpdates().subscribe().unsubscribe();
 		// TODO add progress
 		List<RunningFlowDTO> list = snapshot.stream()
-				.map(it -> MAPPER.map(it))
+				.map(it -> cordaMapper.map(it))
 				.collect(Collectors.toList());
 		return querySpec.apply(list);
 	}

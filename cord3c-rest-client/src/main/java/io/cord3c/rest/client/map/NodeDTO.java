@@ -1,5 +1,6 @@
-package io.cord3c.rest.client;
+package io.cord3c.rest.client.map;
 
+import io.cord3c.rest.client.ServerAddress;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;

@@ -1,5 +1,7 @@
-package io.cord3c.ssi.networkmap.adapter;
+package io.cord3c.ssi.networkmap.adapter.config;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.crnk.core.engine.internal.document.mapper.DocumentMappingConfig;
 import io.crnk.spring.setup.boot.core.CrnkBootConfigurer;
 import io.crnk.spring.setup.boot.core.CrnkCoreAutoConfiguration;
@@ -41,6 +43,9 @@ public class CommonRestConfiguration {
 			// we want a bit more compact by avoiding almost redundant self and related relationship links
 			DocumentMappingConfig documentMappingConfig = boot.getModuleRegistry().getDocumentMappingConfig();
 			documentMappingConfig.getResourceMapping().setSerializeSelfRelationshipLinks(false);
+
+			boot.getObjectMapper().registerModule(new JavaTimeModule());
+			boot.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		};
 	}
 }
