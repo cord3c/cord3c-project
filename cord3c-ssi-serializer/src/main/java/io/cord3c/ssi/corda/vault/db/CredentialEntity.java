@@ -1,5 +1,6 @@
 package io.cord3c.ssi.corda.vault.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.crnk.core.resource.annotations.JsonApiId;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.experimental.FieldNameConstants;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -40,9 +41,14 @@ public class CredentialEntity {
 
 	private Instant expirationDate;
 
-	// FIXME @MapKeyColumn(name = "name")
+	@JsonIgnore
+	@MapKeyColumn(name = "name")
 	@OneToMany(mappedBy = "credential", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<ClaimEntity> claims;
+	private Map<String, ClaimEntity> claims;
+
+	/*public Set<ClaimEntity> getClaims() {
+		return Collections.unmodifiableSet(new HashSet<>(claims.values()));
+	}*/
 
 	private ProofEmbeddable proof;
 

@@ -12,12 +12,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.google.common.base.Verify;
 import io.cord3c.ssi.api.internal.hashlink.HashLink;
-import io.cord3c.ssi.api.internal.hashlink.Multibase;
-import io.cord3c.ssi.api.internal.hashlink.Multihash;
+import io.crnk.core.resource.annotations.JsonApiId;
+import io.crnk.core.resource.annotations.JsonApiResource;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.corda.core.serialization.CordaSerializable;
 
@@ -25,8 +26,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.*;
 
@@ -34,6 +33,7 @@ import java.util.*;
 @NoArgsConstructor
 @CordaSerializable
 @Slf4j
+@FieldNameConstants
 public class VerifiableCredential {
 
 	// allu/03-02-2020: don't use the default PrettyPrinter because of CR-LF issues
@@ -43,7 +43,6 @@ public class VerifiableCredential {
 			.findAndRegisterModules();
 
 	private static ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-
 
 	@JsonProperty(value = "@context")
 	private List<String> contexts = new ArrayList<>();

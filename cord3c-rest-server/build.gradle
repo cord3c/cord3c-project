@@ -21,10 +21,9 @@ dependencies {
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-node:${CORDA_VERSION}"
 
+	testImplementation project(':cord3c-common-test')
 	testImplementation project(':cord3c-server-http')
 	testImplementation project(':cord3c-monitor-ping')
-	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
-	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
 }
 
 

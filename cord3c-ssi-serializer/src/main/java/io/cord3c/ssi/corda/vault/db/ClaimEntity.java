@@ -53,6 +53,42 @@ public class ClaimEntity {
 	@ToString.Exclude
 	private CredentialEntity credential;
 
+	/**
+	 * @param value
+	 * @return field used to store the given value based on type
+	 */
+	public static String selectField(JsonNode value) {
+		if (value.isLong()) {
+			return Fields.longValue;
+		} else if (value.isDouble()) {
+			return Fields.doubleValue;
+		} else if (value.isTextual()) {
+			return Fields.stringValue;
+		} else if (value.isNull()) {
+			throw new UnsupportedOperationException("filtering by null not implemented");
+		} else if (value.isBoolean()) {
+			return Fields.booleanValue;
+		} else {
+			return Fields.jsonValue;
+		}
+	}
+
+	public static Object toValue(JsonNode value) {
+		if (value.isLong()) {
+			return value.longValue();
+		} else if (value.isDouble()) {
+			return value.doubleValue();
+		} else if (value.isTextual()) {
+			return value.textValue();
+		} else if (value.isNull()) {
+			throw new UnsupportedOperationException("filtering by null not implemented");
+		} else if (value.isBoolean()) {
+			return value.booleanValue();
+		} else {
+			return value.textValue();
+		}
+	}
+
 	@SneakyThrows
 	public JsonNode getValue() {
 		if (stringValue != null) {

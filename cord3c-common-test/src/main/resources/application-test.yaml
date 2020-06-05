@@ -1,0 +1,68 @@
+production-features:
+  enabled: false
+
+demo:
+  core:
+    url: http://localhost:1/api/demo
+  identity:
+    url: http://localhost:1/api/identity
+  rating:
+    core:
+      url: http://localhost:1/api/demo
+
+spring:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+  liquibase:
+    enabled: false
+
+management:
+  server:
+    port: -1
+  metrics:
+    export:
+      elastic:
+        enabled: false
+datasource:
+  #username: demo
+  #password: demo
+  #url: jdbc:postgresql://localhost:5432/demo
+  #driverClassName: org.postgresql.Driver
+  username: sa
+  password:
+  url: jdbc:h2:mem:demo
+  driverClassName: org.h2.Driver
+  initializer:
+    enabled: false
+
+crnk:
+  jpa:
+    expose-all: false
+
+sb4b:
+  identity:
+    signKey: 3XnAuCFtuZlr/7Py+CzxPOvv1Z7An0J0NvmKDSmYzNNmxWQwSr/uMJwLvwzfzDEvtdcV1Bk0sH7DnA4ex2dfnw==
+    techusers:
+      john:
+        # password: "john's password"
+        hashedPassword: $2a$10$UHg4aVUGO9NkZ5m0WzS/yOaxYKQ2WKIqPJEFI.8KWiMUSOSiID6MG
+    keyStoreAlias: testKeyAlias
+    keyStorePassword: testKeyPassword
+  scheduler:
+    enabled: false
+  corda:
+    rest:
+      host: 127.0.0.1
+      rpcPort: 20001
+  coordinates:
+    member-id: localhost
+    environment: test
+    hostname: 127.0.0.1
+    location: Zurich
+    country: CH
+    domain: localhost
+    httpsEnabled: false

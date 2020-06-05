@@ -3,6 +3,8 @@ package io.cord3c.ssi.corda.vault;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.corda.vault.db.CredentialEntity;
 import io.cord3c.ssi.corda.vault.db.VCSchemaMapper;
+import io.crnk.core.queryspec.FilterSpec;
+import io.crnk.core.queryspec.QuerySpec;
 import kotlin.jvm.functions.Function1;
 import net.corda.core.node.AppServiceHub;
 import org.mapstruct.factory.Mappers;
@@ -17,6 +19,8 @@ public class VCVault {
 	private final AppServiceHub serviceHub;
 
 	private final VCSchemaMapper mapper = Mappers.getMapper(VCSchemaMapper.class);
+
+	private Function1<QuerySpec, List<VerifiableCredential>> queryEngine;
 
 
 	public VCVault(AppServiceHub serviceHub) {
@@ -62,6 +66,23 @@ public class VCVault {
 		return entities.stream().map(it -> mapper.fromEntity(it)).collect(Collectors.toList());
 	}
 
+	public List<VerifiableCredential> find(FilterSpec filterSpec) {
+		QuerySpec querySpec = new QuerySpec(CredentialEntity.class);
+		querySpec.addFilter(filterSpec);
+		return find(querySpec);
+	}
+
+	public List<VerifiableCredential> find(QuerySpec querySpec) {
+		requireQueryEngine();
+		return queryEngine.invoke(querySpec);
+	}
+
+	private void requireQueryEngine() {
+		if (queryEngine == null) {
+			throw new IllegalStateException("currently no query engine added to VCVault. For now it is as VCRepository in cord3c-rest-server cordapp. In the future this dependency limitation will likely go away.");
+		}
+	}
+
 	private List<CredentialEntity> getEntities(Collection<String> ids) {
 		return withEntityManager(em -> {
 			TypedQuery<CredentialEntity> query = em.createQuery("select c from CredentialEntity c where c.id IN :ids", CredentialEntity.class);
@@ -72,5 +93,9 @@ public class VCVault {
 
 	private <T> T withEntityManager(Function1<EntityManager, T> function) {
 		return serviceHub.getDatabase().transaction(sessionScope -> serviceHub.withEntityManager((Function1<EntityManager, T>) function::invoke));
+	}
+
+	public void setQueryEngine(Function1<QuerySpec, List<VerifiableCredential>> queryEngine) {
+		this.queryEngine = queryEngine;
 	}
 }

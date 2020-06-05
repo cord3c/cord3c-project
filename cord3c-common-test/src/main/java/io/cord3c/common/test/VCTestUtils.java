@@ -1,4 +1,4 @@
-package io.cord3c.ssi.corda.vault;
+package io.cord3c.common.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +29,7 @@ public class VCTestUtils {
 		credential.setClaims(claims);
 		return credential;
 	}
+
 
 	public static Collection<TestCordapp> cordapps() {
 		return Collections.singletonList(

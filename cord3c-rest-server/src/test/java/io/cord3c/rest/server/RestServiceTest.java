@@ -2,6 +2,7 @@ package io.cord3c.rest.server;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cord3c.common.test.VCTestUtils;
 import io.cord3c.monitor.ping.PingFlow;
 import io.cord3c.monitor.ping.PingInput;
 import io.cord3c.rest.client.*;
@@ -10,6 +11,8 @@ import io.cord3c.rest.client.map.NotaryDTO;
 import io.cord3c.rest.client.map.PartyDTO;
 import io.cord3c.rest.server.internal.RestServletFactory;
 import io.cord3c.server.http.HttpService;
+import io.cord3c.ssi.api.vc.VerifiableCredential;
+import io.crnk.core.queryspec.FilterOperator;
 import io.crnk.core.queryspec.PathSpec;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.resource.list.ResourceList;
@@ -80,6 +83,74 @@ public class RestServiceTest implements WithAssertions {
 		assertThat(links.has("notary")).isTrue();
 		assertThat(links.has("party")).isTrue();
 		assertThat(links.has("vault")).isTrue();
+	}
+
+
+	@Test
+	public void verifyVCs() {
+		VerifiableCredential credential = VCTestUtils.generateMockCredentials();
+
+		VCRepository repository = client.getCredentials();
+		repository.create(new VerifiableCredentialDTO(credential));
+
+		verifyFindAllVCs(credential);
+		verifyFindById(credential);
+		verifyFindByCredentialAttribute(credential, true);
+		verifyFindByCredentialAttribute(credential, false);
+		verifyFindByClaim(credential, true);
+		verifyFindByClaim(credential, false);
+	}
+
+	private void verifyFindByClaim(VerifiableCredential credential, boolean match) {
+		VerifiableCredentialDTO dto = new VerifiableCredentialDTO(credential);
+
+		PathSpec issuerPath = PathSpec.of(VerifiableCredentialDTO.Fields.credential, VerifiableCredential.Fields.claims, "hello");
+		QuerySpec querySpec = new QuerySpec(VerifiableCredentialDTO.class);
+		querySpec.addFilter(issuerPath.filter(FilterOperator.EQ, match ? "world" : "does not exist"));
+
+		VCRepository repository = client.getCredentials();
+		List<VerifiableCredentialDTO> list = repository.findAll(querySpec);
+		if (match) {
+			assertThat(list).hasSize(1);
+			VerifiableCredential resultCredential = list.get(0).getCredential();
+			assertThat(resultCredential.getId()).isEqualTo(dto.getCredential().getId());
+		} else {
+			assertThat(list).isEmpty();
+		}
+	}
+
+	private void verifyFindById(VerifiableCredential credential) {
+		VerifiableCredentialDTO dto = new VerifiableCredentialDTO(credential);
+
+		VCRepository repository = client.getCredentials();
+		VerifiableCredential searchedCredential = repository.findOne(dto.getId(), new QuerySpec(VerifiableCredentialDTO.class)).getCredential();
+		assertThat(searchedCredential).isEqualToComparingFieldByField(credential);
+	}
+
+	private void verifyFindByCredentialAttribute(VerifiableCredential credential, boolean match) {
+		VerifiableCredentialDTO dto = new VerifiableCredentialDTO(credential);
+
+		PathSpec issuerPath = PathSpec.of(VerifiableCredentialDTO.Fields.credential, VerifiableCredential.Fields.issuer);
+		QuerySpec querySpec = new QuerySpec(VerifiableCredentialDTO.class);
+		querySpec.addFilter(issuerPath.filter(FilterOperator.EQ, match ? dto.getCredential().getIssuer() : "does not exist"));
+
+		VCRepository repository = client.getCredentials();
+		List<VerifiableCredentialDTO> list = repository.findAll(querySpec);
+		if (match) {
+			assertThat(list).hasSize(1);
+			VerifiableCredential resultCredential = list.get(0).getCredential();
+			assertThat(resultCredential.getId()).isEqualTo(dto.getCredential().getId());
+		} else {
+			assertThat(list).isEmpty();
+		}
+	}
+
+	private void verifyFindAllVCs(VerifiableCredential credential) {
+		VCRepository repository = client.getCredentials();
+		ResourceList<VerifiableCredentialDTO> list = repository.findAll(new QuerySpec(VerifiableCredentialDTO.class));
+		assertThat(list).hasSize(1);
+		VerifiableCredential searchedCredential = list.get(0).getCredential();
+		assertThat(searchedCredential).isEqualToComparingFieldByField(credential);
 	}
 
 	@Test

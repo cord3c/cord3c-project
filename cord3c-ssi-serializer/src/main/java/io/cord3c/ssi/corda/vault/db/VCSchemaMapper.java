@@ -6,11 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper
 public abstract class VCSchemaMapper {
@@ -33,14 +31,14 @@ public abstract class VCSchemaMapper {
 		return VerifiableCredential.fromJson(entity.getJsonValue());
 	}
 
-	protected Set<ClaimEntity> toClaimEntity(CredentialEntity credentialEntity, VerifiableCredential credential) {
-		Set<ClaimEntity> set = credentialEntity.getClaims();
-		if (set == null) {
-			set = new HashSet<>();
+	protected Map<String, ClaimEntity> toClaimEntity(CredentialEntity credentialEntity, VerifiableCredential credential) {
+		Map<String, ClaimEntity> map = credentialEntity.getClaims();
+		if (map == null) {
+			map = new HashMap<>();
 		}
 
-		Map<String, ClaimEntity> existing = set.stream().collect(Collectors.toMap(it -> it.getId().getName(), it -> it));
-		set.clear();
+		Map<String, ClaimEntity> existing = new HashMap<>(map);
+		map.clear();
 
 		for (Map.Entry<String, JsonNode> entry : credential.getClaims().entrySet()) {
 			ClaimEntity entity = existing.get(entry.getKey());
@@ -53,14 +51,14 @@ public abstract class VCSchemaMapper {
 				entity.setId(id);
 			}
 			entity.setValue(entry.getValue());
-			set.add(entity);
+			map.put(entry.getKey(), entity);
 		}
-		return set;
+		return map;
 	}
 
 	protected Map<String, JsonNode> fromClaimEntity(CredentialEntity entity) {
 		Map<String, JsonNode> claims = new LinkedHashMap<>();
-		for (ClaimEntity claimEntity : entity.getClaims()) {
+		for (ClaimEntity claimEntity : entity.getClaims().values()) {
 			claims.put(claimEntity.getId().getName(), claimEntity.getValue());
 		}
 		return claims;

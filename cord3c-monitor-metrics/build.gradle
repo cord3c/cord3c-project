@@ -18,8 +18,7 @@ dependencies {
 	testImplementation project(':cord3c-server-http')
 	testImplementation project(':cord3c-monitor-ping')
 	testImplementation "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
-	testImplementation "net.corda:corda-core:${CORDA_VERSION}"
-	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
+	testImplementation project(':cord3c-common-test')
 }
 
 jar {

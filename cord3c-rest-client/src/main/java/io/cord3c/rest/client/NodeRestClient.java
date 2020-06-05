@@ -39,4 +39,8 @@ public class NodeRestClient {
 	public NodeRepository getNodes() {
 		return client.getRepositoryForInterface(NodeRepository.class);
 	}
+
+	public VCRepository getCredentials() {
+		return client.getRepositoryForInterface(VCRepository.class);
+	}
 }

@@ -1,11 +1,14 @@
 package io.cord3c.ssi.corda;
 
+import io.cord3c.common.test.VCTestUtils;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.corda.serialization.setup.TestParty;
-import io.cord3c.ssi.corda.vault.VCTestUtils;
 import io.cord3c.ssi.corda.vault.VCVault;
 import net.corda.core.node.ServiceHub;
-import net.corda.testing.node.*;
+import net.corda.testing.node.MockNetwork;
+import net.corda.testing.node.MockNetworkNotarySpec;
+import net.corda.testing.node.MockNetworkParameters;
+import net.corda.testing.node.StartedMockNode;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import java.util.*;
+import java.util.Arrays;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class VCServiceTest implements WithAssertions {
