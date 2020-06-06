@@ -1,4 +1,4 @@
-package io.cord3c.ssi.api.vc;
+package io.cord3c.ssi.api.internal.crypto;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,16 +38,7 @@ public class KeyFactoryHelper {
 
 	public static final String CERTIFICATE_ALGORITHM = "SHA256withECDSA";
 
-	public static final String ELLIPTIC_CURVE = "secp256k1";
-
 	public static final int DEFAULT_VALIDITY_IN_YEARS = 100;
-
-	@SneakyThrows
-	public static KeyPair generateKeyPair() {
-		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-		keyPairGenerator.initialize(new ECGenParameterSpec(ELLIPTIC_CURVE));
-		return keyPairGenerator.generateKeyPair();
-	}
 
 	@SneakyThrows
 	public static PublicKey constructPublicKeyFromEncodedBytes(byte[] encodedBytes) {
@@ -61,7 +52,7 @@ public class KeyFactoryHelper {
 
 	@SneakyThrows
 	public static KeyStore storeKeyPairInKeyStore(KeyPair keyPair, String legalName, String alias, String password) {
-		Certificate[] chain = { generateCertificate(legalName, keyPair) };
+		Certificate[] chain = {generateCertificate(legalName, keyPair)};
 
 		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 		keyStore.load(null, null);

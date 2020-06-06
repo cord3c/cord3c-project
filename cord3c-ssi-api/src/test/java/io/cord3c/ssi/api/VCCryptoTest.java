@@ -1,11 +1,10 @@
 package io.cord3c.ssi.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.cord3c.ssi.api.vc.KeyFactoryHelper;
 import io.cord3c.ssi.api.vc.SignatureVerificationException;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
-import io.cord3c.ssi.api.vc.W3CHelper;
-import io.cord3c.ssi.api.vc.crypto.VerifiableCredentialCrypto;
+import io.cord3c.ssi.api.internal.W3CHelper;
+import io.cord3c.ssi.api.vc.VCCrypto;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class VerifiableCredentialCryptoTest implements WithAssertions {
+public class VCCryptoTest implements WithAssertions {
 
 	private ECPublicKey publicKey;
 
@@ -29,16 +28,16 @@ public class VerifiableCredentialCryptoTest implements WithAssertions {
 
 	private SSIFactory factory;
 
-	private VerifiableCredentialCrypto crypto;
+	private VCCrypto crypto;
 
 	@BeforeAll
 	public void setup() {
-		KeyPair keyPair = KeyFactoryHelper.generateKeyPair();
+		factory = new SSIFactory();
+		crypto = factory.getCrypto();
+
+		KeyPair keyPair = crypto.generateKeyPair();
 		publicKey = (ECPublicKey) keyPair.getPublic();
 		privateKey = (ECPrivateKey) keyPair.getPrivate();
-
-		factory = new SSIFactory();
-		crypto = factory.getVerifier();
 	}
 
 	@Test
@@ -52,7 +51,7 @@ public class VerifiableCredentialCryptoTest implements WithAssertions {
 	public void encodeAndVerifyVerifiableCredentialWithWrongPublicKey() {
 		VerifiableCredential verifiableCredential = generateMockCredentials();
 
-		ECPublicKey someOtherPublicKey = (ECPublicKey) KeyFactoryHelper.generateKeyPair().getPublic();
+		ECPublicKey someOtherPublicKey = (ECPublicKey) crypto.generateKeyPair().getPublic();
 
 		assertThatThrownBy(() -> crypto.verify(verifiableCredential, someOtherPublicKey)).isExactlyInstanceOf(SignatureVerificationException.class).hasMessageContaining("Signature verification failed");
 	}

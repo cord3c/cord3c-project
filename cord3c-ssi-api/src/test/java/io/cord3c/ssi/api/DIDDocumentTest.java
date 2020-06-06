@@ -3,6 +3,7 @@ package io.cord3c.ssi.api;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.security.interfaces.ECPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,10 +11,12 @@ import java.util.List;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import io.cord3c.ssi.api.did.Authentication;
 import io.cord3c.ssi.api.did.DIDDocument;
-import io.cord3c.ssi.api.did.PublicKey;
+import io.cord3c.ssi.api.did.DIDPublicKey;
 import io.cord3c.ssi.api.did.Service;
 import io.cord3c.ssi.api.internal.DIDGenerator;
-import io.cord3c.ssi.api.vc.*;
+import io.cord3c.ssi.api.internal.W3CHelper;
+import io.cord3c.ssi.api.resolver.DefaultUniversalResolver;
+import io.cord3c.ssi.api.vc.VCCrypto;
 import net.corda.core.crypto.Base58;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
@@ -37,13 +40,15 @@ public class DIDDocumentTest implements WithAssertions {
 
 	@Test
 	public void createDIDDocumentFileAndConvertBack() throws IOException {
+		SSIFactory factory = new SSIFactory();
+		VCCrypto crypto = factory.getCrypto();
+
 		String did = DIDGenerator.generateRandomDid(TEST_DOMAIN);
-		java.security.PublicKey publicKey = KeyFactoryHelper.generateKeyPair().getPublic();
-		List<PublicKey> publicKeys = new ArrayList<>();
-		String publicKeyHex = Base58.encode(publicKey.getEncoded());
-		publicKeys.add(new PublicKey(did + "#keys-1", did, publicKey.getAlgorithm(), publicKeyHex));
-		List<Authentication> authentications = new ArrayList<>();
-		authentications.add(new Authentication(W3CHelper.JwsVerificationKey2020, Arrays.asList(publicKeys.get(0).getId())));
+		java.security.PublicKey publicKey = crypto.generateKeyPair().getPublic();
+
+		DIDPublicKey didPublicKey = crypto.toDidPublicKey(publicKey, did);
+		List<DIDPublicKey> publicKeys = Arrays.asList(didPublicKey);
+		List<Authentication> authentications = Arrays.asList(crypto.toAuthentication(didPublicKey));
 		List<Service> services = new ArrayList<>();
 
 		DIDDocument didDocument = new DIDDocument(W3CHelper.DID_CONTEXT_V1, did, publicKeys, authentications, services);
@@ -56,7 +61,7 @@ public class DIDDocumentTest implements WithAssertions {
 		didDocument = DIDDocument.parse(jsonFile);
 
 		assertThat(didDocument.getId()).isEqualTo(did);
-		assertThat(didDocument.getPublicKeys().get(0).getType()).isEqualTo(publicKey.getAlgorithm());
+		assertThat(didDocument.getPublicKeys().get(0).getType()).isEqualTo("EcdsaSecp256k1VerificationKey2019");
 		byte[] convertedPublicKeyHex = Base58.decode(didDocument.getPublicKeys().get(0).getPublicKeyBase58());
 		assertThat(convertedPublicKeyHex).isEqualTo(publicKey.getEncoded());
 

@@ -9,6 +9,8 @@ import java.security.cert.X509Certificate;
 import io.cord3c.rest.client.map.NetworkParametersRepository;
 import io.cord3c.rest.client.map.NodeRepository;
 import io.cord3c.rest.server.internal.CordaMapper;
+import io.cord3c.ssi.api.SSIFactory;
+import io.cord3c.ssi.api.vc.VCCrypto;
 import io.cord3c.ssi.networkmap.adapter.VCNetworkMapProperties;
 import io.cord3c.ssi.networkmap.adapter.did.NetworkMapDocumentServlet;
 import io.cord3c.ssi.networkmap.adapter.did.NodeInfoDocumentServlet;
@@ -76,17 +78,26 @@ public class VCNetworkMapConfiguration {
 		return mapper;
 	}
 
-
 	@Bean
-	public ServletRegistrationBean rootDidServlet() {
-		String url = "/.well-known/did.json";
-		return new ServletRegistrationBean(new NetworkMapDocumentServlet(properties), url);
+	public SSIFactory ssiFactory() {
+		return new SSIFactory();
 	}
 
 	@Bean
-	public ServletRegistrationBean partyDidServlet(NodeMapRepositoryImpl repository, VCNetworkMapProperties properties) {
+	public VCCrypto vcCrypto(SSIFactory ssiFactory) {
+		return ssiFactory.getCrypto();
+	}
+
+	@Bean
+	public ServletRegistrationBean rootDidServlet(VCCrypto crypto) {
+		String url = "/.well-known/did.json";
+		return new ServletRegistrationBean(new NetworkMapDocumentServlet(properties, crypto), url);
+	}
+
+	@Bean
+	public ServletRegistrationBean partyDidServlet(NodeMapRepositoryImpl repository, VCNetworkMapProperties properties, VCCrypto crypto) {
 		String url = "/parties/*";
-		return new ServletRegistrationBean(new NodeInfoDocumentServlet(repository, properties), url);
+		return new ServletRegistrationBean(new NodeInfoDocumentServlet(repository, properties, crypto), url);
 	}
 
 	@Bean

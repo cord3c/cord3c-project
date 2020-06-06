@@ -2,6 +2,7 @@ package io.cord3c.ssi.api.vc;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cord3c.ssi.api.internal.W3CHelper;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
 

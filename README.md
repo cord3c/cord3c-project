@@ -34,9 +34,10 @@ Our steps are:
 - Support for [hashlink](https://tools.ietf.org/html/draft-sporny-hashlink-04) to implement
   [content integrity protection](https://www.w3.org/TR/vc-data-model/#content-integrity-protection)
   for W3C VCs.
-- Letting every Corda Party gain a DID and make it discoverable using
-  [universal resolvers](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c).
-  An adapter service thereby bridges between network maps and universal resolvers.
+- Letting every Corda node gain a DID, make it discoverable using
+  [universal resolvers](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c),
+  and let it issue VCs. An adapter HTTP service thereby bridges between network maps
+  and universal resolvers using  [did:web](https://w3c-ccg.github.io/did-method-web/).
 - Allow *end-users and IoT devices carry a DID to participate in transactions*.
 - *JSON as simpler data format* for states and transactions. Renders Corda transactions human-readable!
   Non-Java application can start creating, retrieving and verifying data with little effort.

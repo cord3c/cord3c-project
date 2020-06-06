@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Verify;
+import io.cord3c.ssi.api.internal.W3CHelper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;

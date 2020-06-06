@@ -1,7 +1,7 @@
 package io.cord3c.ssi.corda.internal.information;
 
 import com.google.common.base.Verify;
-import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.api.internal.W3CHelper;
 import io.cord3c.ssi.corda.state.annotations.Subject;
 import io.cord3c.ssi.corda.internal.party.PartyAdapterAccessor;
 import io.cord3c.ssi.corda.internal.party.PartyRegistry;

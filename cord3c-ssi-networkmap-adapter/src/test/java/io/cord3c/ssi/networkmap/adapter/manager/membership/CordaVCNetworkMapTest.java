@@ -8,7 +8,7 @@ import io.cord3c.rest.client.map.PartyDTO;
 import io.cord3c.ssi.api.did.Authentication;
 import io.cord3c.ssi.api.did.DIDDocument;
 import io.cord3c.ssi.api.resolver.DefaultUniversalResolver;
-import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.api.internal.W3CHelper;
 import io.cord3c.ssi.networkmap.adapter.config.VCNetworkMapConfiguration;
 import io.crnk.core.queryspec.PathSpec;
 import io.crnk.core.queryspec.QuerySpec;
@@ -104,7 +104,7 @@ public class CordaVCNetworkMapTest implements WithAssertions {
 		assertThat(rootDoc.getAuthentications()).hasSize(1);
 
 		Authentication authentication = rootDoc.getAuthentications().get(0);
-		assertThat(authentication.getType()).isEqualTo(W3CHelper.JwsVerificationKey2020);
+		assertThat(authentication.getType()).isEqualTo("JwsVerificationKey2020");
 		assertThat(authentication.getPublicKey()).isEqualTo(Arrays.asList("did:web:localhost:8085#keys-1"));
 	}
 

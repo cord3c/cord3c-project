@@ -25,7 +25,7 @@ public class DIDDocument {
 
 	@JsonProperty(value = "publicKey")
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private List<PublicKey> publicKeys = new ArrayList<>();
+	private List<DIDPublicKey> publicKeys = new ArrayList<>();
 
 	@JsonProperty(value = "authentication")
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)

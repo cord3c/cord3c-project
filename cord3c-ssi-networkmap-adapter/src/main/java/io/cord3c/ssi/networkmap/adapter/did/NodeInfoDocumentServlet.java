@@ -5,9 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.cord3c.rest.client.map.PartyDTO;
-import io.cord3c.ssi.api.did.PublicKey;
+import io.cord3c.ssi.api.did.DIDPublicKey;
 import io.cord3c.ssi.api.internal.DIDGenerator;
-import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.api.internal.W3CHelper;
+import io.cord3c.ssi.api.vc.VCCrypto;
 import io.cord3c.ssi.networkmap.adapter.VCNetworkMapProperties;
 import io.cord3c.ssi.networkmap.adapter.repository.NodeMapRepositoryImpl;
 import io.cord3c.ssi.api.did.DIDDocument;
@@ -23,9 +24,12 @@ public class NodeInfoDocumentServlet extends HttpServlet {
 
 	private final PartyToDIDMapper didMapper;
 
+	private final VCCrypto crypto;
+
 	@SneakyThrows
-	public NodeInfoDocumentServlet(NodeMapRepositoryImpl repository, VCNetworkMapProperties properties) {
+	public NodeInfoDocumentServlet(NodeMapRepositoryImpl repository, VCNetworkMapProperties properties, VCCrypto crypto) {
 		this.didMapper = new PartyToDIDMapper(properties.getHost());
+		this.crypto = crypto;
 		this.repository = repository;
 	}
 
@@ -42,13 +46,13 @@ public class NodeInfoDocumentServlet extends HttpServlet {
 			log.info("did not found party with did={}", did);
 			response.setStatus(404);
 		} else {
-			PublicKey publicKey = DIDGenerator.toPublicKey(party.getOwningKey(), did);
+			DIDPublicKey publicKey = crypto.toDidPublicKey(party.getOwningKey(), did);
 
 			DIDDocument doc = new DIDDocument();
 			doc.setContext(W3CHelper.DID_CONTEXT_V1);
 			doc.setId(did);
 			doc.getPublicKeys().add(publicKey);
-			doc.getAuthentications().add(DIDGenerator.toAuthentication(publicKey));
+			doc.getAuthentications().add(crypto.toAuthentication(publicKey));
 			DIDServletWriter.write(response, doc);
 		}
 	}

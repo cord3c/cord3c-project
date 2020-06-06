@@ -1,8 +1,9 @@
 package io.cord3c.ssi.corda.serialization;
 
-import io.cord3c.ssi.api.vc.KeyFactoryHelper;
+import io.cord3c.ssi.api.SSIFactory;
+import io.cord3c.ssi.api.vc.VCCrypto;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
-import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.api.internal.W3CHelper;
 import io.cord3c.ssi.corda.internal.party.CordaPartyRegistry;
 import io.cord3c.ssi.corda.serialization.setup.VCTestState;
 import io.cord3c.ssi.corda.state.VCMapper;
@@ -23,6 +24,8 @@ import java.util.function.Supplier;
 public class VCMapperTest implements WithAssertions {
 
 	private VCMapper mapper;
+
+	private VCCrypto crypto = new SSIFactory().getCrypto();
 
 	private Party party0;
 
@@ -65,7 +68,7 @@ public class VCMapperTest implements WithAssertions {
 
 	private Party mockParty(String name) {
 		CordaX500Name cordaX500Name = new CordaX500Name(name, "Mock City", "US");
-		PublicKey publicKey = KeyFactoryHelper.generateKeyPair().getPublic();
+		PublicKey publicKey = crypto.generateKeyPair().getPublic();
 		return new Party(cordaX500Name, publicKey);
 	}
 

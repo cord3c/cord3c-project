@@ -1,14 +1,20 @@
 package io.cord3c.ssi.corda;
 
 import io.cord3c.common.test.VCTestUtils;
+import io.cord3c.ssi.api.did.DIDPublicKey;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.corda.serialization.setup.TestParty;
 import io.cord3c.ssi.corda.vault.VCVault;
+import lombok.SneakyThrows;
+import net.corda.core.crypto.DigitalSignature;
 import net.corda.core.node.ServiceHub;
+import net.corda.core.node.services.IdentityService;
+import net.corda.core.node.services.KeyManagementService;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkNotarySpec;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.StartedMockNode;
+import net.i2p.crypto.eddsa.EdDSAEngine;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,6 +22,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
+import java.security.MessageDigest;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -26,6 +36,8 @@ public class VCServiceTest implements WithAssertions {
 	private MockNetwork network;
 
 	private VCVault vault;
+
+	private VCService service;
 
 
 	@BeforeAll
@@ -38,8 +50,8 @@ public class VCServiceTest implements WithAssertions {
 
 		StartedMockNode node = association.getNode();
 		ServiceHub services = node.getServices();
-		VCService vcService = services.cordaService(VCService.class);
-		vault = vcService.getVault();
+		service = services.cordaService(VCService.class);
+		vault = service.getVault();
 	}
 
 	@AfterAll
@@ -60,5 +72,27 @@ public class VCServiceTest implements WithAssertions {
 		vault.record(credential);
 		vault.record(credential);
 		assertThat(vault.get(credential.getId())).isEqualToComparingFieldByField(credential);
+	}
+
+	@Test
+	@SneakyThrows
+	public void verifySigning() {
+		VerifiableCredential credential = VCTestUtils.generateMockCredentials();
+
+		assertThat(credential.getProof().getType()).isEqualTo("JsonWebSignature2020");
+		VerifiableCredential signed = service.sign(credential);
+		assertThat(signed.getProof()).isNotNull();
+
+		PublicKey publicKey = service.getIdentityKey().getPublicKey();
+		service.verify(signed, publicKey);
+	}
+
+	@Test
+	@SneakyThrows
+	public void verifyCordaDidPublicKey() {
+		DIDPublicKey publicKey = service.getCrypto().toDidPublicKey(service.getIdentityKey().getPublicKey(), "did:hello:world");
+		assertThat(publicKey.getType()).isEqualTo("JwsVerificationKey2020");
+		assertThat(publicKey.getId()).isEqualTo("did:hello:world#keys-1");
+		assertThat(publicKey.getController()).isEqualTo("did:hello:world");
 	}
 }

@@ -1,9 +1,10 @@
 package io.cord3c.ssi.networkmap.adapter.did;
 
 import io.cord3c.ssi.api.did.DIDDocument;
-import io.cord3c.ssi.api.did.PublicKey;
+import io.cord3c.ssi.api.did.DIDPublicKey;
 import io.cord3c.ssi.api.internal.DIDGenerator;
-import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.api.internal.W3CHelper;
+import io.cord3c.ssi.api.vc.VCCrypto;
 import io.cord3c.ssi.networkmap.adapter.VCNetworkMapProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -20,19 +21,21 @@ public class NetworkMapDocumentServlet extends HttpServlet {
 
 	private final VCNetworkMapProperties properties;
 
+	private final VCCrypto crypt;
+
 	@Override
 	@SneakyThrows
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		X509Certificate rootCertificate = properties.getRootCertificate();
 
 		String did = DIDGenerator.toWellKnownDid(properties.getHost());
-		PublicKey publicKey = DIDGenerator.toPublicKey(rootCertificate.getPublicKey(), did);
+		DIDPublicKey publicKey = crypt.toDidPublicKey(rootCertificate.getPublicKey(), did);
 
 		DIDDocument doc = new DIDDocument();
 		doc.setContext(W3CHelper.DID_CONTEXT_V1);
 		doc.setId(did);
 		doc.getPublicKeys().add(publicKey);
-		doc.getAuthentications().add(DIDGenerator.toAuthentication(publicKey));
+		doc.getAuthentications().add(crypt.toAuthentication(publicKey));
 		DIDServletWriter.write(response, doc);
 
 		DIDServletWriter.write(response, doc);

@@ -1,27 +1,16 @@
 package io.cord3c.ssi.corda.serialization;
 
-import java.io.NotSerializableException;
-import java.security.PublicKey;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
+import com.google.common.collect.ImmutableList;
+import io.cord3c.common.test.VCTestUtils;
 import io.cord3c.ssi.corda.internal.party.CordaPartyRegistry;
 import io.cord3c.ssi.corda.internal.party.PartyRegistry;
 import io.cord3c.ssi.corda.serialization.setup.TestParty;
 import io.cord3c.ssi.corda.serialization.setup.VCTestCommands;
 import io.cord3c.ssi.corda.serialization.setup.VCTestState;
-import com.google.common.collect.ImmutableList;
-import io.cord3c.ssi.corda.vault.VCTestUtils;
 import net.corda.core.contracts.AttachmentResolutionException;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.TransactionResolutionException;
 import net.corda.core.identity.AbstractParty;
-import net.corda.core.internal.CordaUtilsKt;
 import net.corda.core.node.ServiceHub;
 import net.corda.core.serialization.SerializationContext;
 import net.corda.core.serialization.SerializedBytes;
@@ -33,13 +22,17 @@ import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkNotarySpec;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.StartedMockNode;
-import net.corda.testing.node.TestCordapp;
-import net.corda.testing.node.internal.CustomCordapp;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+
+import java.io.NotSerializableException;
+import java.security.PublicKey;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class VCTransactionSerializationTest {

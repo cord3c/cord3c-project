@@ -3,7 +3,7 @@ package io.cord3c.common.test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
-import io.cord3c.ssi.api.vc.W3CHelper;
+import io.cord3c.ssi.api.internal.W3CHelper;
 import lombok.experimental.UtilityClass;
 import net.corda.core.internal.CordaUtilsKt;
 import net.corda.testing.node.TestCordapp;
