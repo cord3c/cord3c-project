@@ -3,6 +3,7 @@ apply plugin: PublishingDefaultsPlugin
 
 dependencies {
 	api project(':cord3c-ssi-api')
+	api project(':cord3c-ssi-annotations')
 
 	api "net.corda:corda-core:${CORDA_VERSION}"
 	api "net.corda:corda-node-driver:${CORDA_VERSION}"

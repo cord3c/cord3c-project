@@ -9,7 +9,7 @@ configurations {
 
 dependencies {
 	implementation project(':cord3c-ssi-api')
-	implementation project(':cord3c-ssi-serializer')
+	implementation project(':cord3c-ssi-serialization')
 	implementation project(':cord3c-rest-server')
 
 	implementation 'com.squareup.okhttp3:okhttp:4.2.2' // used by network map client

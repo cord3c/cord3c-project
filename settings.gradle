@@ -7,7 +7,10 @@ include ':cord3c-monitor-ping'
 include ':cord3c-monitor-health'
 include ':cord3c-monitor-metrics'
 include ':cord3c-ssi-api'
-include ':cord3c-ssi-serializer'
+include ':cord3c-ssi-annotations'
+include ':cord3c-ssi-serialization'
+include ':cord3c-ssi-service'
+include ':cord3c-ssi-vault'
 include ':cord3c-ssi-networkmap-adapter'
 
 gradle.beforeProject { Project project ->

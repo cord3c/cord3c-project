@@ -7,7 +7,7 @@ apply plugin: net.corda.plugins.QuasarPlugin
 dependencies {
 	api project(':cord3c-rest-client')
 	compileOnly project(':cord3c-server-http')
-	implementation project(':cord3c-ssi-serializer')
+	api project(':cord3c-ssi-service')
 
 	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 

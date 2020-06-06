@@ -1,0 +1,34 @@
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+apply plugin: net.corda.plugins.QuasarPlugin
+
+dependencies {
+	api project(':cord3c-ssi-api')
+	api project(':cord3c-ssi-vault')
+	api project(':cord3c-ssi-serialization')
+
+	api "io.crnk:crnk-data-jpa:${CRNK_VERSION}"
+
+	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
+	compileOnly "net.corda:corda-rpc:${CORDA_VERSION}"
+	compileOnly "net.corda:corda-serialization:${CORDA_VERSION}"
+
+	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
+
+	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
+
+	compileOnly 'org.slf4j:slf4j-api'
+	implementation 'io.crnk:crnk-core' // consider copy/pasting BeanInformation implementation
+	compileOnly 'javax.validation:validation-api'
+	compileOnly 'org.hibernate.validator:hibernate-validator'
+
+	testImplementation project(':cord3c-common-test')
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+}
