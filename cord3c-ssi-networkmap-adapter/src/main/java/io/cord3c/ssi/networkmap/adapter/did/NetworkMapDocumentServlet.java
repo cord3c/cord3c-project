@@ -28,7 +28,7 @@ public class NetworkMapDocumentServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		X509Certificate rootCertificate = properties.getRootCertificate();
 
-		String did = DIDGenerator.toWellKnownDid(properties.getHost());
+		String did = DIDGenerator.toWellKnownDid(properties.getUrl());
 		DIDPublicKey publicKey = crypt.toDidPublicKey(rootCertificate.getPublicKey(), did);
 
 		DIDDocument doc = new DIDDocument();

@@ -2,6 +2,7 @@ package io.cord3c.ssi.corda.internal.information;
 
 import com.google.common.base.Verify;
 import io.cord3c.ssi.annotations.*;
+import io.cord3c.ssi.api.internal.PropertyUtils;
 import io.cord3c.ssi.api.internal.W3CHelper;
 import io.cord3c.ssi.corda.internal.party.PartyAdapterAccessor;
 import io.cord3c.ssi.corda.internal.party.PartyRegistry;
@@ -9,21 +10,25 @@ import io.cord3c.ssi.corda.internal.VerifiableCredentialUtils;
 import io.crnk.core.engine.information.bean.BeanAttributeInformation;
 import io.crnk.core.engine.information.bean.BeanInformation;
 import io.crnk.core.engine.internal.utils.UrlUtils;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.corda.core.identity.Party;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class VerifiableCredentialRegistry {
 
-	private final String baseUrl;
+	@Getter
+	@Setter
+	private String baseUrl = PropertyUtils.getProperty(VCProperties.SERVER_URL, null);
+
+	private final PartyRegistry partyRegistry;
 
 	private Map<Class, VerifiableCredentialInformation> credentials = new ConcurrentHashMap<>();
 
-	private final PartyRegistry partyRegistry;
 
 	public VerifiableCredentialInformation get(Class implementationClass) {
 		if (!credentials.containsKey(implementationClass)) {
@@ -70,16 +75,27 @@ public class VerifiableCredentialRegistry {
 	}
 
 	private ValueAccessor<String> createIdAccessor(VerifiableCredentialInformation information) {
+		ValueAccessor<String> idElementAccessor = VerifiableCredentialUtils.getAccessorForAnnotation(Id.class, information.getImplementationType());
 		return new ValueAccessor<String>() {
 			@Override
 			public String getValue(Object state) {
-				String type = information.getTypes().get(0);
-				return UrlUtils.concat(baseUrl, type, "FIXME");
+				String type = information.getTypes().get(1);
+				Object idElement = idElementAccessor.getValue(state);
+				Verify.verify(baseUrl != null, "call setBaseUrl(...) first");
+				if (idElement != null) {
+					return UrlUtils.concat(baseUrl, type, idElement.toString());
+				}
+				return null;
 			}
 
 			@Override
 			public void setValue(Object state, String fieldValue) {
-				// ignore, maybe at some point some objects like to have it
+				if (fieldValue != null) {
+					int sep = fieldValue.lastIndexOf("/");
+					idElementAccessor.setValue(state, fieldValue.substring(sep + 1));
+				} else {
+					idElementAccessor.setValue(state, null);
+				}
 			}
 
 			@Override

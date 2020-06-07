@@ -1,4 +1,6 @@
-include ':cord3c-example'
+include ':cord3c-example-cordapp'
+include ':cord3c-example-node'
+include ':cord3c-example-systemTest'
 include ':cord3c-common-test'
 include ':cord3c-rest-client'
 include ':cord3c-rest-server'

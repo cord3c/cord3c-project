@@ -1,0 +1,57 @@
+import io.corda3c.gradle.CordappPlugin
+
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+apply plugin: net.corda.plugins.QuasarPlugin
+
+dependencies {
+	compileOnly project(':cord3c-ssi-service')
+	compileOnly project(':cord3c-rest-server')
+	compileOnly project(':cord3c-monitor-ping')
+	compileOnly project(':cord3c-monitor-metrics')
+	compileOnly project(':cord3c-monitor-health')
+
+	compileOnly "net.corda:corda-core:$CORDA_VERSION"
+	compileOnly 'org.slf4j:slf4j-api'
+
+	testImplementation project(':cord3c-common-test')
+	testImplementation project(':cord3c-ssi-service')
+	testImplementation project(':cord3c-rest-server')
+	testImplementation project(':cord3c-monitor-ping')
+	testImplementation project(':cord3c-monitor-metrics')
+	testImplementation project(':cord3c-monitor-health')
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+shadowJar {
+	archiveClassifier = 'cordapp'
+	archiveBaseName = 'cord3c-example'
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+		shadow(MavenPublication) {
+			project.shadow.component(it)
+			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+		}
+	}
+}
+
+apply plugin: CordappPlugin
+cordapp {
+	shading = true
+	targetPlatformVersion 4
+	minimumPlatformVersion 4
+	workflow {
+		name 'cord3c example cordapp'
+		vendor 'cord3c'
+		licence 'TDB'
+		versionId 1
+	}
+	signing {
+		enabled false
+	}
+}

@@ -13,7 +13,7 @@ public class DIDGenerator {
 	public static final String ALG_SHA256 = "SHA-256";
 
 	public static String toWellKnownDid(String domain) {
-		return DID_WEB_PREFIX + ":" + domain;
+		return DID_WEB_PREFIX + ":" + VCUtils.toHost(domain);
 	}
 
 	public static String generateRandomDid(String domain) {

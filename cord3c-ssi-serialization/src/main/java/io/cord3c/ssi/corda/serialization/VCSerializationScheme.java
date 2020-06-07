@@ -35,7 +35,8 @@ public class VCSerializationScheme implements SerializationScheme {
 
 	public VCSerializationScheme(PartyRegistry partyRegistry, String baseUrl) {
 		SSIFactory factory = new SSIFactory();
-		VerifiableCredentialRegistry registry = new VerifiableCredentialRegistry(baseUrl, partyRegistry);
+		VerifiableCredentialRegistry registry = new VerifiableCredentialRegistry(partyRegistry);
+		registry.setBaseUrl(baseUrl);
 		ObjectMapper claimMapper = factory.getClaimMapper();
 		credentialMapper = new VCMapper(registry, claimMapper);
 

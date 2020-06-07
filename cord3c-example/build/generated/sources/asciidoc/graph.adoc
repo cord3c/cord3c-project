@@ -1,1 +1,0 @@
-image:images/graph.svg[width=90%, pdfwidth=90%, align=center]

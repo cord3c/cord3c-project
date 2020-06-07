@@ -56,7 +56,7 @@ public class VCRepositoryImpl extends JpaEntityRepositoryBase<VerifiableCredenti
 		Optional<FilterSpec> optIdFilter = clone.findFilter(PathSpec.of(VerifiableCredentialDTO.Fields.id));
 		if (optIdFilter.isPresent()) {
 			FilterSpec filterSpec = optIdFilter.get();
-			filterSpec.setValue(new String(Base58.decode(filterSpec.getValue())));
+			filterSpec.setPath(PathSpec.of("hashId"));
 		}
 
 		clone.accept(new QuerySpecVisitorBase() {

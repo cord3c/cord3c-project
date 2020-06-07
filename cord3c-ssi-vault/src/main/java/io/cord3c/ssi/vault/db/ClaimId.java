@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class ClaimId implements Serializable {
 
 	@JsonApiRelationId
-	@Column(name = "claim_id")
-	private String claimId;
+	@Column(name = "credential_hash_id")
+	private String credentialHashId;
 
 	@Column
 	private String name;
@@ -26,17 +26,17 @@ public class ClaimId implements Serializable {
 
 	public ClaimId(String idString) {
 		int sep = idString.lastIndexOf("#"); // FIXME good separator?
-		claimId = idString.substring(0, sep);
+		credentialHashId = idString.substring(0, sep);
 		name = idString.substring(sep + 1);
 	}
 
 	public ClaimId(String claimId, String name) {
-		this.claimId = claimId;
+		this.credentialHashId = claimId;
 		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return claimId + "#" + name;
+		return credentialHashId + "#" + name;
 	}
 }

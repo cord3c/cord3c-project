@@ -17,7 +17,7 @@ import net.corda.core.node.services.vault.QueryCriteria;
 public class VerifiableCredentialUtils {
 
 
-	public static <T> ValueAccessor<T> getAccessorForAnnotation(Class annotationClass, Class<T> stateImplementationClass) {
+	public static <T> ValueAccessor<T> getAccessorForAnnotation(Class annotationClass, Class stateImplementationClass) {
 		assertIsVerifiableCredential(stateImplementationClass);
 		BeanInformation beanInformation = BeanInformation.get(stateImplementationClass);
 		for (String attributeName : beanInformation.getAttributeNames()) {

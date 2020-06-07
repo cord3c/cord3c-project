@@ -56,7 +56,7 @@ public class VCServiceTest implements WithAssertions {
 	public void vaultWriteAndRead() {
 		VerifiableCredential credential = VCTestUtils.generateMockCredentials();
 		vault.record(credential);
-		assertThat(vault.get(credential.getId())).isEqualToComparingFieldByField(credential);
+		assertThat(vault.get(credential.toHashId())).isEqualToComparingFieldByField(credential);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class VCServiceTest implements WithAssertions {
 		VerifiableCredential credential = VCTestUtils.generateMockCredentials();
 		vault.record(credential);
 		vault.record(credential);
-		assertThat(vault.get(credential.getId())).isEqualToComparingFieldByField(credential);
+		assertThat(vault.get(credential.toHashId())).isEqualToComparingFieldByField(credential);
 	}
 
 	@Test
@@ -72,8 +72,8 @@ public class VCServiceTest implements WithAssertions {
 	public void verifySigning() {
 		VerifiableCredential credential = VCTestUtils.generateMockCredentials();
 
-		assertThat(credential.getProof().getType()).isEqualTo("JsonWebSignature2020");
 		VerifiableCredential signed = service.sign(credential);
+		assertThat(signed.getProof().getType()).isEqualTo("JsonWebSignature2020");
 		assertThat(signed.getProof()).isNotNull();
 
 		PublicKey publicKey = service.getIdentityKey().getPublicKey();

@@ -1,0 +1,35 @@
+apply plugin: JavaDefaultsPlugin
+
+testSets {
+	systemTest
+}
+
+dependencies {
+	implementation 'org.slf4j:slf4j-api'
+	implementation project(':cord3c-common-test')
+	implementation project(':cord3c-rest-client')
+	implementation project(':cord3c-example-cordapp')
+
+	implementation "org.testcontainers:junit-jupiter:1.14.3"
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-test'
+	implementation 'org.springframework:spring-test'
+}
+
+systemTest {
+	group = 'Verification'
+	description 'Run black-box system tests.'
+	outputs.upToDateWhen { false }
+}
+
+for (env in ['dev', 'docker', 'prod']) {
+	tasks.create("systemTest${env.toUpperCase().replace("-", "_")}", Test) {
+		group = 'Verification'
+		description "Run black-box system tests against ${env}."
+		systemProperty 'spring.profiles.active', env
+		testClassesDirs = systemTest.testClassesDirs
+		classpath = systemTest.classpath
+		outputs.upToDateWhen { false }
+		// dependsOn decryptFiles
+	}
+}

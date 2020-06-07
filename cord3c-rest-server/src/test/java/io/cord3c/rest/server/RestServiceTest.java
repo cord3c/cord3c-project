@@ -56,7 +56,7 @@ public class RestServiceTest implements WithAssertions {
 
 	@BeforeAll
 	public void setup() {
-		RestServletFactory.setNetworkMapHost("http://localhost:8080");
+		RestServletFactory.setNetworkMapUrl("http://localhost:8080");
 
 		name = new CordaX500Name("STAR Labs", "Central City", "US");
 		final MockNetworkParameters defaultParameters = new MockNetworkParameters().withCordappsForAllNodes(cordapps());
@@ -211,18 +211,9 @@ public class RestServiceTest implements WithAssertions {
 		PingInput input = new PingInput();
 		input.setOtherParty(name.toString());
 		input.setMessage("echo");
-		RunningFlowDTO flow = new RunningFlowDTO();
-		flow.setFlowClass(PingFlow.PingFlowInitiator.class.getName());
-		flow.setParameters(toJson(input));
-		flow = client.getFlows().create(flow);
+		RunningFlowDTO flow = client.invokeFlow(PingFlow.PingFlowInitiator.class, input);
 		assertThat(flow.getId()).isNotNull();
 	}
-
-	private JsonNode toJson(Object value) {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.valueToTree(value);
-	}
-
 
 	private String getUrl() {
 		ServiceHub serviceHub = node.getServices();

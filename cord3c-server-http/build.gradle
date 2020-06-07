@@ -23,8 +23,7 @@ dependencies {
 apply plugin: 'com.github.johnrengelman.shadow'
 shadowJar {
 	archiveClassifier = 'cordapp'
-	archiveBaseName = 'cord3c-server-rest'
-	// relocate 'test', 'test2'
+	archiveBaseName = 'cord3c-server-http'
 }
 
 publishing {

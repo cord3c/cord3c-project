@@ -16,6 +16,8 @@ public abstract class VCSchemaMapper {
 
 	@Mapping(target = "claims", expression = "java(toClaimEntity(entity, credential))")
 	@Mapping(target = "jsonValue", expression = "java(credential.toJsonString())")
+	@Mapping(target = "hashId", expression = "java(credential.toHashId())")
+	@Mapping(target = "credentialId", source = "id")
 	public abstract void toEntity(@MappingTarget CredentialEntity entity, VerifiableCredential credential);
 
 	/*@InheritInverseConfiguration
@@ -44,7 +46,7 @@ public abstract class VCSchemaMapper {
 			ClaimEntity entity = existing.get(entry.getKey());
 			if (entity == null) {
 				ClaimId id = new ClaimId();
-				id.setClaimId(credential.getId());
+				id.setCredentialHashId(credential.toHashId());
 				id.setName(entry.getKey());
 
 				entity = new ClaimEntity();

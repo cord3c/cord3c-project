@@ -1,5 +1,6 @@
 package io.cord3c.ssi.corda;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auto.service.AutoService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -11,6 +12,10 @@ import io.cord3c.ssi.api.resolver.DefaultUniversalResolver;
 import io.cord3c.ssi.api.resolver.UniversalResolver;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.api.vc.VCCrypto;
+import io.cord3c.ssi.corda.internal.information.VerifiableCredentialRegistry;
+import io.cord3c.ssi.corda.internal.party.CordaPartyRegistry;
+import io.cord3c.ssi.corda.internal.party.PartyRegistry;
+import io.cord3c.ssi.corda.state.VCMapper;
 import io.cord3c.ssi.vault.VCVault;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +47,42 @@ public class VCService extends SingletonSerializeAsToken {
 	@Getter
 	private final VCCrypto crypto;
 
+	@Getter
+	private final VCMapper mapper;
+
+	@Getter
+	private final VerifiableCredentialRegistry registry;
+
+	@Getter
+	private final ObjectMapper claimMapper;
+
+	private final CordaPartyRegistry partyRegistry;
+
 	public VCService(AppServiceHub serviceHub) {
 		this.serviceHub = serviceHub;
 		this.vault = new VCVault(serviceHub);
 		this.univeralResolver = new DefaultUniversalResolver();
+		this.claimMapper = new ObjectMapper();
+		this.partyRegistry = new CordaPartyRegistry(serviceHub.getIdentityService());
+		this.registry = new VerifiableCredentialRegistry(partyRegistry);
 		this.crypto = new VCCrypto(univeralResolver);
+		this.mapper = new VCMapper(registry, claimMapper);
+	}
+
+	public void setNetworkMapUrl(String networkMapUrl) {
+		partyRegistry.setNetworkMapUrl(networkMapUrl);
+	}
+
+	public String getNetworkMapUrl() {
+		return partyRegistry.getNetworkMapUrl();
+	}
+
+	public void setBaseUrl(String baseUrl) {
+		registry.setBaseUrl(baseUrl);
+	}
+
+	public String getBaseUrl() {
+		return registry.getBaseUrl();
 	}
 
 	public VerifiableCredential sign(VerifiableCredential verifiableCredential) {
@@ -56,6 +92,13 @@ public class VCService extends SingletonSerializeAsToken {
 
 	public X509Certificate getIdentityKey() {
 		return serviceHub.getMyInfo().getLegalIdentitiesAndCerts().get(0).getCertificate();
+	}
+
+	public VerifiableCredential issue(Object state) {
+		VerifiableCredential credential = mapper.toCredential(state);
+		VerifiableCredential signedCredential = sign(credential);
+		vault.record(signedCredential);
+		return signedCredential;
 	}
 
 	/**

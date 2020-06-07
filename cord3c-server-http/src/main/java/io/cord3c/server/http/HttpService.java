@@ -46,6 +46,7 @@ public class HttpService extends SingletonSerializeAsToken {
 			server.setHandler(servletHandler);
 			server.setConnectors(new Connector[]{connector});
 			server.start();
+			log.info("HTTP server running on http://127.0.0.1:" + port);
 		} else {
 			log.warn("HttpService instantiated multiple times");
 		}

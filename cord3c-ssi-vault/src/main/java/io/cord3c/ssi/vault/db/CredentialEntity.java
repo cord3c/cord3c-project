@@ -22,7 +22,9 @@ public class CredentialEntity {
 
 	@Id
 	@JsonApiId
-	private String id;
+	private String hashId;
+
+	private String credentialId;
 
 	@Lob
 	private String jsonValue;

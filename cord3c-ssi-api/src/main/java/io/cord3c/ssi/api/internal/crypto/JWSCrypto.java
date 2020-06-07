@@ -30,7 +30,7 @@ public class JWSCrypto {
 
 	@SneakyThrows(JOSEException.class)
 	public VerifiableCredential sign(VerifiableCredential credential, JWSSigner signer) {
-		Verify.verify(!credential.isSigned(), "The seems to be a proof already");
+		Verify.verify(!credential.isSigned(), "There seems to be a proof already");
 		credential.validate();
 
 		Set<JWSAlgorithm> jwsAlgorithms = signer.supportedJWSAlgorithms();

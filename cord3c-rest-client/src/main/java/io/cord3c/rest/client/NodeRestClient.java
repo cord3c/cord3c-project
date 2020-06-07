@@ -1,5 +1,7 @@
 package io.cord3c.rest.client;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cord3c.rest.client.map.NodeRepository;
 import io.cord3c.rest.client.map.NotaryRepository;
 import io.cord3c.rest.client.map.PartyRepository;
@@ -43,4 +45,17 @@ public class NodeRestClient {
 	public VCRepository getCredentials() {
 		return client.getRepositoryForInterface(VCRepository.class);
 	}
+
+	public RunningFlowDTO invokeFlow(Class flowClass, Object input) {
+		RunningFlowDTO flow = new RunningFlowDTO();
+		flow.setFlowClass(flowClass.getName());
+		flow.setParameters(toJson(input));
+		return getFlows().create(flow);
+	}
+
+	private JsonNode toJson(Object value) {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.valueToTree(value);
+	}
+
 }

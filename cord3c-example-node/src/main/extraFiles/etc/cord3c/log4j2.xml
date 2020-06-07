@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" packages="net.corda.cliutils">
+
+	<Properties>
+		<Property name="log-path">${sys:log-path:-logs}</Property>
+		<Property name="log-name">node-${hostName}</Property>
+		<Property name="diagnostic-log-name">diagnostic-${hostName}</Property>
+		<Property name="archive">${log-path}/archive</Property>
+		<Property name="defaultLogLevel">${sys:defaultLogLevel:-info}</Property>
+	</Properties>
+
+	<Appenders>
+
+		<Console name="Console-Debug-Appender" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>%highlight{[%level{length=5}] %date{HH:mm:ssZ} [%t] %c{2}.%method - %msg %X%n%throwable{full}}{INFO=white,WARN=red,FATAL=bright red}
+				</pattern>
+			</PatternLayout>
+		</Console>
+
+	</Appenders>
+
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console-Debug-Appender" level="info"/>
+			<AppenderRef ref="Socket"/>
+		</Root>
+	</Loggers>
+</Configuration>

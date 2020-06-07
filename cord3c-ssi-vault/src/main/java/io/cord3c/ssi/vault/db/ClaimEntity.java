@@ -48,8 +48,8 @@ public class ClaimEntity {
 	private String jsonValue;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({@JoinColumn(name = "claim_id", insertable = false, updatable = false)})
-	@JsonApiRelation(idField = "claimId", opposite = "claims", serialize = SerializeType.ONLY_ID)
+	@JoinColumns({@JoinColumn(name = "credential_hash_id", insertable = false, updatable = false)})
+	@JsonApiRelation(idField = "credentialHashId", opposite = "claims", serialize = SerializeType.ONLY_ID)
 	@ToString.Exclude
 	private CredentialEntity credential;
 

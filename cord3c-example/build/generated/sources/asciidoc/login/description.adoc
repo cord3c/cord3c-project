@@ -1,1 +1,0 @@
-Represents user login information of the user.

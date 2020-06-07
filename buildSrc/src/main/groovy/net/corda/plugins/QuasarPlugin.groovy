@@ -56,6 +56,7 @@ class QuasarPlugin implements Plugin<Project> {
 		project.tasks.withType(JavaExec) {
 			doFirst {
 				jvmArgs "-javaagent:${project.configurations.quasar.singleFile}${quasarExtension.exclusions.get()}"
+				System.out.println(jvmArgs)
 				jvmArgs "-Dco.paralleluniverse.fibers.verifyInstrumentation"
 			}
 		}

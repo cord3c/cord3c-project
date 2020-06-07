@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Lob;
 import java.time.Instant;
 
 @Data
@@ -28,6 +29,7 @@ public class ProofEmbeddable {
 
 	@JsonInclude(Include.NON_NULL)
 	@Setter
+	@Lob
 	private String jws;
 
 }

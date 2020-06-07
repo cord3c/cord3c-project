@@ -1,7 +1,0 @@
-[cols="1,5", options="header"]
-|===
-| Type
-| Description
-| <<types_secretid,SecretId>>
-| Identifier for nested Secret resource.
-|===

@@ -7,17 +7,8 @@
 		</encoder>
 	</appender>
 
-	<logger name="ch.adnovum.sb4b" level="INFO" />
-	<logger name="io.crnk" level="INFO" />
-	<logger name="net.corda.node.services.statemachine.interceptors.DumpHistoryOnErrorInterceptor" level="INFO" />
-	<logger name="org.apache" level="INFO" />
-
-	<!-- raw sql logging
-		<logger name="org.hibernate.SQL" level="DEBUG" />
-		<logger name="org.hibernate.type" level="TRACE" />
-	-->
-
-	<root level="WARN">
-		<appender-ref ref="STDOUT" />
+	<logger name="io.crnk" level="INFO"/>
+	<root level="INFO">
+		<appender-ref ref="STDOUT"/>
 	</root>
 </configuration>

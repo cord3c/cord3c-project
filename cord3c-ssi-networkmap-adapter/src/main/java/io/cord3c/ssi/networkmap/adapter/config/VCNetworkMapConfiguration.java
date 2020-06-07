@@ -67,7 +67,9 @@ public class VCNetworkMapConfiguration {
 
 	@Bean
 	public PartyToDIDMapper partyToDIDMapper() {
-		return new PartyToDIDMapper(properties.getHost());
+		PartyToDIDMapper mapper = new PartyToDIDMapper();
+		mapper.setNetworkMapUrl(properties.getUrl());
+		return mapper;
 	}
 
 

@@ -33,7 +33,7 @@ public class RestServletFactory implements HttpServletFactory {
 
 	@Getter
 	@Setter
-	private static String networkMapHost = System.getenv("CORD3C_SSI_NETWORKMAP_HOST");
+	private static String networkMapUrl;
 
 	@Override
 	public String getPattern() {
@@ -53,11 +53,18 @@ public class RestServletFactory implements HttpServletFactory {
 
 		@Override
 		protected void initCrnk(CrnkBoot boot) {
-			if (networkMapHost == null) {
+			if (networkMapUrl == null) {
+				networkMapUrl = System.getenv("CORD3C_SSI_NETWORKMAP_URL");
+			}
+			if (networkMapUrl == null) {
+				networkMapUrl = System.getProperty("cord3c.ssi.networkmap.url");
+			}
+			if (networkMapUrl == null) {
 				throw new IllegalStateException("please configure CORD3C_SSI_NETWORKMAP_HOST or set manually on RestServletFactory");
 			}
 
-			PartyToDIDMapper didMapper = new PartyToDIDMapper(networkMapHost);
+			PartyToDIDMapper didMapper = new PartyToDIDMapper();
+			didMapper.setNetworkMapUrl(networkMapUrl);
 			cordaMapper.setDidMapper(didMapper);
 
 			boot.addModule(new CordaRestModule(serviceHub, cordaMapper));

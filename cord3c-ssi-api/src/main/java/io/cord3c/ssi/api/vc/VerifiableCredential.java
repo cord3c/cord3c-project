@@ -167,7 +167,11 @@ public class VerifiableCredential {
 	 */
 	@SneakyThrows
 	public String toHashLink() {
-		return id + "?hl=" + HashLink.create(toJsonString());
+		return id + "?hl=" + toHashId();
+	}
+
+	public String toHashId() {
+		return HashLink.create(toJsonString());
 	}
 
 }

@@ -2,25 +2,26 @@
 
 **Here you find W3C DID/VC, REST, HTTP, and monitoring support for R3 Corda!**
 
-Corda is an open source blockchain/DLT project  with a strong focus on
-privacy and scalability while addressing the needs of enterprises. More information
-are available in https://github.com/corda/corda/. A focus area of Corda are business-to-business
-transactions in finance and insurance markets. However, its model and strong privacy guarantees
-also make it applicable to a wide range of other markets. This project aims at
+Corda :heart: W3C  :arrow_right: cord3c
+
+[Corda](https://github.com/corda/corda/) is an open source blockchain/DLT project
+with a strong focus on privacy and scalability to address the needs of enterprises.
+Target market of Corda are business-to-business transactions in finance and
+insurance markets. However, its architecture also make it applicable
+to a wide range of other markets. This project aims at
 unlocking some of that potential with a number of extensions. Primary focus
 lies bringing various RFCs and W3C specifications to Corda with the goal to:
 
-- avoid the lock-in to any single vendor.
-- involve end-users and IoT devices in business processes-
-- give ownership of data back to users with self-sovereign identity (SSI)
-  to improve security and privacy.
-- gain interoperability across different kinds of devices.
-- simplify transactions and state data formats to ease their use, exchange, maintenance and upgrade.
-- target the non-Java developer community.
-- improve speed and reduce storage requirements to process transactions.
-- simplify some development and operational aspects.
+- allow involvement of end-users and IoT devices in business processes.
+- follow the principles of self-sovereign identity (SSI) to
+  let users have ownership of their data and gain further
+  security and privacy along the way.
+- allow interoperability across different kinds of devices beyond the Java ecosystem.
+- improve speed and reduce storage requirements to process transactions to
+  cover the most demanding use cases.
+- avoid the lock-in to any single vendor by following further open standards.
 
-This is achieved due to the flexible nature of the Corda flow framework and some further internal APIs.
+This is achieved due to the flexible nature of the Corda and its flow framework.
 Our steps are:
 
 - *Native support for W3C [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) (VCs)
@@ -29,35 +30,43 @@ Our steps are:
   from people to objects and relationships among them with DIDs and VCs. VCs can be created,
   signed, exchanged, verified, and saved in a vault not unlike Corda transactions.
 - Focus on W3C standards to (over time)  support a wide range of SSI implementations (soverin,  uport, etc.).
-- Support for [did:web method](https://w3c-ccg.github.io/did-method-web/) to bootstrap DIDs with
-  HTTPS to ease development and avoid relying on other more complex SSI implementation from start.
-- Support for [hashlink](https://tools.ietf.org/html/draft-sporny-hashlink-04) to implement
-  [content integrity protection](https://www.w3.org/TR/vc-data-model/#content-integrity-protection)
-  for W3C VCs.
 - Letting every Corda node gain a DID, make it discoverable using
   [universal resolvers](https://medium.com/decentralized-identity/a-universal-resolver-for-self-sovereign-identifiers-48e6b4a5cc3c),
   and let it issue VCs. An adapter HTTP service thereby bridges between network maps
-  and universal resolvers using  [did:web](https://w3c-ccg.github.io/did-method-web/).
+  and universal resolvers.
+- Support for [did:web method](https://w3c-ccg.github.io/did-method-web/) to bootstrap DIDs with
+  HTTPS to ease development and avoid relying on other more complex SSI implementation from start.
 - Allow *end-users and IoT devices carry a DID to participate in transactions*.
-- *JSON as simpler data format* for states and transactions. Renders Corda transactions human-readable!
+- Support for [hashlink](https://tools.ietf.org/html/draft-sporny-hashlink-04) to implement
+  [content integrity protection](https://www.w3.org/TR/vc-data-model/#content-integrity-protection)
+  for W3C VCs.
+- Adoptions of [JSON Web Signatures](https://tools.ietf.org/html/rfc7515) to *ease signing and verifying of
+  transactions by any device*, from a Corda server to browsers, mobiles and IoT devices.
+- A *REST API* following the open [JSON:API](https://jsonapi.org/) specification complementing the proprietary
+  Corda RPC protocol to ease working with Corda across a wider range of clients.
+- A monitoring endpoint offering health checking and [Prometheus-based metrics](https://prometheus.io/).
+
+In an experimental state we also start using:
+
+- *JSON as data format* for states and transactions. Renders Corda transactions human-readable!
   Non-Java application can start creating, retrieving and verifying data with little effort.
   Existing tools allow to customize the mapping of data to Java objects while helping with aspects
   like compatibility, versioning and upgrades.
-- Adoptions of [JSON Web Signatures](https://tools.ietf.org/html/rfc7515) to *ease signing and verifying of
-  transactions by any device*, from a Corda server to browsers, mobiles and IoT devices.
 - Blurring the boundaries between Corda transactions/states and W3C VCs by modelling the former with the later.
-  The benefits are two-fold: let W3C VCs gain Corda functionality and let W3C VC implementations consume transactions.
-- A *REST API* following the open [JSON:API](https://jsonapi.org/) specification complementing the proprietary
-  Corda RPC protocol to ease working with Corda across a wider range of clients.
-- A monitoring endpoint offering health checking and Prometheus-based metrics.
+  The benefits are two-fold: let W3C VCs gain Corda functionality like notarization and
+  and UXTO and let W3C VC implementations consume transactions vice versa.
 
 This project is under early but active development. Feedback very welcomed.
 
 It is important to note that all extensions are complementary to the existing Corda features
-and can be used together or individually with any Corda server. The extensions do not break
-existing features. Further, we focus on implementing W3C standards rather than working with
-any single
+and can be used together or individually with any Corda server.
 
+
+# Example
+
+Run the network map:
+
+docker run -p 8080:8080 --rm  -e NMS_TLS=false --name networkmap -t -i  -e NMS_PARAM_UPDATE_DELAY=0S -e NMS_STORAGE_TYPE=file  cordite/network-map:v0.4.5
 
 
 

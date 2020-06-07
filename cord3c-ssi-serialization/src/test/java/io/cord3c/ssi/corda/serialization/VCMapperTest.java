@@ -40,7 +40,8 @@ public class VCMapperTest implements WithAssertions {
 
 		Supplier<List<Party>> partySupplier = () -> Arrays.asList(party0, party1);
 
-		partyRegistry = new CordaPartyRegistry("mock-networkmap.org", partySupplier);
+		partyRegistry = new CordaPartyRegistry(partySupplier);
+		partyRegistry.setNetworkMapUrl("mock-networkmap.org");
 
 		VCSerializationScheme scheme = new VCSerializationScheme(partyRegistry, "http://localhost");
 		mapper = scheme.getCredentialMapper();
@@ -53,6 +54,7 @@ public class VCMapperTest implements WithAssertions {
 		state.setSubjectNode(party1);
 		state.setTimestamp(Instant.now());
 		state.setValue(12);
+		state.setId("foo");
 
 		VerifiableCredential credential = mapper.toCredential(state);
 		log.info("{}", credential);
@@ -60,7 +62,7 @@ public class VCMapperTest implements WithAssertions {
 		assertThat(credential.getClaims().get("value").intValue()).isEqualTo(12);
 		assertThat(credential.getIssuer()).isEqualTo(partyRegistry.toDid(party0));
 		assertThat(credential.getClaims().get(W3CHelper.CLAIM_SUBJECT_ID).textValue()).isEqualTo(partyRegistry.toDid(party1));
-		assertThat(credential.getId()).isEqualTo("http://localhost/VerifiableCredential/FIXME");
+		assertThat(credential.getId()).isEqualTo("http://localhost/test/foo");
 
 		VCTestState mappedState = mapper.fromCredential(credential);
 		assertThat(mappedState).isEqualToComparingFieldByField(state);

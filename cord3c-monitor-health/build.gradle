@@ -1,0 +1,61 @@
+import io.corda3c.gradle.CordappPlugin
+
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+apply plugin: net.corda.plugins.QuasarPlugin
+
+dependencies {
+
+	compileOnly project(':cord3c-server-http')
+
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+	implementation "io.dropwizard.metrics:metrics-core"
+
+	compileOnly "net.corda:corda-core:$CORDA_VERSION"
+	compileOnly "net.corda:corda-node:$CORDA_VERSION"
+	compileOnly 'javax.servlet:javax.servlet-api'
+
+	testImplementation project(':cord3c-server-http')
+	testImplementation project(':cord3c-monitor-ping')
+	testImplementation "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
+	testImplementation project(':cord3c-common-test')
+}
+
+jar {
+	archiveBaseName = 'cord3c-monitor-metrics'
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+shadowJar {
+	archiveClassifier = 'cordapp'
+	archiveBaseName = 'cord3c-monitor-metrics'
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+		shadow(MavenPublication) {
+			project.shadow.component(it)
+			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+		}
+	}
+}
+
+apply plugin: CordappPlugin
+cordapp {
+	shading = true
+	targetPlatformVersion 4
+	minimumPlatformVersion 4
+	workflow {
+		name "cord3c metrics"
+		vendor "cord3c"
+		licence "TDB"
+		versionId 1 // demo major cordapp version
+	}
+	signing {
+		enabled false
+	}
+}
+

@@ -8,13 +8,13 @@ import io.cord3c.rest.client.map.PartyDTO;
 import io.cord3c.ssi.api.did.Authentication;
 import io.cord3c.ssi.api.did.DIDDocument;
 import io.cord3c.ssi.api.resolver.DefaultUniversalResolver;
-import io.cord3c.ssi.api.internal.W3CHelper;
 import io.cord3c.ssi.networkmap.adapter.config.VCNetworkMapConfiguration;
 import io.crnk.core.queryspec.PathSpec;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.resource.list.ResourceList;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -32,6 +32,7 @@ import java.util.Arrays;
 @SpringBootTest(classes = VCNetworkMapConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 @TestPropertySource(properties = "server.port=8085")
+@Disabled // FIXME create system test
 public class CordaVCNetworkMapTest implements WithAssertions {
 
 	@LocalServerPort

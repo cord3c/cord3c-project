@@ -29,6 +29,9 @@ public class VCTestState implements ContractState {
 	@Subject
 	private Party subjectNode;
 
+	@Id
+	private String id;
+
 	@Claim
 	int value;
 

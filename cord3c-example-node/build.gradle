@@ -1,0 +1,103 @@
+import net.corda.plugins.QuasarPlugin
+
+apply plugin: JavaDefaultsPlugin
+apply plugin: QuasarPlugin
+
+apply plugin: 'application'
+
+mainClassName = "io.cord3c.example.node.ExampleNode"
+
+configurations {
+	cordapp
+	extralib
+}
+
+dependencies {
+	implementation "net.corda:corda-node:${CORDA_VERSION}"
+
+	implementation 'javax.json:javax.json-api:1.1.4'
+	implementation "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
+
+	cordapp project(':cord3c-rest-server'), { targetConfiguration = 'shadow' }
+	cordapp project(':cord3c-server-http'), { targetConfiguration = 'shadow' }
+	cordapp project(':cord3c-ssi-service'), { targetConfiguration = 'shadow' }
+	cordapp project(':cord3c-monitor-ping'), { targetConfiguration = 'shadow' }
+	cordapp project(':cord3c-example-cordapp'), { targetConfiguration = 'shadow' }
+
+}
+
+apply plugin: 'com.google.cloud.tools.jib'
+jib {
+	from {
+		image = 'anapsix/alpine-java:8u192b12_server-jre_unlimited'
+	}
+	jib {
+		extraDirectories.paths = ['src/main/extraFiles', 'build/extraFiles']
+	}
+
+	container {
+		ports = ['8080']
+	}
+	to {
+		image = "cord3c/example-node"
+		auth {
+			username = dockerHubUser
+			password = dockerHubPass
+		}
+		tags = ['latest']
+	}
+}
+
+task packageCordapps(type: Copy) {
+	into file("$buildDir/extraFiles/opt/cord3c/corda")
+	into file("$buildDir/data/cordapps/")
+	from configurations.cordapp
+	doFirst {
+		delete "$buildDir/extraFiles/opt/cord3c/cordapps"
+	}
+}
+
+processResources.dependsOn packageCordapps
+
+// deployment example to google cloud with Kubernetes and Helm
+apply plugin: 'kubectl'
+apply plugin: 'gcloud'
+apply plugin: 'helm'
+gcloud {
+	keyFile = file("$projectDir/secrets/gcloud.key")
+	region = System.getenv("CRNK_GCLOUD_REGION")
+	project = System.getenv("CRNK_GCLOUD_PROJECT")
+	gke {
+		clusterName = System.getenv("CRNK_GCLOUD_CLUSTER")
+	}
+	client {
+		imageName = 'google/cloud-sdk'
+		version = '224.0.0'
+	}
+}
+gcloudSetProject.dependsOn gcloudActivateServiceAccount
+gcloudGetKubernetesCredentials.dependsOn gcloudSetProject
+
+task deploy() {
+	dependsOn gcloudGetKubernetesCredentials, helmPackage, tasks.jib
+	doFirst {
+		kubectl.exec({ commandLine = "kubectl apply -f=${file('src/main/kubernetes/example-namespace.yaml')}" })
+
+		File yamlFile = file("build/helm/crnk-example.yaml")
+		yamlFile.parentFile.mkdirs()
+
+		String imageId = file("build/jib-image.id").text
+		if (imageId.startsWith("sha256:")) {
+			imageId = imageId.substring(7);
+		}
+		imageId = imageId.trim()
+
+		helm.exec({
+			commandLine = "helm template --name=crnk --set image.tag=${imageId} ${helmPackageCrnkExample.outputs.files.singleFile} --namespace=default"
+			stdoutFile = yamlFile
+		})
+
+		kubectl.exec({ commandLine = "kubectl apply -f=${yamlFile} -n=default" })
+	}
+}
+

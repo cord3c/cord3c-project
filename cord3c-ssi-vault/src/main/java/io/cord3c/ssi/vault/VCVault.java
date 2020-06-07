@@ -1,5 +1,6 @@
 package io.cord3c.ssi.vault;
 
+import com.google.common.base.Verify;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.vault.db.CredentialEntity;
 import io.cord3c.ssi.vault.db.VCSchemaMapper;
@@ -38,16 +39,19 @@ public class VCVault {
 	 */
 	public void record(List<VerifiableCredential> credentials) {
 		withEntityManager(em -> {
-			Set<String> ids = credentials.stream().map(it -> it.getId()).collect(Collectors.toSet());
-			Map<String, CredentialEntity> existing = getEntities(ids).stream()
-					.collect(Collectors.toMap(it -> it.getId(), it -> it));
+			Set<String> hashIds = credentials.stream().map(it -> it.toHashId()).collect(Collectors.toSet());
+			Map<String, CredentialEntity> existing = getEntities(hashIds).stream()
+					.collect(Collectors.toMap(it -> it.getHashId(), it -> it));
 
 			for (VerifiableCredential credential : credentials) {
-				CredentialEntity entity = existing.get(credential.getId());
+				Verify.verify(credential.getId() != null);
+				String hashId = credential.toHashId();
+				CredentialEntity entity = existing.get(hashId);
 				if (entity == null) {
 					entity = new CredentialEntity();
 				}
 				mapper.toEntity(entity, credential);
+				Verify.verify(entity.getCredentialId() != null);
 				em.persist(entity);
 			}
 			return null;
@@ -85,7 +89,7 @@ public class VCVault {
 
 	private List<CredentialEntity> getEntities(Collection<String> ids) {
 		return withEntityManager(em -> {
-			TypedQuery<CredentialEntity> query = em.createQuery("select c from CredentialEntity c where c.id IN :ids", CredentialEntity.class);
+			TypedQuery<CredentialEntity> query = em.createQuery("select c from CredentialEntity c where c.hashId IN :ids", CredentialEntity.class);
 			query.setParameter("ids", ids);
 			return query.getResultList();
 		});

@@ -23,7 +23,7 @@ public class VCSchemaMapperTest implements WithAssertions {
 		VerifiableCredential parsed = mapper.fromEntity(entity);
 		assertThat(parsed).isEqualToComparingFieldByField(credential);
 
-		assertThat(entity.getId()).isEqualTo(credential.getId());
+		assertThat(entity.getCredentialId()).isEqualTo(credential.getId());
 		assertThat(entity.getIssuanceDate()).isEqualTo(credential.getIssuanceDate());
 		assertThat(entity.getIssuer()).isEqualTo(credential.getIssuer());
 		assertThat(entity.getExpirationDate()).isEqualTo(credential.getExpirationDate());
@@ -33,7 +33,7 @@ public class VCSchemaMapperTest implements WithAssertions {
 		assertThat(entity.getClaims()).hasSize(2);
 		ClaimEntity claimEntity = entity.getClaims().values().stream().filter(it -> it.getId().getName().equals("hello")).findFirst().get();
 		assertThat(claimEntity.getId().getName()).isEqualTo("hello");
-		assertThat(claimEntity.getId().getClaimId()).isEqualTo(credential.getId());
+		assertThat(claimEntity.getId().getCredentialHashId()).isEqualTo(entity.getHashId());
 		assertThat(claimEntity.getStringValue()).isEqualTo("world");
 	}
 }
