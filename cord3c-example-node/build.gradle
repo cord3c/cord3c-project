@@ -29,14 +29,16 @@ dependencies {
 apply plugin: 'com.google.cloud.tools.jib'
 jib {
 	from {
-		image = 'anapsix/alpine-java:8u192b12_server-jre_unlimited'
+		image = 'azul/zulu-openjdk:8u192'
 	}
 	jib {
 		extraDirectories.paths = ['src/main/extraFiles', 'build/extraFiles']
 	}
-
+	containerizingMode = 'packaged' // required by Corda classloading mechanism
+//	System.out.println(quasar.exclusions.get());
 	container {
 		ports = ['8080']
+		jvmFlags = ["-javaagent:/opt/cord3c/quasar/quasar.jar"] // ${quasar.exclusions.get()}  FIXME
 	}
 	to {
 		image = "cord3c/example-node"
@@ -48,16 +50,22 @@ jib {
 	}
 }
 
-task packageCordapps(type: Copy) {
-	into file("$buildDir/extraFiles/opt/cord3c/corda")
-	into file("$buildDir/data/cordapps/")
+assemble.dependsOn(jibDockerBuild)
+
+task packageCordapps(type: Sync) {
+	into file("$buildDir/extraFiles/opt/cord3c/cordapps")
 	from configurations.cordapp
-	doFirst {
-		delete "$buildDir/extraFiles/opt/cord3c/cordapps"
+}
+
+task packageQuasar(type: Sync) {
+	into file("$buildDir/extraFiles/opt/cord3c/quasar")
+	from project.configurations.quasar.singleFile
+	rename { String fileName ->
+		fileName.replace("-core-0.7.10-jdk8", "")
 	}
 }
 
-processResources.dependsOn packageCordapps
+processResources.dependsOn packageCordapps, packageQuasar
 
 // deployment example to google cloud with Kubernetes and Helm
 apply plugin: 'kubectl'

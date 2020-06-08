@@ -74,9 +74,6 @@ dependencies {
 
 	compile "com.github.jengelman.gradle.plugins:shadow:$SHADOW_PLUGIN_VERSION"
 
-	compile "org.jboss.forge.roaster:roaster-api:$ROASTER_VERSION"
-	compile "org.jboss.forge.roaster:roaster-jdt:$ROASTER_VERSION"
-
 	compile "gradle.plugin.net.corda.plugins:cordapp:$CORDA_PLUGINS_VERSION"
 
 	compile "org.ajoberstar.grgit:grgit-gradle:$GRGIT_GRADLE_VERSION"

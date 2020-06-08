@@ -37,7 +37,7 @@ public class ExampleNode {
 
 	private File configDir;
 
-	private File baseDir;
+	private File dataDir;
 
 	private File truststoreFile;
 
@@ -57,11 +57,14 @@ public class ExampleNode {
 
 	private String env;
 
+	private File cordappDir;
+
 	public static void main(String[] args) {
 		ExampleNode node = new ExampleNode();
 		node.start();
 	}
 
+	@SneakyThrows
 	private void start() {
 		configure();
 		configureLogging();
@@ -69,14 +72,23 @@ public class ExampleNode {
 			generateNetworkParameters();
 		}
 		configureNode();
+		installCordapps();
 		startDatabase();
 		downloadTrustStore();
 		run();
 	}
 
 	@SneakyThrows
+	private void installCordapps() {
+		// even for docker a bit of copying around to satisfy the Corda directory structure
+		FileUtils.copyDirectory(cordappDir, new File(dataDir, "cordapps"));
+
+		// consider applying liquibase
+	}
+
+	@SneakyThrows
 	private void generateNetworkParameters() {
-		File file = new File(baseDir, "network-parameters");
+		File file = new File(dataDir, "network-parameters");
 		if (!networkMapEnabled && !file.exists()) {
 			FileUtils.copyFile(new File(configDir, file.getName()), file);
 		}
@@ -97,16 +109,22 @@ public class ExampleNode {
 		if (!projectDir.getName().equals("cord3c-example-node")) {
 			projectDir = new File(projectDir, "cord3c-example-node");
 		}
-		Verify.verify(projectDir.exists());
 
-		configDir = new File(projectDir, "src/main/extraFiles/etc/cord3c/");
-
-		baseDir = new File(projectDir, "build/data");
+		if (!projectDir.exists()) {
+			configDir = new File("/etc/cord3c/");
+			dataDir = new File("/var/cord3c");
+			cordappDir = new File("/opt/cord3c/cordapps");
+		} else {
+			configDir = new File(projectDir, "src/main/extraFiles/etc/cord3c/");
+			dataDir = new File(projectDir, "build/data");
+			cordappDir = new File(projectDir, "build/extraFiles/opt/cord3c/cordapps");
+		}
+		dataDir.mkdirs();
+		Verify.verify(configDir.exists(), configDir.getAbsolutePath());
+		Verify.verify(cordappDir.exists(), cordappDir.getAbsolutePath());
 
 		env = PropertyUtils.getProperty("cord3c.env", "dev");
 		networkMapEnabled = Boolean.parseBoolean(PropertyUtils.getProperty("cord3c.networkmap.enabled", Boolean.toString("prod".equals(env))));
-		baseDir.mkdirs();
-
 		System.setProperty("cord3c.server.url", "http://localhost:8090");
 		System.setProperty("cord3c.networkmap.url", "http://localhost:8080");
 	}
@@ -115,7 +133,7 @@ public class ExampleNode {
 	private void startDatabase() {
 		h2Server = Server.createTcpServer("-tcpPassword", databasePassword, "-tcpPort", Integer.toString(h2Port),
 				"-ifNotExists", "-tcpAllowOthers",
-				"-tcpDaemon", "-baseDir", baseDir.getAbsolutePath()).start();
+				"-tcpDaemon", "-baseDir", dataDir.getAbsolutePath()).start();
 		if (h2Server.isRunning(true)) {
 			log.info("H2 server was started and is running on port " + h2Port
 					+ " use jdbc:h2:tcp://localhost:" + h2Port + "/build/data");
@@ -131,8 +149,8 @@ public class ExampleNode {
 		nodeConfigFile = new File(configDir, "node-" + env + ".conf");
 		String nodeConfig = FileUtils.readFileToString(nodeConfigFile, StandardCharsets.UTF_8);
 		nodeConfig = nodeConfig.replace("${networkMapUrl}", networkMapUrl);
-		FileUtils.writeStringToFile(new File(baseDir, "node.conf"), nodeConfig, StandardCharsets.UTF_8);
-		truststoreFile = new File(baseDir, "network-truststore.jks");
+		FileUtils.writeStringToFile(new File(dataDir, "node.conf"), nodeConfig, StandardCharsets.UTF_8);
+		truststoreFile = new File(dataDir, "network-truststore.jks");
 	}
 
 	private void configureLogging() {
@@ -141,16 +159,23 @@ public class ExampleNode {
 		System.setProperty("log4j.configurationFile", logFile.getAbsolutePath());
 		log = LoggerFactory.getLogger(getClass());
 		System.setProperty("net.corda.node.printErrorsToStdErr", "true");
+
+		log.info("starting up cord3c example app");
+		log.info("using env={}", env);
+		if (networkMapEnabled) {
+			log.info("using networkMap={}", networkMapUrl);
+		} else {
+			log.info("network map disabled");
+		}
 	}
 
 	@SneakyThrows
 	private void run() {
 		NodeStartup startup = new NodeStartup();
 		RunAfterNodeInitialisation registration = node -> {
-			Verify.verify(truststoreFile.exists());
-
 			if (networkMapEnabled && !isRegistered()) {
-				InitialRegistration initialRegistration = new InitialRegistration(baseDir.toPath(), truststoreFile.toPath(), "trustpass", startup);
+				Verify.verify(truststoreFile.exists());
+				InitialRegistration initialRegistration = new InitialRegistration(dataDir.toPath(), truststoreFile.toPath(), "trustpass", startup);
 				initialRegistration.run(node);
 				log.warn("*************************************************************************************************************");
 				log.warn("performed registration with network map, please restart or fix https://github.com/corda/corda/issues/6318 :-)");
@@ -162,14 +187,14 @@ public class ExampleNode {
 		boolean requireCertificates = false;
 
 		SharedNodeCmdLineOptions cmdOptions = new SharedNodeCmdLineOptions();
-		cmdOptions.setBaseDirectory(baseDir.toPath());
+		cmdOptions.setBaseDirectory(dataDir.toPath());
 		cmdOptions.setDevMode(false);
 
 		startup.initialiseAndRun(cmdOptions, registration, requireCertificates);
 	}
 
 	private boolean isRegistered() {
-		return Arrays.asList(baseDir.listFiles()).stream().filter(it -> it.getName().startsWith("nodeInfo-")).findAny().isPresent();
+		return Arrays.asList(dataDir.listFiles()).stream().filter(it -> it.getName().startsWith("nodeInfo-")).findAny().isPresent();
 	}
 
 	@SneakyThrows
@@ -186,12 +211,14 @@ public class ExampleNode {
 
 	@SneakyThrows
 	private void downloadTrustStore() {
-		String url = networkMapUrl + "/network-map/truststore";
-		try (CloseableHttpClient client = HttpClientBuilder.create().useSystemProperties().build()) {
-			HttpGet get = new HttpGet(url);
-			CloseableHttpResponse response = client.execute(get);
-			Verify.verify(response.getStatusLine().getStatusCode() == 200);
-			FileUtils.writeByteArrayToFile(truststoreFile, EntityUtils.toByteArray(response.getEntity()));
+		if (networkMapEnabled) {
+			String url = networkMapUrl + "/network-map/truststore";
+			try (CloseableHttpClient client = HttpClientBuilder.create().useSystemProperties().build()) {
+				HttpGet get = new HttpGet(url);
+				CloseableHttpResponse response = client.execute(get);
+				Verify.verify(response.getStatusLine().getStatusCode() == 200);
+				FileUtils.writeByteArrayToFile(truststoreFile, EntityUtils.toByteArray(response.getEntity()));
+			}
 		}
 	}
 }
