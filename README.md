@@ -105,7 +105,7 @@ The API endpoint will be available at:
 
  	http://localhost:8090/api/
 
-Some further URLs to play around that show the power of Crnk:
+Some further URLs to play around:
 
     http://127.0.0.1:8080/api/movie
     FIXME
@@ -141,68 +141,3 @@ cordapps
 
 cord3c is licensed under the Apache License, Version 2.0.
 You can grab a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# crnk example application
-
-[![Build Status](https://travis-ci.org/crnk-project/crnk-example.svg?branch=master)](https://travis-ci.org/crnk-project/crnk-example)
-[![Gitter](https://img.shields.io/gitter/room/crkn-io/lobby.svg)](https://gitter.im/crnk-io/Lobby)
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://github.com/crnk-project/crnk-framework/blob/master/LICENSE.txt)
-
-This is a Spring-based showcasing the use of [Crnk](https://github.com/crnk-project/crnk-framework).
-Further smaller example applications integrating into various frameworks can be found at
-[crnk-integration-examples](https://github.com/crnk-project/crnk-framework/tree/master/crnk-integration-examples).
-
-*WARNING: this example project is still in development and subject to various improvements, see roadmap*
-
-
-
-
-
-
-
-
-
-## Build Setup
-
-The project makes use of https://github.com/rmee/gradle-plugins/ for the build setup.
-
-- if no JAVA_HOME is configured (recommended), a suitable JDK will be downloaded automatically
-  by the `jdk-bootstrap` plugin.
-- `src/main/helm` holds a Helm chart to deploy to Kubernetes.
-- Deployment to Kubernetes is triggered by the `deploy` task. All the deployment is confined
-  to Docker images and a project-specific home directory located in `build/home`. No installation
-  of any tooling necessary thanks to the plugins in use. Further wrapper scripts like `./kubectl`
-  allow to use this deployment setup from a shell (GitBash, Linux, etc.). For deployment
-  `CRNK_GCLOUD_REGION`, `CRNK_GCLOUD_PROJECT`, `CRNK_GCLOUD_CLUSTER` environment variables must
-  be set and credentials be available in `crnk-example-service/secrets/gcloud.key`.
-
-
-
-
-
-## Links
-
-* [Homepage](http://www.crnk.io)
-* [Documentation](http://www.crnk.io/releases/stable/documentation/)
-* [Source code](https://github.com/crnk-project/crnk-example/)
-* [Issue tracker](https://github.com/crnk-project/crnk-example/issues)
-* [Forum](https://gitter.im/crnk-io/Lobby)
-* [Build](https://travis-ci.org/crnk-project/crnk-example/)
