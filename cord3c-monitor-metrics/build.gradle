@@ -52,7 +52,7 @@ cordapp {
 		name "cord3c metrics"
 		vendor "cord3c"
 		licence "TDB"
-		versionId 1 // demo major cordapp version
+		versionId 1
 	}
 	signing {
 		enabled false

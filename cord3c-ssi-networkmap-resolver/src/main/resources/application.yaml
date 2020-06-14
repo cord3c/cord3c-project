@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: cord3c-ssi-networkmap-adapter
+
+server:
+  port: 8080
+
+crnk:
+  path-prefix: /api/map
+  jpa:
+    enabled: false
+  meta:
+    enabled: false
+
+cord3c:
+  ssi:
+    networkmap:
+      url: http://cord3c-map-cordite:8080/

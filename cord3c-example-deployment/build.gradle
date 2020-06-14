@@ -1,0 +1,35 @@
+apply plugin: 'kubectl'
+apply plugin: 'helm'
+cliExec {
+	register 'doctl'
+	imageName = 'cord3c/cord3c-ci-base'
+	imageTag = BASE_IMAGE_VERSION
+}
+
+
+helmPackageCord3cExample {
+	def nodeImageIdFile = file("../cord3c-example-node/build/image-input.id")
+	def resolverImageIdFile = file("../cord3c-ssi-networkmap-resolver/build/image-input.id")
+
+	inputs.file nodeImageIdFile
+	inputs.file resolverImageIdFile
+
+	dependsOn ':cord3c-example-node:jib', ':cord3c-ssi-networkmap-resolver:jib'
+	doFirst {
+		values.put('node.image.tag', nodeImageIdFile.text.substring("sha256:".length()).trim())
+		values.put('resolver.image.tag', resolverImageIdFile.text.substring("sha256:".length()).trim())
+	}
+}
+
+task deploy() {
+	dependsOn helmPackage
+	doFirst {
+		cliExec.exec({ commandLine = "doctl auth init --access-token ${System.env.CORD3C_ACCESS_TOKEN}" })
+		cliExec.exec({ commandLine = "doctl kubernetes cluster kubeconfig save cord3c-example" })
+		cliExec.exec({ commandLine = "kubectl apply -f=${file('src/main/kubernetes/example-namespace.yaml')}" })
+		helm.exec({
+			commandLine = "helm upgrade -i cord3c ${helmPackageCord3cExample.outputs.files.singleFile} --namespace=cord3c-example"
+		})
+	}
+}
+

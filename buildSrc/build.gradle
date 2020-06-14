@@ -52,14 +52,6 @@ dependencies {
 
 	compile "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:$TESTSETS_VERSION"
 
-	compile "com.github.rmee:kubectl:${RMEE_GRADLE_VERSION}"
-	compile "com.github.rmee:helm:${RMEE_GRADLE_VERSION}"
-	compile "com.github.rmee:gcloud:${RMEE_GRADLE_VERSION}"
-	compile "com.github.rmee:oc:${RMEE_GRADLE_VERSION}"
-	compile "com.github.rmee:az:${RMEE_GRADLE_VERSION}"
-	compile "com.github.rmee:terraform:${RMEE_GRADLE_VERSION}"
-	compile "com.github.rmee:assemble-needed:${RMEE_GRADLE_VERSION}"
-
 	compile "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
 	compile "org.apache.httpcomponents:httpmime:$APACHE_HTTP_VERSION"
 	compile "commons-io:commons-io:$COMMONS_IO_VERSION"

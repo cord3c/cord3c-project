@@ -25,7 +25,7 @@ public class HttpService extends SingletonSerializeAsToken {
 	private static AppServiceHub serviceHub;
 
 	@Getter
-	private int port = 8090;
+	private int port = 8080;
 
 	@SneakyThrows
 	public HttpService(AppServiceHub appServiceHub) {

@@ -1,0 +1,4 @@
+apiVersion: v1
+description: cord3c example application
+name: cord3c-example
+version: 0.1.0

@@ -6,10 +6,12 @@ management:
     port: 8081
 
 crnk:
-  path-prefix: /api
+  path-prefix: /api/node
   default-page-limit: 20
   security:
     enabled: ${example.security-enabled}
+  meta:
+    enabled: false
 
 github:
   client:

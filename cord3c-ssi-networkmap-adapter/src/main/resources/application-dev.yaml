@@ -1,5 +1,0 @@
-cord3c:
-    ssi:
-        networkmap:
-            url: https://map.test.cardossier.net/
-            host: localhost:8080

@@ -1,0 +1,104 @@
+apply plugin: 'base'
+
+ext.baseImageVersion = rootProject.version
+ext.baseImageName = "cord3c/cord3c-ci-base:${baseImageVersion}"
+ext.wrapperTask = project.getRootProject().getTasks().getByName('wrapper')
+
+task buildBaseImage(type: Exec) {
+	group 'Publish'
+	description 'Building base docker image'
+
+	def imageArgs = [
+			JDK_VERSION       : "${JDK_VERSION}",
+			JDK_FILENAME      : "OpenJDK8U-jdk_x64_linux_hotspot_${JDK_VERSION.replace("-", "")}.tar.gz",
+			TF_VERSION        : "${TF_VERSION}",
+			TF_FILENAME       : "terraform_${TF_VERSION.replace("-", "")}_linux_amd64.zip",
+			DOCTL_VERSION     : "${DOCTL_VERSION}",
+			HELM_VERSION      : "${HELM_VERSION}",
+			HELM_FILENAME     : "helm-${HELM_VERSION}-linux-amd64.tar.gz",
+			GRADLE_VERSION    : "${GRADLE_VERSION}",
+			GRADLE_FILENAME   : "gradle-${GRADLE_VERSION}-all.zip",
+			DOCKER_VERSION    : "${DOCKER_VERSION}",
+			KUBERNETES_VERSION: "${KUBERNETES_VERSION}"
+	]
+
+	def argList = []
+	imageArgs.each { k, v ->
+		argList << "--build-arg"
+		argList << "${k}=${v}"
+	}
+	commandLine 'docker', 'build', '-t', "${baseImageName}", '-t', 'cord3c/cord3c-ci-base:latest', "${projectDir}"
+	args argList
+
+	doFirst {
+		println "Building base image with version $baseImageVersion"
+	}
+}
+
+
+def static replaceTag(String line, newTag) {
+	return line.substring(0, line.lastIndexOf('/') + 1) + newTag
+}
+
+
+def static replaceVersionProp(String line, newVersion) {
+	return line.substring(0, line.indexOf("=") + 1) + newVersion
+}
+
+
+task updateBaseImageVersion() {
+	group 'Publish'
+	description 'Updates base docker image version for pipeline and shell scripts'
+
+	def yml = '.gitlab-ci.yml'
+	def props = 'gradle.properties'
+
+	doFirst {
+		// updates the gitlab ci definition with the new image
+		copy {
+			from rootProject.file(yml)
+			into buildDir
+			filter { line -> line.startsWith("image") ? replaceTag(line, baseImageName) : line }
+		}
+
+		copy {
+			from "$buildDir/${yml}"
+			into rootProject.rootDir
+		}
+
+		copy {
+			from rootProject.file(props)
+			into buildDir
+			filter { line -> line.startsWith("BASE_IMAGE_VERSION") ? replaceVersionProp(line, baseImageVersion) : line }
+		}
+
+		copy {
+			from "$buildDir/${props}"
+			into rootProject.rootDir
+		}
+	}
+}
+wrapperTask.inputs.files("${project.getRootProject().file('.gitlab-ci.yml')}")
+
+
+task publishBaseImage() {
+	group 'Publish'
+	description 'Publising base docker image'
+
+	doLast {
+		println "Publishing ${baseImageName} to registriy ${DOCKER_REGISTRY}"
+
+		project.exec {
+			commandLine 'docker', 'login', '-u', dockerPublishUser, '--password-stdin', DOCKER_REGISTRY
+			standardInput = new ByteArrayInputStream(dockerPublishPass.getBytes())
+		}
+		project.exec {
+			commandLine 'docker', 'tag', "${baseImageName}", "${DOCKER_REGISTRY}/${baseImageName}"
+		}
+		project.exec {
+			commandLine 'docker', 'push', "${DOCKER_REGISTRY}/${baseImageName}"
+		}
+	}
+}
+publishBaseImage.dependsOn(buildBaseImage)
+publishBaseImage.dependsOn(updateBaseImageVersion)

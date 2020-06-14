@@ -33,7 +33,7 @@ import java.util.Arrays;
 
 public class ExampleNode {
 
-	private String networkMapUrl = "http://localhost:8080";
+	private String networkMapUrl;
 
 	private File configDir;
 
@@ -51,8 +51,6 @@ public class ExampleNode {
 
 	private Server h2Server;
 
-	private boolean networkMapEnabled;
-
 	private Logger log;
 
 	private String env;
@@ -68,7 +66,7 @@ public class ExampleNode {
 	private void start() {
 		configure();
 		configureLogging();
-		if (!networkMapEnabled) {
+		if (networkMapUrl == null) {
 			generateNetworkParameters();
 		}
 		configureNode();
@@ -89,7 +87,7 @@ public class ExampleNode {
 	@SneakyThrows
 	private void generateNetworkParameters() {
 		File file = new File(dataDir, "network-parameters");
-		if (!networkMapEnabled && !file.exists()) {
+		if (networkMapUrl == null && !file.exists()) {
 			FileUtils.copyFile(new File(configDir, file.getName()), file);
 		}
 	}
@@ -124,7 +122,7 @@ public class ExampleNode {
 		Verify.verify(cordappDir.exists(), cordappDir.getAbsolutePath());
 
 		env = PropertyUtils.getProperty("cord3c.env", "dev");
-		networkMapEnabled = Boolean.parseBoolean(PropertyUtils.getProperty("cord3c.networkmap.enabled", Boolean.toString("prod".equals(env))));
+		networkMapUrl = PropertyUtils.getProperty("cord3c.networkmap.url", null);
 		System.setProperty("cord3c.server.url", "http://localhost:8090");
 		System.setProperty("cord3c.networkmap.url", "http://localhost:8080");
 	}
@@ -162,7 +160,7 @@ public class ExampleNode {
 
 		log.info("starting up cord3c example app");
 		log.info("using env={}", env);
-		if (networkMapEnabled) {
+		if (networkMapUrl != null) {
 			log.info("using networkMap={}", networkMapUrl);
 		} else {
 			log.info("network map disabled");
@@ -173,7 +171,7 @@ public class ExampleNode {
 	private void run() {
 		NodeStartup startup = new NodeStartup();
 		RunAfterNodeInitialisation registration = node -> {
-			if (networkMapEnabled && !isRegistered()) {
+			if (networkMapUrl != null && !isRegistered()) {
 				Verify.verify(truststoreFile.exists());
 				InitialRegistration initialRegistration = new InitialRegistration(dataDir.toPath(), truststoreFile.toPath(), "trustpass", startup);
 				initialRegistration.run(node);
@@ -211,7 +209,7 @@ public class ExampleNode {
 
 	@SneakyThrows
 	private void downloadTrustStore() {
-		if (networkMapEnabled) {
+		if (networkMapUrl != null) {
 			String url = networkMapUrl + "/network-map/truststore";
 			try (CloseableHttpClient client = HttpClientBuilder.create().useSystemProperties().build()) {
 				HttpGet get = new HttpGet(url);

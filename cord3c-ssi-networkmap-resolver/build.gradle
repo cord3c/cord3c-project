@@ -1,0 +1,86 @@
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+
+configurations {
+	cordaBinary.extendsFrom bom
+	cordaExtraJars.extendsFrom bom
+	cordaJaas.extendsFrom bom
+}
+
+configurations.all {
+	exclude group: "log4j"
+	exclude group: "org.apache.logging.log4j"
+}
+
+dependencies {
+	implementation project(':cord3c-ssi-api')
+	implementation project(':cord3c-ssi-serialization')
+	implementation project(':cord3c-rest-server')
+
+	implementation 'com.squareup.okhttp3:okhttp:4.2.2' // used by network map client
+	api "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
+
+	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
+
+	implementation "net.corda:corda-core:${CORDA_VERSION}"
+	implementation "net.corda:corda-rpc:${CORDA_VERSION}"
+	implementation "net.corda:corda-serialization:${CORDA_VERSION}"
+	implementation "net.corda:corda-node-api:${CORDA_VERSION}"
+	implementation("net.corda:corda-node:${CORDA_VERSION}") {
+		transitive = false
+	}
+
+	implementation 'org.springframework.boot:spring-boot-starter-undertow'
+	implementation 'org.springframework:spring-web'
+	implementation 'org.springframework:spring-context'
+	implementation 'org.springframework:spring-beans'
+	implementation 'org.springframework.boot:spring-boot-autoconfigure'
+	implementation 'org.springframework.boot:spring-boot'
+
+	implementation "info.picocli:picocli:4.1.4"
+	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
+
+	implementation 'io.crnk:crnk-core'
+	implementation 'io.crnk:crnk-home'
+	implementation 'io.crnk:crnk-setup-spring-boot2'
+	implementation 'io.crnk:crnk-format-plain-json'
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
+
+	implementation 'javax.servlet:javax.servlet-api'
+	implementation 'org.slf4j:slf4j-api:1.7.5'
+	implementation 'ch.qos.logback:logback-classic'
+	implementation 'org.slf4j:log4j-over-slf4j'
+
+	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+}
+
+apply plugin: JavaImageDefaultsPlugin
+jib {
+	from {
+		//image = 'adoptopenjdk/openjdk11-openj9:x86_64-ubuntu-jdk-11.0.1.13'
+		image = 'azul/zulu-openjdk:8u192'
+	}
+	container {
+		mainClass = 'io.cord3c.ssi.networkmap.resolver.NetworkMapResolverMain'
+		ports = ['8080']
+	}
+	to {
+		image = "cord3c/networkmap-resolver"
+		auth {
+			username = dockerHubUser
+			password = dockerHubPass
+		}
+		tags = ['latest']
+	}
+}
+

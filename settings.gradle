@@ -1,5 +1,7 @@
 include ':cord3c-example-cordapp'
 include ':cord3c-example-node'
+include ':cord3c-example-deployment'
+include ':cord3c-example-base-image'
 include ':cord3c-example-systemTest'
 include ':cord3c-common-test'
 include ':cord3c-rest-client'
@@ -13,7 +15,7 @@ include ':cord3c-ssi-annotations'
 include ':cord3c-ssi-serialization'
 include ':cord3c-ssi-service'
 include ':cord3c-ssi-vault'
-include ':cord3c-ssi-networkmap-adapter'
+include ':cord3c-ssi-networkmap-resolver'
 
 gradle.beforeProject { Project project ->
 	project.with {

@@ -23,8 +23,6 @@ class JavaDefaultsPlugin implements Plugin<Project> {
 			apply plugin: 'org.unbroken-dome.test-sets'
 			apply plugin: 'idea'
 
-			apply plugin: 'assemble-needed'
-
 			java {
 				withSourcesJar()
 			}
