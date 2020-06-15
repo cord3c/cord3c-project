@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app: example
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  name: {{ .Release.Name }}-ingress
+  annotations:
+    kubernetes.io/ingress.class: "contour"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/node
+            backend:
+              serviceName: {{ .Release.Name }}-example-node
+              servicePort: 8080
+          - path: /api/map
+            backend:
+              serviceName: {{ .Release.Name }}-map-resolver
+              servicePort: 8080
+          - path: /parties
+            backend:
+              serviceName: {{ .Release.Name }}-map-resolver
+              servicePort: 8080
+          - path: /.well-known
+            backend:
+              serviceName: {{ .Release.Name }}-map-resolver
+              servicePort: 8080
+          - path: /network-map/
+            backend:
+              serviceName: {{ .Release.Name }}-map-cordite
+              servicePort: 8080
+          - path: /
+            backend:
+              serviceName: {{ .Release.Name }}-map-cordite
+              servicePort: 8080

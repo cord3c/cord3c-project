@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @FieldNameConstants
 @ToString(callSuper = true)
-@BelongsToContract(LeageContract.class)
+@BelongsToContract(LeagueContract.class)
 @VerifiableCredentialType(type = "leagueMembership")
 public class LeagueMembership implements ContractState {
 

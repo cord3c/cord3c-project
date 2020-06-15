@@ -26,7 +26,7 @@ public class CordaRestModule implements Module {
 		context.addRepository(new NodeRepositoryImpl(serviceHub, cordaMapper));
 		context.addRepository(new NotaryRepositoryImpl(serviceHub, cordaMapper));
 		context.addRepository(new PartyRepositoryImpl(serviceHub, cordaMapper));
-		context.addRepository(new RunningFlowRepositoryImpl(serviceHub, objectMapper, cordaMapper));
+		context.addRepository(new FlowExecutionRepositoryImpl(serviceHub, objectMapper, cordaMapper));
 		context.addRepository(new VaultStateRepositoryImpl(cordaMapper));
 
 		if (existsClass("io.cord3c.ssi.api.vc.VerifiableCredential")) {

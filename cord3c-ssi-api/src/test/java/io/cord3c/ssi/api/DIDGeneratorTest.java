@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class DIDGeneratorTest implements WithAssertions {
 
-	private static final String TEST_DOMAIN = "test";
+	private static final String TEST_DOMAIN = "http://test";
 
 	@Test
 	public void generateRandomDidTest() {

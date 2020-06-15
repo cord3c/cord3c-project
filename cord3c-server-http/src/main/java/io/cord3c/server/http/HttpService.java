@@ -20,12 +20,14 @@ import java.util.ServiceLoader;
 @AutoService(SingletonSerializeAsToken.class)
 public class HttpService extends SingletonSerializeAsToken {
 
+	public static int DEFAULT_PORT = 8080;
+
 	private static Server server = new Server();
 
 	private static AppServiceHub serviceHub;
 
 	@Getter
-	private int port = 8080;
+	private int port = DEFAULT_PORT;
 
 	@SneakyThrows
 	public HttpService(AppServiceHub appServiceHub) {

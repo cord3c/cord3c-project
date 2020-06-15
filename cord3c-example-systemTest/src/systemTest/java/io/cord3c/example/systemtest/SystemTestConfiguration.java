@@ -16,11 +16,11 @@ public class SystemTestConfiguration {
 
 	@Bean
 	public NodeRestClient nodeRestClient() {
-		return new NodeRestClient(properties.getApiUrl());
+		return new NodeRestClient(properties.getNodeUrl());
 	}
 
 	@Bean
 	public NetworkMapRestClient networkMapClient() {
-		return new NetworkMapRestClient(properties.getNetworkMapUrl());
+		return new NetworkMapRestClient(properties.getResolverUrl());
 	}
 }

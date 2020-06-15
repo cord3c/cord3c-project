@@ -2,14 +2,19 @@ package io.cord3c.rest.server.internal;
 
 import io.cord3c.rest.client.VaultStateDTO;
 import io.cord3c.rest.client.VaultStateRepository;
+import io.crnk.core.engine.internal.utils.PreconditionUtil;
+import io.crnk.core.queryspec.QuerySpec;
+import io.crnk.core.resource.list.ResourceList;
 import io.crnk.data.jpa.JpaEntityRepositoryBase;
 import io.crnk.data.jpa.JpaRepositoryConfig;
 import io.crnk.data.jpa.mapping.JpaMapper;
 import io.crnk.data.jpa.query.Tuple;
 import lombok.RequiredArgsConstructor;
+import net.corda.core.node.AppServiceHub;
 import net.corda.core.schemas.PersistentStateRef;
 import net.corda.node.services.vault.VaultSchemaV1;
-import org.mapstruct.factory.Mappers;
+
+import javax.persistence.EntityManager;
 
 public class VaultStateRepositoryImpl extends JpaEntityRepositoryBase<VaultStateDTO, PersistentStateRef> implements VaultStateRepository {
 

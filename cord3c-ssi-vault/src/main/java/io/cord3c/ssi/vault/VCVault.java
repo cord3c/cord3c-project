@@ -49,10 +49,10 @@ public class VCVault {
 				CredentialEntity entity = existing.get(hashId);
 				if (entity == null) {
 					entity = new CredentialEntity();
+					mapper.toEntity(entity, credential);
+					Verify.verify(entity.getCredentialId() != null);
+					em.persist(entity);
 				}
-				mapper.toEntity(entity, credential);
-				Verify.verify(entity.getCredentialId() != null);
-				em.persist(entity);
 			}
 			return null;
 		});

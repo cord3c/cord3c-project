@@ -46,7 +46,7 @@ public class WebDriver implements DIDDriver {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 
-		Verify.verify(conn.getResponseCode() <= 200);
+		Verify.verify(conn.getResponseCode() <= 200, "failed to retrieve DID from %s, got=%s", url, conn.getResponseMessage());
 		InputStream in = conn.getInputStream();
 		String encoding = conn.getContentEncoding();
 		encoding = encoding == null ? "UTF-8" : encoding;

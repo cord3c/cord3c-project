@@ -1,3 +1,5 @@
 cord3c:
-    systemtest:
-        api-url: http://localhost:8090/api
+  systemtest:
+    url: http://localhost:8080
+    resolver-url: ${cord3c.systemtest.url}/api/map
+    node-url:  ${cord3c.systemtest.url}/api/node

@@ -35,9 +35,10 @@ public class RestServletFactory implements HttpServletFactory {
 	@Setter
 	private static String networkMapUrl;
 
+
 	@Override
 	public String getPattern() {
-		return "/api/*";
+		return "/api/node/*";
 	}
 
 	@Override
@@ -47,9 +48,12 @@ public class RestServletFactory implements HttpServletFactory {
 		return CordaCrnkServlet.class;
 	}
 
+
 	public static class CordaCrnkServlet extends CrnkServlet {
 
 		private CordaMapper cordaMapper = Mappers.getMapper(CordaMapper.class);
+
+		private ThreadLocal<EntityManager> emLocal = new ThreadLocal<>();
 
 		@Override
 		protected void initCrnk(CrnkBoot boot) {
@@ -57,7 +61,7 @@ public class RestServletFactory implements HttpServletFactory {
 				networkMapUrl = System.getenv("CORD3C_SSI_NETWORKMAP_URL");
 			}
 			if (networkMapUrl == null) {
-				networkMapUrl = System.getProperty("cord3c.ssi.networkmap.url");
+				networkMapUrl = System.getProperty("cord3c.networkmap.url");
 			}
 			if (networkMapUrl == null) {
 				throw new IllegalStateException("please configure CORD3C_SSI_NETWORKMAP_HOST or set manually on RestServletFactory");
@@ -73,8 +77,9 @@ public class RestServletFactory implements HttpServletFactory {
 		}
 
 		private Module createJpaModule() {
+			// TODO move transaction handling into repository? keep it away from other repositories? focus on repository.getEntityManager?
 			JpaModuleConfig config = new JpaModuleConfig();
-			Supplier<EntityManager> supplier = () -> serviceHub.withEntityManager(it -> it);
+			Supplier<EntityManager> supplier = () -> emLocal.get();// serviceHub.withEntityManager(it -> it);
 			TransactionRunner transactionRunner = new TransactionRunner() {
 				@Override
 				@SneakyThrows
@@ -86,14 +91,23 @@ public class RestServletFactory implements HttpServletFactory {
 		}
 
 		@RequiredArgsConstructor
-		private static class CordaTransaction<T> implements Function1<SessionScope, T> {
+		private class CordaTransaction<T> implements Function1<SessionScope, T> {
 
 			private final Callable<T> callable;
 
-			@SneakyThrows
 			@Override
 			public T invoke(SessionScope sessionScope) {
-				return (T) callable.call();
+				return serviceHub.withEntityManager(em -> {
+					emLocal.set(em);
+					T result = safeCall(callable);
+					emLocal.remove();
+					return result;
+				});
+			}
+
+			@SneakyThrows
+			private T safeCall(Callable<T> callable) {
+				return callable.call();
 			}
 		}
 	}

@@ -7,7 +7,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 public class SystemTestProperties {
 
-	private String apiUrl;
+	private String url;
+
+	private String nodeUrl;
 
 	private String networkMapUrl;
+
+	private String resolverUrl;
 }

@@ -41,7 +41,7 @@ public class VCMapperTest implements WithAssertions {
 		Supplier<List<Party>> partySupplier = () -> Arrays.asList(party0, party1);
 
 		partyRegistry = new CordaPartyRegistry(partySupplier);
-		partyRegistry.setNetworkMapUrl("mock-networkmap.org");
+		partyRegistry.setNetworkMapUrl("http://mock-networkmap.org");
 
 		VCSerializationScheme scheme = new VCSerializationScheme(partyRegistry, "http://localhost");
 		mapper = scheme.getCredentialMapper();

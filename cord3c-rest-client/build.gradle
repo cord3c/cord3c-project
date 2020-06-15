@@ -6,6 +6,10 @@ dependencies {
 	api "io.crnk:crnk-client:${CRNK_VERSION}"
 	api "org.apache.httpcomponents:httpclient:$APACHE_HTTP_VERSION"
 
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$JACKSON_VERSION"
+	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
+
 	api project(":cord3c-ssi-api")
 
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"

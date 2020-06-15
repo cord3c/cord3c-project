@@ -14,6 +14,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-test'
 	implementation 'org.springframework:spring-test'
+
+	implementation 'io.crnk:crnk-testkit'
 }
 
 systemTest {

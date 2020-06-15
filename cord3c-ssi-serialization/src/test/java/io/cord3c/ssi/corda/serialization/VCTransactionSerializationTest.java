@@ -85,7 +85,7 @@ public class VCTransactionSerializationTest {
 		System.out.println(wireTransaction);
 
 		CordaPartyRegistry partyRegistry = new CordaPartyRegistry(node.getServices().getIdentityService());
-		partyRegistry.setNetworkMapUrl("mock-networkmap.org");
+		partyRegistry.setNetworkMapUrl("http://mock-networkmap.org");
 		String baseUrl = "http://localhost";
 		VCSerializationScheme scheme = new VCSerializationScheme(partyRegistry, baseUrl);
 		SerializedBytes serialize = scheme.serialize(wireTransaction, context);

@@ -143,10 +143,14 @@ public class ExampleNode {
 
 	@SneakyThrows
 	private void configureNode() {
-		System.setProperty("cord3c.ssi.networkmap.url", networkMapUrl);
 		nodeConfigFile = new File(configDir, "node-" + env + ".conf");
 		String nodeConfig = FileUtils.readFileToString(nodeConfigFile, StandardCharsets.UTF_8);
-		nodeConfig = nodeConfig.replace("${networkMapUrl}", networkMapUrl);
+		if (networkMapUrl != null) {
+			System.setProperty("cord3c.networkmap.url", networkMapUrl);
+			nodeConfig = nodeConfig.replace("${networkMapUrl}", networkMapUrl);
+		} else {
+			System.setProperty("cord3c.networkmap.url", "http://no-networkmap");
+		}
 		FileUtils.writeStringToFile(new File(dataDir, "node.conf"), nodeConfig, StandardCharsets.UTF_8);
 		truststoreFile = new File(dataDir, "network-truststore.jks");
 	}

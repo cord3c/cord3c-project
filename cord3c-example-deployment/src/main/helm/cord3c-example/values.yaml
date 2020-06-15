@@ -1,1 +1,4 @@
 domain: example.net
+
+networkmap:
+  externalUrl: http://174.138.101.25

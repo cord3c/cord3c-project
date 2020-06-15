@@ -56,7 +56,8 @@ public class RestServiceTest implements WithAssertions {
 
 	@BeforeAll
 	public void setup() {
-		RestServletFactory.setNetworkMapUrl("http://localhost:8080");
+		HttpService.DEFAULT_PORT = 18080;
+		RestServletFactory.setNetworkMapUrl("http://localhost:" + HttpService.DEFAULT_PORT);
 
 		name = new CordaX500Name("STAR Labs", "Central City", "US");
 		final MockNetworkParameters defaultParameters = new MockNetworkParameters().withCordappsForAllNodes(cordapps());
@@ -79,7 +80,7 @@ public class RestServiceTest implements WithAssertions {
 
 		JsonNode links = jsonNode.get("links");
 		assertThat(links.has("flow")).isTrue();
-		assertThat(links.has("node")).isTrue();
+		assertThat(links.has("nodeInfo")).isTrue();
 		assertThat(links.has("notary")).isTrue();
 		assertThat(links.has("party")).isTrue();
 		assertThat(links.has("vault")).isTrue();
@@ -201,8 +202,8 @@ public class RestServiceTest implements WithAssertions {
 
 	@Test
 	public void verifyRunningFlows() {
-		QuerySpec querySpec = new QuerySpec(RunningFlowDTO.class);
-		ResourceList<RunningFlowDTO> states = client.getFlows().findAll(querySpec);
+		QuerySpec querySpec = new QuerySpec(FlowExecutionDTO.class);
+		ResourceList<FlowExecutionDTO> states = client.getFlows().findAll(querySpec);
 		assertThat(states).hasSize(0); // FIXME add test flows data
 	}
 
@@ -211,13 +212,13 @@ public class RestServiceTest implements WithAssertions {
 		PingInput input = new PingInput();
 		input.setOtherParty(name.toString());
 		input.setMessage("echo");
-		RunningFlowDTO flow = client.invokeFlow(PingFlow.PingFlowInitiator.class, input);
+		FlowExecutionDTO flow = client.invokeFlow(PingFlow.PingFlowInitiator.class, input);
 		assertThat(flow.getId()).isNotNull();
 	}
 
 	private String getUrl() {
 		ServiceHub serviceHub = node.getServices();
 		HttpService httpService = serviceHub.cordaService(HttpService.class);
-		return "http://127.0.0.1:" + httpService.getPort() + "/api";
+		return "http://127.0.0.1:" + httpService.getPort() + "/api/node";
 	}
 }

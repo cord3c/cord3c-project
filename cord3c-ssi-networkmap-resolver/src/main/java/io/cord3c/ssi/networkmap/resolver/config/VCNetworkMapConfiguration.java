@@ -68,7 +68,7 @@ public class VCNetworkMapConfiguration {
 	@Bean
 	public PartyToDIDMapper partyToDIDMapper() {
 		PartyToDIDMapper mapper = new PartyToDIDMapper();
-		mapper.setNetworkMapUrl(properties.getUrl());
+		mapper.setNetworkMapUrl(properties.getExternalUrl());
 		return mapper;
 	}
 
@@ -132,8 +132,9 @@ public class VCNetworkMapConfiguration {
 	@SneakyThrows
 	private X509Certificate fetchTrustStore() {
 		String url = properties.getUrl() + "/network-map/truststore";
+		log.info("fetching truststore from {}", url);
 		HttpClientBuilder builder = HttpClientBuilder.create();
-		builder.useSystemProperties();
+		// builder.useSystemProperties();
 		try (CloseableHttpClient client = builder.build()) {
 			HttpGet get = new HttpGet(url);
 			CloseableHttpResponse response = client.execute(get);
@@ -146,7 +147,7 @@ public class VCNetworkMapConfiguration {
 
 				return (X509Certificate) certificate;
 			} else {
-				throw new IllegalStateException("failed to obtain network truststore: got " + response.getStatusLine().toString());
+				throw new IllegalStateException("failed to obtain network truststore from " + url + ", got " + response.getStatusLine().toString());
 			}
 		}
 	}

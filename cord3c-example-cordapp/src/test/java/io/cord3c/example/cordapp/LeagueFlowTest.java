@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class LeageFlowTest implements WithAssertions {
+public class LeagueFlowTest implements WithAssertions {
 
 	private MockNetwork network;
 
@@ -43,7 +43,7 @@ public class LeageFlowTest implements WithAssertions {
 	@BeforeAll
 	public void setup() {
 		System.setProperty(VCProperties.SERVER_URL, "localhost");
-		System.setProperty(VCProperties.NETWORK_MAP_URL, "localhost");
+		System.setProperty(VCProperties.NETWORK_MAP_URL, "http://localhost");
 		name1 = new CordaX500Name("STAR Labs", "Central City", "US");
 		name2 = new CordaX500Name("Wayne Enterprises", "Gotham City", "US");
 		final MockNetworkParameters defaultParameters = new MockNetworkParameters().withCordappsForAllNodes(cordapps());
@@ -56,7 +56,7 @@ public class LeageFlowTest implements WithAssertions {
 	@SneakyThrows
 	@Test
 	public void issueMembership() {
-		String did = DIDGenerator.generateRandomDid("private");
+		String did = DIDGenerator.generateRandomDid("http://private");
 
 		IssueLeagueMembership.IssueMembershipInput input = new IssueLeagueMembership.IssueMembershipInput();
 		input.setDid(did);

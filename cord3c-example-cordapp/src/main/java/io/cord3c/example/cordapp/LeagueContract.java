@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;
 
-public class LeageContract implements Contract {
+public class LeagueContract implements Contract {
 
     @Override
     public void verify(@NotNull LedgerTransaction tx) {
-        CommandWithParties<LeageCommands> withParties = requireSingleCommand(tx.getCommands(), LeageCommands.class);
+        CommandWithParties<LeagueCommands> withParties = requireSingleCommand(tx.getCommands(), LeagueCommands.class);
         withParties.getValue().verify(tx, withParties);
     }
 }

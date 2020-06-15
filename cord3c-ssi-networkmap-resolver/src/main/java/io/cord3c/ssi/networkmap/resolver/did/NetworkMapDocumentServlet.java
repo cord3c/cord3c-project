@@ -21,24 +21,22 @@ public class NetworkMapDocumentServlet extends HttpServlet {
 
 	private final NetworkMapResolverProperties properties;
 
-	private final VCCrypto crypt;
+	private final VCCrypto crypto;
 
 	@Override
 	@SneakyThrows
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		X509Certificate rootCertificate = properties.getRootCertificate();
 
-		String did = DIDGenerator.toWellKnownDid(properties.getUrl());
-		DIDPublicKey publicKey = crypt.toDidPublicKey(rootCertificate.getPublicKey(), did);
+		String did = DIDGenerator.toWellKnownDid(properties.getExternalUrl());
+		DIDPublicKey publicKey = crypto.toDidPublicKey(rootCertificate.getPublicKey(), did);
 
 		DIDDocument doc = new DIDDocument();
 		doc.setContext(W3CHelper.DID_CONTEXT_V1);
 		doc.setId(did);
 		doc.getPublicKeys().add(publicKey);
-		doc.getAuthentications().add(crypt.toAuthentication(publicKey));
-		DIDServletWriter.write(response, doc);
-
-		DIDServletWriter.write(response, doc);
+		doc.getAuthentications().add(crypto.toAuthentication(publicKey));
+		DIDServletUtils.write(response, doc);
 	}
 
 }

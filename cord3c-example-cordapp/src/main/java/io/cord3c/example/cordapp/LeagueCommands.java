@@ -6,15 +6,15 @@ import net.corda.core.contracts.CommandWithParties;
 import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
-public interface LeageCommands extends CommandData {
+public interface LeagueCommands extends CommandData {
 
-	void verify(@NotNull LedgerTransaction tx, CommandWithParties<LeageCommands> withParties);
+	void verify(@NotNull LedgerTransaction tx, CommandWithParties<LeagueCommands> withParties);
 
 	@EqualsAndHashCode
-	class IssueMembership implements LeageCommands {
+	class IssueMembership implements LeagueCommands {
 
 		@Override
-		public void verify(@NotNull LedgerTransaction tx, CommandWithParties<LeageCommands> withParties) {
+		public void verify(@NotNull LedgerTransaction tx, CommandWithParties<LeagueCommands> withParties) {
 		}
 	}
 }

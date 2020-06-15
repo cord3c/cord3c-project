@@ -8,9 +8,7 @@
 		<withJansi>true</withJansi>
 		<encoder>
 			<charset>UTF-8</charset>
-			<pattern>%d{HH:mm:ss,SSS} %highlight(%-5.5p) [%15.15t] %cyan([%30.30c]) %X{indent} %m
-				[%X{trace.id},%X{transaction.id},%X{user}] %n
-			</pattern>
+			<pattern>%d{HH:mm:ss,SSS} %highlight(%-5.5p) [%15.15t] %cyan([%30.30c]) %X{indent} %m [%X{trace.id},%X{transaction.id},%X{user}] %n</pattern>
 		</encoder>
 	</appender>
 

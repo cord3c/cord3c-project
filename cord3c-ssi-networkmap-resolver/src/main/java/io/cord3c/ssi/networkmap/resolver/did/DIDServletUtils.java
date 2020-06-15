@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.Writer;
 
 @UtilityClass
-public class DIDServletWriter {
+class DIDServletUtils {
 
 
 	@SneakyThrows

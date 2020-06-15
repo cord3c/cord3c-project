@@ -13,6 +13,5 @@ crnk:
     enabled: false
 
 cord3c:
-  ssi:
-    networkmap:
-      url: http://cord3c-map-cordite:8080/
+  networkmap:
+    url: http://cord3c-map-cordite:8080/

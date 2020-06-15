@@ -9,7 +9,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.util.List;
 
-@JsonApiResource(type = "node")
+@JsonApiResource(type = "nodeInfo")
 @Data
 @FieldNameConstants
 public class NodeDTO {

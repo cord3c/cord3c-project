@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-map-resolver
+  labels:
+    app: example
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    description: Corda SSI adapter to resolve DID
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      deployment: map-resolver
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        deployment: map-resolver
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-networkmap-resolver
+        image: 'cord3c/networkmap-resolver:{{ .Values.resolver.image.tag }}'
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+          {{ if .Values.networkmap.url }}
+          - name: CORD3C_SSI_NETWORKMAP_URL
+            value: {{ .Values.networkmap.url }}
+          {{ end }}
+          - name: CORD3C_NETWORKMAP_EXTERNAL_URL
+            value: {{ .Values.networkmap.externalUrl }}

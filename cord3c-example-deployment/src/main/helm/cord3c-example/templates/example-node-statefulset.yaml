@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-example-node
+  labels:
+    app: example
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    description: Corda node of example application.
+spec:
+  serviceName: {{ .Release.Name }}-example-node
+  replicas: 1
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      deployment: example-node
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        deployment: example-node
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-example-node
+        image: 'cord3c/example-node:{{ .Values.node.image.tag }}'
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+        - name: SERVICE_NAME
+          value: example
+        - name: CORD3C_NETWORKMAP_URL
+          value: "http://{{ .Release.Name }}-map-cordite:8080"
+        - name: CORD3C_ENV
+          value: prod
+        volumeMounts:
+          - name: data
+            mountPath: /var/cord3c
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: example
+          chart: {{ .Chart.Name }}
+          release: {{ .Release.Name }}
+          heritage: {{ .Release.Service }}
+        annotations:
+          "helm.sh/resource-policy": keep
+      spec:
+        storageClassName: do-block-storage
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

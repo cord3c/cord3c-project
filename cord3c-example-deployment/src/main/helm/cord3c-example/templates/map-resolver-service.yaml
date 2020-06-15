@@ -1,0 +1,17 @@
+kind: Service
+apiVersion: "v1"
+metadata:
+  name: {{ .Release.Name }}-map-resolver
+  labels:
+    app: example
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  ports:
+    - name: "http"
+      port: 8080
+      targetPort: 8080
+  selector:
+    release: {{ .Release.Name }}
+    deployment: map-resolver

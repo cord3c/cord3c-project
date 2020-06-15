@@ -1,6 +1,6 @@
 package io.cord3c.rest.server.internal;
 
-import io.cord3c.rest.client.RunningFlowDTO;
+import io.cord3c.rest.client.FlowExecutionDTO;
 import io.cord3c.rest.client.VaultStateDTO;
 import io.cord3c.rest.client.map.NodeDTO;
 import io.cord3c.rest.client.map.NotaryDTO;
@@ -71,8 +71,8 @@ public abstract class CordaMapper {
 		return CryptoUtils.toStringShort(party.getOwningKey());
 	}
 
-	public RunningFlowDTO map(StateMachineTransactionMapping mapping) {
-		RunningFlowDTO dto = new RunningFlowDTO();
+	public FlowExecutionDTO map(StateMachineTransactionMapping mapping) {
+		FlowExecutionDTO dto = new FlowExecutionDTO();
 		dto.setId(mapping.getStateMachineRunId().getUuid());
 		dto.setTransactionId(mapping.getTransactionId());
 		return dto;

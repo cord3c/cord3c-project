@@ -12,12 +12,12 @@ public class DIDGenerator {
 
 	public static final String ALG_SHA256 = "SHA-256";
 
-	public static String toWellKnownDid(String domain) {
-		return DID_WEB_PREFIX + ":" + VCUtils.toHost(domain);
+	public static String toWellKnownDid(String url) {
+		return DID_WEB_PREFIX + ":" + VCUtils.toHost(url);
 	}
 
-	public static String generateRandomDid(String domain) {
-		return toWellKnownDid(domain) + ":" + UUID.randomUUID().toString();
+	public static String generateRandomDid(String url) {
+		return toWellKnownDid(url) + ":" + UUID.randomUUID().toString();
 	}
 
 

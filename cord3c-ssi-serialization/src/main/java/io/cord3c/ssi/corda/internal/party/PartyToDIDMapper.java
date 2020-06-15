@@ -9,6 +9,7 @@ import lombok.Setter;
 import net.corda.core.crypto.CryptoUtils;
 
 import java.security.PublicKey;
+import java.util.Objects;
 
 public class PartyToDIDMapper {
 
@@ -20,12 +21,20 @@ public class PartyToDIDMapper {
 	@Setter
 	private String networkMapUrl = PropertyUtils.getProperty(VCProperties.NETWORK_MAP_URL, null);
 
+
+	@Setter
+	private String ssiHost = PropertyUtils.getProperty(VCProperties.NETWORK_MAP_EXTERNAL_URL, null);
+
+	private String getDidHost() {
+		return VCUtils.toHost(Objects.requireNonNull(networkMapUrl));
+	}
+
 	public String toDid(PublicKey publicKey) {
 		return toDid(CryptoUtils.toStringShort(publicKey));
 	}
 
 	public String toDid(String shortName) {
-		return PARTY_DID_PREFIX + VCUtils.toHost(networkMapUrl) + PARTIES_PATH + shortName;
+		return PARTY_DID_PREFIX + getDidHost() + PARTIES_PATH + shortName;
 	}
 
 	public String getShortName(String did) {
@@ -37,7 +46,7 @@ public class PartyToDIDMapper {
 		String host = did.substring(PARTY_DID_PREFIX.length(), sep);
 		String shortName = did.substring(sep + PARTIES_PATH.length());
 
-		Verify.verify(host.equals(VCUtils.toHost(networkMapUrl)), "unknown network map: %s, expected %s", host, networkMapUrl);
+		Verify.verify(host.equals(getDidHost()), "unknown network map: %s, expected %s", host, networkMapUrl);
 		return shortName;
 	}
 

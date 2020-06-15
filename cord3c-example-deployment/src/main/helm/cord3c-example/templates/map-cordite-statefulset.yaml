@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-map-cordite
+  labels:
+    app: example
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    description: Corda node of example application.
+spec:
+  serviceName: {{ .Release.Name }}-map-cordite
+  replicas: 1
+  selector:
+    matchLabels:
+      release: {{ .Release.Name }}
+      deployment: map-cordite
+  template:
+    metadata:
+      labels:
+        release: {{ .Release.Name }}
+        deployment: map-cordite
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: {{ .Release.Name }}-map-cordite
+        image: 'cordite/network-map:v0.4.5'
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+        env:
+        - name: NMS_TLS
+          value: "false"
+        - name: NMS_PARAM_UPDATE_DELAY
+          value: "0S"
+        - name: NMS_STORAGE_TYPE
+          value: "file"
+        - name: SERVICE_NAME
+          value: map-cordite
+        volumeMounts:
+          - name: data
+            mountPath: /opt/cordite/db
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: example
+          chart: {{ .Chart.Name }}
+          release: {{ .Release.Name }}
+          heritage: {{ .Release.Service }}
+        annotations:
+          "helm.sh/resource-policy": keep
+      spec:
+        storageClassName: do-block-storage
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

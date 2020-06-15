@@ -28,7 +28,7 @@ public class NodeInfoDocumentServlet extends HttpServlet {
 	@SneakyThrows
 	public NodeInfoDocumentServlet(NodeMapRepositoryImpl repository, NetworkMapResolverProperties properties, VCCrypto crypto) {
 		this.didMapper = new PartyToDIDMapper();
-		this.didMapper.setNetworkMapUrl(properties.getUrl());
+		this.didMapper.setNetworkMapUrl(properties.getExternalUrl());
 		this.crypto = crypto;
 		this.repository = repository;
 	}
@@ -53,7 +53,7 @@ public class NodeInfoDocumentServlet extends HttpServlet {
 			doc.setId(did);
 			doc.getPublicKeys().add(publicKey);
 			doc.getAuthentications().add(crypto.toAuthentication(publicKey));
-			DIDServletWriter.write(response, doc);
+			DIDServletUtils.write(response, doc);
 		}
 	}
 
