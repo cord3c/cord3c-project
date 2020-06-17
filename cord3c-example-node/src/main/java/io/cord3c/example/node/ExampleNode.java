@@ -92,16 +92,6 @@ public class ExampleNode {
 		}
 	}
 
-
-	private static CertificateAndKeyPair createDevNetworkMapCa(CertificateAndKeyPair rootCa) {
-		KeyPair keyPair = Crypto.generateKeyPair();
-		Pair<Duration, Duration> validityWindow = new Pair<>(Duration.ZERO, Duration.ofDays(365 * 10L));
-		X509Certificate cert = X509Utilities.createCertificate(CertificateType.NETWORK_MAP, rootCa.getCertificate(),
-				rootCa.getKeyPair(), new X500Principal("CN=Network Map,O=R3 Ltd,L=London,C=GB"), keyPair.getPublic(),
-				validityWindow, null, null, null); // TODO add in corda 4.0 , null, null
-		return new CertificateAndKeyPair(cert, keyPair);
-	}
-
 	private void configure() {
 		File projectDir = new File("").getAbsoluteFile();
 		if (!projectDir.getName().equals("cord3c-example-node")) {
@@ -197,18 +187,6 @@ public class ExampleNode {
 
 	private boolean isRegistered() {
 		return Arrays.asList(dataDir.listFiles()).stream().filter(it -> it.getName().startsWith("nodeInfo-")).findAny().isPresent();
-	}
-
-	@SneakyThrows
-	private void skipSerializationSetup(Node node) {
-		// fix this in corda, registration and running does not work together
-		System.out.println(node.getClass());
-		System.out.println(Arrays.asList(node.getClass().getDeclaredFields()));
-
-		Field initialiseSerialization = node.getClass().getDeclaredField("initialiseSerialization");
-		initialiseSerialization.setAccessible(true);
-		initialiseSerialization.set(node, false);
-
 	}
 
 	@SneakyThrows
