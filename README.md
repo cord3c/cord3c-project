@@ -70,18 +70,16 @@ is also a good example how external consumers can interact with the REST API of 
 
 The endpoint is publicly accessible for anybody to look around. Some interesting links to visit:
 
-http://174.138.101.25/api/node/ entry point to discover JSON:API node API. Everything is linked with HATEOAS for eased exploration.
-http://174.138.101.25/api/map/ is a matching JSON-API endpoint of our networkmap-to-SSI adapter.
-http://174.138.101.25/.well-known/did.json serves the DID of the network map (with its root key).
-http://174.138.101.25/parties/DL8VrsqpbxTCLL9gnnJYTqreeY5Y98yQ2645f1EE8zqTox serves the DID for the party having the short name `DL8VrsqpbxTCLL9gnnJYTqreeY5Y98yQ2645f1EE8zqTox`
-http://174.138.101.25/api/map/party lists all the parties, including their DID.
-http://174.138.101.25/api/node/verifiableCredential lists all recorded VCs.
-http://174.138.101.25/api/node/verifiableCredential?filter[credential.issuanceDate][GT]=2020-06-14T11:42:05.812Z&sort=credential.issuer as example for sorting and filtering with JSON:API (any other endpoint can also be searched and filtered).
-http://174.138.101.25/api/node/flow endpoint to post new flows and get currently and recently run flows.
+- http://174.138.101.25/api/node/ entry point to discover JSON:API node API. Everything is linked with HATEOAS for eased exploration.
+- http://174.138.101.25/api/map/ is a matching JSON-API endpoint of our networkmap-to-SSI adapter.
+- http://174.138.101.25/.well-known/did.json serves the DID of the network map (with its root key).
+- http://174.138.101.25/parties/DL8VrsqpbxTCLL9gnnJYTqreeY5Y98yQ2645f1EE8zqTox serves the DID for the party having the short name `DL8VrsqpbxTCLL9gnnJYTqreeY5Y98yQ2645f1EE8zqTox`
+- http://174.138.101.25/api/map/party lists all the parties, including their DID.
+- http://174.138.101.25/api/node/verifiableCredential lists all recorded VCs.
+- http://174.138.101.25/api/node/verifiableCredential?filter[credential.issuanceDate][GT]=2020-06-14T11:42:05.812Z&sort=credential.issuer as example for sorting and filtering with JSON:API (any other endpoint can also be searched and filtered).
+- http://174.138.101.25/api/node/flow endpoint to post new flows and get currently and recently run flows.
 
-FIXME: move to HTTPS to make DIDs discoverable from https://uniresolver.io/ and other implementations using
-did:web:174.138.101.25 (or a domain name)
-
+FIXME: move to HTTPS to make DIDs discoverable from https://uniresolver.io/ and other implementations using did:web:174.138.101.25 (or a domain name)
 FIXME: add curl example to trigger flows, else?
 
 
