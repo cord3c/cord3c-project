@@ -1,5 +1,4 @@
 apply plugin: JavaDefaultsPlugin
-apply plugin: PublishingDefaultsPlugin
 
 dependencies {
 	api project(':cord3c-ssi-api')
@@ -8,12 +7,4 @@ dependencies {
 	api "net.corda:corda-core:${CORDA_VERSION}"
 	api "net.corda:corda-node-driver:${CORDA_VERSION}"
 	api "com.fasterxml.jackson.core:jackson-databind:$JACKSON_VERSION"
-}
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-	}
 }

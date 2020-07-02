@@ -72,14 +72,25 @@ public class ExampleNode {
 		configureNode();
 		installCordapps();
 		startDatabase();
+		resetDatabase();
 		downloadTrustStore();
 		run();
+	}
+
+	private void resetDatabase() {
+		// clear data in database (but not credentials)
+		String url = "jdbc:h2:tcp://localhost:" + h2Port + "/node";
+		ResetManager resetManager = new ResetManager(null, url, databaseUser, databasePassword);
+		resetManager.softReset();
 	}
 
 	@SneakyThrows
 	private void installCordapps() {
 		// even for docker a bit of copying around to satisfy the Corda directory structure
-		FileUtils.copyDirectory(cordappDir, new File(dataDir, "cordapps"));
+		File cordappRuntimeDir = new File(dataDir, "cordapps");
+		FileUtils.deleteDirectory(cordappRuntimeDir);
+		cordappRuntimeDir.mkdirs();
+		FileUtils.copyDirectory(cordappDir, cordappRuntimeDir);
 
 		// consider applying liquibase
 	}
@@ -115,6 +126,7 @@ public class ExampleNode {
 		networkMapUrl = PropertyUtils.getProperty("cord3c.networkmap.url", null);
 		System.setProperty("cord3c.server.url", "http://localhost:8090");
 		System.setProperty("cord3c.networkmap.url", "http://localhost:8080");
+		System.setProperty("cord3c.rest.contextPath", "/api/node/");
 	}
 
 	@SneakyThrows
@@ -124,7 +136,7 @@ public class ExampleNode {
 				"-tcpDaemon", "-baseDir", dataDir.getAbsolutePath()).start();
 		if (h2Server.isRunning(true)) {
 			log.info("H2 server was started and is running on port " + h2Port
-					+ " use jdbc:h2:tcp://localhost:" + h2Port + "/build/data");
+					+ " use jdbc:h2:tcp://localhost:" + h2Port + "/node");
 		} else {
 			throw new IllegalStateException("Could not start H2 server.");
 		}

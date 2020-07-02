@@ -142,14 +142,14 @@ public class CordappPlugin @Inject constructor(private val objects: ObjectFactor
     }
 
     private fun configurePomCreation(project: Project) {
-        project.tasks.withType(GenerateMavenPom::class.java) { task ->
+        /*project.tasks.withType(GenerateMavenPom::class.java) { task ->
             task.doFirst {
                 project.logger.info("Modifying task: ${task.name} in project ${project.path} to exclude all dependencies from pom")
                 // The CorDapp is a semi-fat jar, so we need to exclude its compile and runtime
                 // scoped dependencies from its Maven POM when we publish it.
                 task.pom = filterDependenciesFor(task.pom)
             }
-        }
+        }*/
     }
 
     private fun calculateExcludedDependencies(project: Project): Set<Dependency> {

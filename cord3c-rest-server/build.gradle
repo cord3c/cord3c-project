@@ -5,19 +5,20 @@ apply plugin: PublishingDefaultsPlugin
 apply plugin: net.corda.plugins.QuasarPlugin
 
 dependencies {
-	api project(':cord3c-rest-client')
+	api project(':cord3c-rest-api')
+	compileOnly project(':cord3c-ssi-api')
 	compileOnly project(':cord3c-server-http')
-	compileOnly project(':cord3c-ssi-service')
+	compileOnly project(':cord3c-ssi-serialization') // TODO make self-contained with ssi being optional
 
-	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
+	compileOnly "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 
-	implementation "io.crnk:crnk-core:${CRNK_VERSION}"
-	implementation "io.crnk:crnk-setup-servlet:${CRNK_VERSION}"
-	implementation "io.crnk:crnk-data-jpa:${CRNK_VERSION}"
-	implementation "io.crnk:crnk-client:${CRNK_VERSION}"
-	implementation "io.crnk:crnk-home:${CRNK_VERSION}"
+	api "io.crnk:crnk-core:${CRNK_VERSION}"
+	api "io.crnk:crnk-setup-servlet:${CRNK_VERSION}"
+	api "io.crnk:crnk-data-jpa:${CRNK_VERSION}"
+	api "io.crnk:crnk-client:${CRNK_VERSION}"
+	api "io.crnk:crnk-home:${CRNK_VERSION}"
 
-	api 'javax.servlet:javax.servlet-api'
+	compileOnly 'javax.servlet:javax.servlet-api'
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-node:${CORDA_VERSION}"
 
@@ -25,24 +26,37 @@ dependencies {
 	testImplementation project(':cord3c-common-test')
 	testImplementation project(':cord3c-server-http')
 	testImplementation project(':cord3c-monitor-ping')
+	testImplementation project(':cord3c-rest-client')
 }
 
 
 apply plugin: 'com.github.johnrengelman.shadow'
 shadowJar {
 	archiveClassifier = 'cordapp'
-	archiveBaseName = 'cord3c-server-rest'
+	archiveBaseName = 'cord3c-rest-server'
 	// relocate 'test', 'test2'
+
+	dependencies {
+		exclude(dependency {
+			return (it.moduleGroup.startsWith('com.fasterxml') || it.moduleGroup == 'org.slf4j'
+					|| it.moduleGroup == 'javax.xml.bind' || it.moduleName.startsWith('cord3c-ssi')
+					|| it.moduleGroup == 'javax.annotation' || it.moduleGroup == 'javax.activation'
+					|| it.moduleGroup == 'net.i2p.crypto')
+		})
+	}
+}
+
+def cordappArtifact = artifacts.add('archives', shadowJar.outputs.files.singleFile) {
+	type 'cordapp'
+	classifier 'cordapp'
+	builtBy shadowJar
 }
 
 publishing {
 	publications {
 		maven(MavenPublication) {
 			from components.java
-		}
-		shadow(MavenPublication) {
-			project.shadow.component(it)
-			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+			artifact cordappArtifact
 		}
 	}
 }

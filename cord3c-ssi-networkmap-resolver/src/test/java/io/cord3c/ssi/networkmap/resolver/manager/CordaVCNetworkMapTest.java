@@ -1,10 +1,10 @@
 package io.cord3c.ssi.networkmap.resolver.manager;
 
 import io.cord3c.rest.client.NetworkMapRestClient;
-import io.cord3c.rest.client.map.NetworkParametersDTO;
-import io.cord3c.rest.client.map.NodeDTO;
-import io.cord3c.rest.client.map.NotaryDTO;
-import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.api.map.NetworkParametersDTO;
+import io.cord3c.rest.api.map.NodeDTO;
+import io.cord3c.rest.api.map.NotaryDTO;
+import io.cord3c.rest.api.map.PartyDTO;
 import io.cord3c.ssi.api.did.Authentication;
 import io.cord3c.ssi.api.did.DIDDocument;
 import io.cord3c.ssi.api.resolver.DefaultUniversalResolver;

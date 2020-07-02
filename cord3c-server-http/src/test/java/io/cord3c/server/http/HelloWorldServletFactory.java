@@ -17,8 +17,8 @@ public class HelloWorldServletFactory implements HttpServletFactory {
 	}
 
 	@Override
-	public Class<? extends HttpServlet> getImplementation(AppServiceHub serviceHub) {
-		return HelloWorldServlet.class;
+	public HelloWorldServlet getImplementation(AppServiceHub serviceHub) {
+		return new HelloWorldServlet();
 	}
 
 	public static class HelloWorldServlet extends HttpServlet {

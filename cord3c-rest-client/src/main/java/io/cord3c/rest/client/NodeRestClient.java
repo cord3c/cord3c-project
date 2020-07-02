@@ -1,23 +1,32 @@
 package io.cord3c.rest.client;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.UUID;
+import java.util.concurrent.TimeoutException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.cord3c.rest.client.map.NodeRepository;
-import io.cord3c.rest.client.map.NotaryRepository;
-import io.cord3c.rest.client.map.PartyRepository;
+import io.cord3c.rest.api.DrainingRepository;
+import io.cord3c.rest.api.FlowExecutionDTO;
+import io.cord3c.rest.api.FlowExecutionRepository;
+import io.cord3c.rest.api.VaultStateRepository;
+import io.cord3c.rest.api.map.MyInfoDTO;
+import io.cord3c.rest.api.map.MyInfoRepository;
+import io.cord3c.rest.api.map.NodeDTO;
+import io.cord3c.rest.api.map.NodeRepository;
+import io.cord3c.rest.api.map.NotaryRepository;
+import io.cord3c.rest.api.map.PartyRepository;
+import io.cord3c.ssi.api.rest.VCRepository;
 import io.crnk.client.CrnkClient;
+import io.crnk.core.queryspec.PathSpec;
 import io.crnk.core.queryspec.QuerySpec;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.corda.core.flows.FlowLogic;
 import net.jodah.typetools.TypeResolver;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 
 public class NodeRestClient {
 
@@ -55,6 +64,18 @@ public class NodeRestClient {
 
 	public PartyRepository getParties() {
 		return client.getRepositoryForInterface(PartyRepository.class);
+	}
+
+	public DrainingRepository getDraining() {
+		return client.getRepositoryForInterface(DrainingRepository.class);
+	}
+
+	public MyInfoDTO getMyInfo() {
+		QuerySpec querySpec = new QuerySpec(MyInfoDTO.class);
+		querySpec.includeRelation(PathSpec.of(MyInfoDTO.Fields.node, NodeDTO.Fields.legalIdentitiesAndCerts));
+
+		MyInfoRepository repository = client.getRepositoryForInterface(MyInfoRepository.class);
+		return repository.findOne("me", querySpec);
 	}
 
 	public NodeRepository getNodes() {
@@ -111,9 +132,5 @@ public class NodeRestClient {
 			timeout = timeout.minus(waitPeriod);
 		}
 		throw new TimeoutException("flow failed to finish in time: " + currentStatus);
-	}
-
-	public CrnkClient getCrnk() {
-		return client;
 	}
 }

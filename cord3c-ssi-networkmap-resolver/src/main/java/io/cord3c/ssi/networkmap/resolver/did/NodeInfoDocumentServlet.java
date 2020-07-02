@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.api.map.PartyDTO;
 import io.cord3c.ssi.api.did.DIDPublicKey;
 import io.cord3c.ssi.api.internal.W3CHelper;
 import io.cord3c.ssi.api.vc.VCCrypto;
@@ -46,7 +46,7 @@ public class NodeInfoDocumentServlet extends HttpServlet {
 			log.info("did not found party with did={}", did);
 			response.setStatus(404);
 		} else {
-			DIDPublicKey publicKey = crypto.toDidPublicKey(party.getOwningKey(), did);
+			DIDPublicKey publicKey = crypto.toDidKey(party.decodeOwningKey(), did);
 
 			DIDDocument doc = new DIDDocument();
 			doc.setContext(W3CHelper.DID_CONTEXT_V1);

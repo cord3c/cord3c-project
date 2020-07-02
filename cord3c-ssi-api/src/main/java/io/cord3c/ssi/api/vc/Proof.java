@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class Proof {
 
@@ -32,7 +30,4 @@ public class Proof {
 	@Setter
 	private String jws;
 
-	public Proof(String type) {
-		this.type = type;
-	}
 }

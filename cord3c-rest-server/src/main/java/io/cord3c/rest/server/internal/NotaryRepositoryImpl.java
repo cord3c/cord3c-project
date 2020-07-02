@@ -1,7 +1,7 @@
 package io.cord3c.rest.server.internal;
 
-import io.cord3c.rest.client.map.NotaryDTO;
-import io.cord3c.rest.client.map.NotaryRepository;
+import io.cord3c.rest.api.map.NotaryDTO;
+import io.cord3c.rest.api.map.NotaryRepository;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ReadOnlyResourceRepositoryBase;
 import io.crnk.core.resource.list.ResourceList;

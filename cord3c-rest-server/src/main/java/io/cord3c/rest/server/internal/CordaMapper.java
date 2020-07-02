@@ -1,21 +1,23 @@
 package io.cord3c.rest.server.internal;
 
-import io.cord3c.rest.client.FlowExecutionDTO;
-import io.cord3c.rest.client.VaultStateDTO;
-import io.cord3c.rest.client.map.NodeDTO;
-import io.cord3c.rest.client.map.NotaryDTO;
-import io.cord3c.rest.client.map.PartyDTO;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+
+import io.cord3c.rest.api.map.NodeDTO;
+import io.cord3c.rest.api.map.NotaryDTO;
+import io.cord3c.rest.api.map.PartyDTO;
 import io.cord3c.ssi.corda.internal.party.PartyToDIDMapper;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
+import net.corda.core.crypto.Base58;
 import net.corda.core.crypto.CryptoUtils;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.identity.PartyAndCertificate;
-import net.corda.core.messaging.StateMachineTransactionMapping;
 import net.corda.core.node.NodeInfo;
 import net.corda.core.node.NotaryInfo;
-import net.corda.node.services.vault.VaultSchemaV1;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -32,8 +34,6 @@ public abstract class CordaMapper {
 	@Mapping(target = "id", expression = "java(getId(notaryInfo.getIdentity()))")
 	public abstract NotaryDTO map(NotaryInfo notaryInfo);
 
-	public abstract VaultStateDTO map(VaultSchemaV1.VaultStates state);
-
 	@Mapping(target = "id", expression = "java(getId(party))")
 	@Mapping(target = "did", expression = "java(didMapper.toDid(party.getParty().getOwningKey()))")
 	public abstract PartyDTO mapParty(PartyAndCertificate party);
@@ -41,6 +41,22 @@ public abstract class CordaMapper {
 	@Mapping(target = "id", expression = "java(getId(party))")
 	@Mapping(target = "did", expression = "java(didMapper.toDid(party.getOwningKey()))")
 	public abstract PartyDTO mapParty(Party party);
+
+	public Party unmapParty(PartyDTO party) {
+		String name = party.getName().toString().replaceAll("\\s+", "");
+		return new Party(CordaX500Name.parse(name), party.decodeOwningKey());
+	}
+
+	public String map(PublicKey publicKey) {
+		return Base58.encode(publicKey.getEncoded());
+	}
+
+	@SneakyThrows
+	public PublicKey unmap(String base58) {
+		byte[] bytes = Base58.decode(base58);
+		KeyFactory keyFactory = KeyFactory.getInstance("EC");
+		return keyFactory.generatePublic(new X509EncodedKeySpec(bytes));
+	}
 
 	protected String getId(NodeInfo nodeInfo) {
 		CordaX500Name name = nodeInfo.getLegalIdentities().get(0).getName();
@@ -69,12 +85,5 @@ public abstract class CordaMapper {
 
 	protected String getId(Party party) {
 		return CryptoUtils.toStringShort(party.getOwningKey());
-	}
-
-	public FlowExecutionDTO map(StateMachineTransactionMapping mapping) {
-		FlowExecutionDTO dto = new FlowExecutionDTO();
-		dto.setId(mapping.getStateMachineRunId().getUuid());
-		dto.setTransactionId(mapping.getTransactionId());
-		return dto;
 	}
 }

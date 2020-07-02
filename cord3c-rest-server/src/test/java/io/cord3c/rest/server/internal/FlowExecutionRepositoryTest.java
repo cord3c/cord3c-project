@@ -1,10 +1,16 @@
 package io.cord3c.rest.server.internal;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cord3c.monitor.ping.PingFlow;
 import io.cord3c.monitor.ping.PingInput;
-import io.cord3c.rest.client.FlowExecutionDTO;
+import io.cord3c.rest.api.FlowExecutionDTO;
 import io.crnk.core.queryspec.QuerySpec;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.StateMachineRunId;
@@ -20,12 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import rx.Observable;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 public class FlowExecutionRepositoryTest implements WithAssertions {
 

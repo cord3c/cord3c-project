@@ -83,7 +83,7 @@ public class VCServiceTest implements WithAssertions {
 	@Test
 	@SneakyThrows
 	public void verifyCordaDidPublicKey() {
-		DIDPublicKey publicKey = service.getCrypto().toDidPublicKey(service.getIdentityKey().getPublicKey(), "did:hello:world");
+		DIDPublicKey publicKey = service.getCrypto().toDidKey(service.getIdentityKey().getPublicKey(), "did:hello:world");
 		assertThat(publicKey.getType()).isEqualTo("JwsVerificationKey2020");
 		assertThat(publicKey.getId()).isEqualTo("did:hello:world#keys-1");
 		assertThat(publicKey.getController()).isEqualTo("did:hello:world");

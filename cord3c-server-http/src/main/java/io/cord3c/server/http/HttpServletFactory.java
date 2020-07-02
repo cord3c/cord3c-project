@@ -1,13 +1,13 @@
 package io.cord3c.server.http;
 
-import net.corda.core.node.AppServiceHub;
-
 import javax.servlet.http.HttpServlet;
+
+import net.corda.core.node.AppServiceHub;
 
 public interface HttpServletFactory {
 
 	String getPattern();
 
-	Class<? extends HttpServlet> getImplementation(AppServiceHub serviceHub);
+	HttpServlet getImplementation(AppServiceHub serviceHub);
 
 }

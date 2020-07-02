@@ -1,14 +1,11 @@
 package io.cord3c.ssi.corda.internal.party;
 
-import net.corda.core.crypto.CryptoUtils;
-import net.corda.core.identity.Party;
-import net.corda.core.node.services.IdentityService;
-
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+
+import net.corda.core.crypto.CryptoUtils;
+import net.corda.core.identity.Party;
 
 public class CordaPartyRegistry implements PartyRegistry {
 
@@ -21,14 +18,6 @@ public class CordaPartyRegistry implements PartyRegistry {
 	public CordaPartyRegistry(Supplier<List<Party>> partySupplier) {
 		this.partySupplier = partySupplier;
 		this.mapper = new PartyToDIDMapper();
-	}
-
-	public CordaPartyRegistry(IdentityService identityService) {
-		this(() -> {
-			List<Party> parties = new ArrayList();
-			identityService.getAllIdentities().forEach(it -> parties.add(it.getParty()));
-			return parties;
-		});
 	}
 
 	public void setNetworkMapUrl(String networkMapUrl) {

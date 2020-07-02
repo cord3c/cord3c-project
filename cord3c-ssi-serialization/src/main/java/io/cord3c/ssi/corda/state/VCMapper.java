@@ -1,28 +1,43 @@
 package io.cord3c.ssi.corda.state;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
-import io.cord3c.ssi.corda.state.credential.TypedCredential;
 import io.cord3c.ssi.corda.internal.information.ClaimInformation;
 import io.cord3c.ssi.corda.internal.information.VerifiableCredentialInformation;
 import io.cord3c.ssi.corda.internal.information.VerifiableCredentialRegistry;
-import lombok.RequiredArgsConstructor;
+import io.cord3c.ssi.corda.internal.party.PartyRegistry;
+import io.cord3c.ssi.corda.state.credential.TypedCredential;
+import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-@RequiredArgsConstructor
 public class VCMapper {
 
+	@Getter
 	private final VerifiableCredentialRegistry registry;
 
-	private final ObjectMapper claimMapper;
+	@Getter
+	private ObjectMapper claimMapper = new ObjectMapper();
+
+	public VCMapper(PartyRegistry partyRegistry) {
+		this.registry = new VerifiableCredentialRegistry(partyRegistry);
+	}
 
 	public VerifiableCredential toCredential(Object state) {
 		VerifiableCredentialInformation information = registry.get(state.getClass());
+
+		claimMapper.findAndRegisterModules();
+
+		if (information.getJsonAccessor() != null) {
+			String json = information.getJsonAccessor().getValue(state);
+			if (json != null) {
+				return VerifiableCredential.fromJson(json);
+			}
+		}
 
 		VerifiableCredential credential = new VerifiableCredential();
 		addTypes(credential, information, state);
@@ -54,6 +69,11 @@ public class VCMapper {
 			Object value = valueReader.readValue(claim.getValue());
 			claimInformation.getAccessor().setValue(state, value);
 		}
+
+		if (information.getJsonAccessor() != null) {
+			information.getJsonAccessor().setValue(state, credential.toJsonString());
+		}
+
 		return (T) state;
 	}
 

@@ -9,18 +9,19 @@ dependencies {
 	api project(':cord3c-ssi-vault')
 	api project(':cord3c-ssi-serialization')
 
-	api "io.crnk:crnk-data-jpa:${CRNK_VERSION}"
+	compileOnly project(':cord3c-rest-server')
+
+	// crnk provided by cord3c-ssi-service
+	api 'io.crnk:crnk-data-jpa'
+	api 'io.crnk:crnk-core' // consider copy/pasting BeanInformation implementation
 
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-rpc:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-serialization:${CORDA_VERSION}"
-
-	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
-
-	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
+	compileOnly "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 
 	compileOnly 'org.slf4j:slf4j-api'
-	implementation 'io.crnk:crnk-core' // consider copy/pasting BeanInformation implementation
+
 	compileOnly 'javax.validation:validation-api'
 	compileOnly 'org.hibernate.validator:hibernate-validator'
 
@@ -31,16 +32,27 @@ apply plugin: 'com.github.johnrengelman.shadow'
 shadowJar {
 	archiveClassifier = 'cordapp'
 	archiveBaseName = 'cord3c-ssi-service'
+	dependencies {
+		exclude(dependency {
+			return (it.moduleGroup == 'io.crnk' || it.moduleGroup.startsWith('com.fasterxml')
+					|| it.moduleGroup == 'org.bouncycastle' || it.moduleGroup == 'org.slf4j'
+					|| it.moduleGroup == 'javax.xml.bind' || it.moduleGroup == 'net.jodah'
+					|| it.moduleGroup == 'net.i2p.crypto')
+		})
+	}
+}
+
+def cordappArtifact = artifacts.add('archives', shadowJar.outputs.files.singleFile) {
+	type 'cordapp'
+	classifier 'cordapp'
+	builtBy shadowJar
 }
 
 publishing {
 	publications {
 		maven(MavenPublication) {
 			from components.java
-		}
-		shadow(MavenPublication) {
-			project.shadow.component(it)
-			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+			artifact cordappArtifact
 		}
 	}
 }

@@ -1,10 +1,10 @@
 package io.cord3c.ssi.corda.internal;
 
 import com.google.common.base.Verify;
-import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.annotations.Claim;
 import io.cord3c.ssi.annotations.Subject;
 import io.cord3c.ssi.annotations.VerifiableCredentialType;
+import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.corda.internal.information.ReflectionValueAccessor;
 import io.cord3c.ssi.corda.internal.information.ValueAccessor;
 import io.crnk.core.engine.information.bean.BeanAttributeInformation;
@@ -16,8 +16,12 @@ import net.corda.core.node.services.vault.QueryCriteria;
 @Slf4j
 public class VerifiableCredentialUtils {
 
-
 	public static <T> ValueAccessor<T> getAccessorForAnnotation(Class annotationClass, Class stateImplementationClass) {
+		return getAccessorForAnnotation(annotationClass, stateImplementationClass, true);
+	}
+
+	public static <T> ValueAccessor<T> getAccessorForAnnotation(Class annotationClass, Class stateImplementationClass,
+			boolean mustBePresent) {
 		assertIsVerifiableCredential(stateImplementationClass);
 		BeanInformation beanInformation = BeanInformation.get(stateImplementationClass);
 		for (String attributeName : beanInformation.getAttributeNames()) {
@@ -26,15 +30,23 @@ public class VerifiableCredentialUtils {
 				return (ValueAccessor<T>) new ReflectionValueAccessor(attribute);
 			}
 		}
-		throw new IllegalStateException("Class annotated with '@" + VerifiableCredential.class.getSimpleName() + "' must contain at least one field annotated with '@" + annotationClass.getSimpleName() + "'");
+		if (mustBePresent) {
+			throw new IllegalStateException(
+					"Class " + stateImplementationClass + " annotated with '@" + VerifiableCredentialType.class.getSimpleName()
+							+ "' "
+							+ "must contain at least one field annotated with '@" + annotationClass.getSimpleName() + "'");
+		}
+		return null;
 	}
 
 
 	/////////////////////// FIXME
 
 	public static VerifiableCredentialType assertIsVerifiableCredential(Class stateClass) {
-		VerifiableCredentialType annotation = (VerifiableCredentialType) stateClass.getAnnotation(VerifiableCredentialType.class);
-		Verify.verify(annotation != null, "state %s must be annotated with '@" + VerifiableCredentialType.class.getSimpleName() + "'", stateClass);
+		VerifiableCredentialType annotation =
+				(VerifiableCredentialType) stateClass.getAnnotation(VerifiableCredentialType.class);
+		Verify.verify(annotation != null,
+				"state %s must be annotated with '@" + VerifiableCredentialType.class.getSimpleName() + "'", stateClass);
 		return annotation;
 	}
 
@@ -53,7 +65,8 @@ public class VerifiableCredentialUtils {
 		assertIsVerifiableCredential(state1);
 		assertIsVerifiableCredential(state2);
 
-		Verify.verify(state1.getClass() == state2.getClass(), "Both states must be of the same class, instead got '" + state1.getClass() + "' and '" + state2.getClass() + "'.");
+		Verify.verify(state1.getClass() == state2.getClass(), "Both states must be of the same class, instead got '" + state1
+		.getClass() + "' and '" + state2.getClass() + "'.");
 
 		return getAllFields(state1).stream().filter(f -> f.getAnnotationsByType(Claim.class).length >= 1).allMatch(f -> {
 			try {
@@ -67,7 +80,8 @@ public class VerifiableCredentialUtils {
 	/**
 	 * Make use of the {@link Claim} annotation to create a {@link QueryCriteria}.
 	 * <p>
-	 * This is done by adding to a {@link QueryCriteria} a {@link CriteriaExpression} of every field annotated with {@link Claim}. We also add to those a {@link CriteriaExpression} for the field annotated with {@link Subject}.
+	 * This is done by adding to a {@link QueryCriteria} a {@link CriteriaExpression} of every field annotated with
+	 * {@link Claim}. We also add to those a {@link CriteriaExpression} for the field annotated with {@link Subject}.
 	 * <p>
 	 * All of those are then ANDed together.
 	 *
@@ -115,7 +129,8 @@ public class VerifiableCredentialUtils {
 		} else if (subjectClazz == UUID.class) {
 			reconstructedSubject = UUID.fromString(getSubject(state));
 		} else {
-			throw new IllegalStateException("We don't handle field annotated with '@" + Subject.class.getSimpleName() + "' to be of type '" + subjectClazz.getSimpleName() + "'");
+			throw new IllegalStateException("We don't handle field annotated with '@" + Subject.class.getSimpleName() + "' to be
+			 of type '" + subjectClazz.getSimpleName() + "'");
 		}
 		querySpec.addFilter(new FilterSpec(PathSpec.of(getSubjectFieldName(state)), FilterOperator.EQ, reconstructedSubject));
 
@@ -164,7 +179,8 @@ public class VerifiableCredentialUtils {
 					builder.append(FieldUtils.readField(field, state, true).toString());
 					builder.append(delimiterString);
 				} catch (IllegalAccessException e) {
-					throw new IllegalStateException("Could not access field '" + field.getName() + "' of class '" + state.getClass() + "'", e);
+					throw new IllegalStateException("Could not access field '" + field.getName() + "' of class '" + state
+					.getClass() + "'", e);
 				}
 			}
 		}

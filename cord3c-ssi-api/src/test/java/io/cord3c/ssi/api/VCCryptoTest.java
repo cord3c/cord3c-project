@@ -1,6 +1,7 @@
 package io.cord3c.ssi.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cord3c.ssi.api.vc.SignatureVerificationException;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.api.internal.W3CHelper;
@@ -29,6 +30,8 @@ public class VCCryptoTest implements WithAssertions {
 	private SSIFactory factory;
 
 	private VCCrypto crypto;
+
+	private ObjectMapper claimMapper = new ObjectMapper();
 
 	@BeforeAll
 	public void setup() {
@@ -60,15 +63,15 @@ public class VCCryptoTest implements WithAssertions {
 	public void encodeTamperAndVerifyVerifiableCredentialFails() {
 		VerifiableCredential verifiableCredential = generateMockCredentials();
 
-		verifiableCredential.getClaims().put("hello", factory.getClaimMapper().valueToTree("new world"));
+		verifiableCredential.getClaims().put("hello", claimMapper.valueToTree("new world"));
 
 		assertThatThrownBy(() -> crypto.verify(verifiableCredential, publicKey)).isExactlyInstanceOf(SignatureVerificationException.class).hasMessageContaining("Payloads don't match");
 	}
 
 	private VerifiableCredential generateMockCredentials() {
 		Map<String, JsonNode> claims = new HashMap<>();
-		claims.put("hello", factory.getClaimMapper().valueToTree("world"));
-		claims.put(W3CHelper.CLAIM_SUBJECT_ID, factory.getClaimMapper().valueToTree("jane"));
+		claims.put("hello", claimMapper.valueToTree("world"));
+		claims.put(W3CHelper.CLAIM_SUBJECT_ID, claimMapper.valueToTree("jane"));
 		VerifiableCredential credential = new VerifiableCredential();
 		credential.setContexts(Arrays.asList(W3CHelper.VC_CONTEXT_V1));
 		credential.setTypes(Arrays.asList(W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL, "test"));

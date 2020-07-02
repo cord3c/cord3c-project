@@ -1,8 +1,18 @@
 package io.cord3c.rest.server.internal;
 
+import java.util.Objects;
+import java.util.ServiceLoader;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServlet;
+
 import com.google.auto.service.AutoService;
-import io.cord3c.rest.server.CordaRestModule;
+import io.cord3c.rest.api.types.CordaTypesModule;
+import io.cord3c.rest.server.RestConfigurer;
+import io.cord3c.rest.server.RestContext;
 import io.cord3c.server.http.HttpServletFactory;
+import io.cord3c.ssi.api.internal.PropertyUtils;
 import io.cord3c.ssi.corda.internal.party.PartyToDIDMapper;
 import io.crnk.core.boot.CrnkBoot;
 import io.crnk.core.engine.transaction.TransactionRunner;
@@ -18,18 +28,10 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import net.corda.core.node.AppServiceHub;
 import net.corda.core.node.services.vault.SessionScope;
-import org.mapstruct.factory.Mappers;
-
-import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServlet;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
 
 
 @AutoService(HttpServletFactory.class)
 public class RestServletFactory implements HttpServletFactory {
-
-	private static AppServiceHub serviceHub;
 
 	@Getter
 	@Setter
@@ -38,56 +40,71 @@ public class RestServletFactory implements HttpServletFactory {
 
 	@Override
 	public String getPattern() {
-		return "/api/node/*";
+		return PropertyUtils.getProperty("cord3c.rest.contextPath", "/api/") + "*";
 	}
 
 	@Override
-	public Class<? extends HttpServlet> getImplementation(AppServiceHub serviceHub) {
-		RestServletFactory.serviceHub = serviceHub;
-
-		return CordaCrnkServlet.class;
+	public HttpServlet getImplementation(AppServiceHub serviceHub) {
+		return new CordaCrnkServlet(serviceHub);
 	}
 
 
-	public static class CordaCrnkServlet extends CrnkServlet {
+	@RequiredArgsConstructor
+	public class CordaCrnkServlet extends CrnkServlet {
 
-		private CordaMapper cordaMapper = Mappers.getMapper(CordaMapper.class);
+		private final AppServiceHub serviceHub;
+
+		private CordaMapper cordaMapper = new CordaMapperImpl();
 
 		private ThreadLocal<EntityManager> emLocal = new ThreadLocal<>();
 
 		@Override
 		protected void initCrnk(CrnkBoot boot) {
 			if (networkMapUrl == null) {
-				networkMapUrl = System.getenv("CORD3C_SSI_NETWORKMAP_URL");
+				networkMapUrl = PropertyUtils.getProperty("cord3c.networkmap.url", null);
 			}
+
 			if (networkMapUrl == null) {
-				networkMapUrl = System.getProperty("cord3c.networkmap.url");
-			}
-			if (networkMapUrl == null) {
-				throw new IllegalStateException("please configure CORD3C_SSI_NETWORKMAP_HOST or set manually on RestServletFactory");
+				throw new IllegalStateException(
+						"please configure CORD3C_SSI_NETWORKMAP_HOST or set manually on RestServletFactory");
 			}
 
 			PartyToDIDMapper didMapper = new PartyToDIDMapper();
 			didMapper.setNetworkMapUrl(networkMapUrl);
 			cordaMapper.setDidMapper(didMapper);
 
+			TransactionRunner transactionRunner = createTransactionRunner();
+
 			boot.addModule(new CordaRestModule(serviceHub, cordaMapper));
 			boot.addModule(HomeModule.create());
-			boot.addModule(createJpaModule());
+			boot.addModule(createJpaModule(transactionRunner));
+			boot.addModule(new CordaTypesModule());
+
+			RestContext context = new RestContext();
+			context.setTransactionRunner(transactionRunner);
+			context.setServiceHub(serviceHub);
+			for (RestConfigurer configurer : ServiceLoader.load(RestConfigurer.class)) {
+				configurer.configure(context, boot);
+			}
 		}
 
-		private Module createJpaModule() {
-			// TODO move transaction handling into repository? keep it away from other repositories? focus on repository.getEntityManager?
+		private Module createJpaModule(TransactionRunner transactionRunner) {
+			// TODO move transaction handling into repository? keep it away from other repositories? focus on repository
+			//  .getEntityManager?
 			JpaModuleConfig config = new JpaModuleConfig();
-			Supplier<EntityManager> supplier = () -> emLocal.get();// serviceHub.withEntityManager(it -> it);
-			TransactionRunner transactionRunner = new TransactionRunner() {
+			Supplier<EntityManager> supplier = () -> Objects.requireNonNull(emLocal.get());
+
+			return JpaModule.createServerModule(config, supplier, transactionRunner);
+		}
+
+		private TransactionRunner createTransactionRunner() {
+			return new TransactionRunner() {
 				@Override
 				@SneakyThrows
 				public <T> T doInTransaction(Callable<T> callable) {
 					return (T) serviceHub.getDatabase().transaction(new CordaTransaction(callable));
 				}
 			};
-			return JpaModule.createServerModule(config, supplier, transactionRunner);
 		}
 
 		@RequiredArgsConstructor

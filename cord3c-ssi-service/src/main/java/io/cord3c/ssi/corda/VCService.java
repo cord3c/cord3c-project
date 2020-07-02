@@ -1,6 +1,10 @@
 package io.cord3c.ssi.corda;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
+import java.util.Collections;
+import java.util.Set;
+
 import com.google.auto.service.AutoService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -10,11 +14,10 @@ import com.nimbusds.jose.jca.JCAContext;
 import com.nimbusds.jose.util.Base64URL;
 import io.cord3c.ssi.api.resolver.DefaultUniversalResolver;
 import io.cord3c.ssi.api.resolver.UniversalResolver;
-import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.api.vc.VCCrypto;
-import io.cord3c.ssi.corda.internal.information.VerifiableCredentialRegistry;
+import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.corda.internal.party.CordaPartyRegistry;
-import io.cord3c.ssi.corda.internal.party.PartyRegistry;
+import io.cord3c.ssi.corda.internal.party.CordaPartySupplier;
 import io.cord3c.ssi.corda.state.VCMapper;
 import io.cord3c.ssi.vault.VCVault;
 import lombok.Getter;
@@ -25,11 +28,6 @@ import net.corda.core.node.AppServiceHub;
 import net.corda.core.node.services.CordaService;
 import net.corda.core.node.services.KeyManagementService;
 import net.corda.core.serialization.SingletonSerializeAsToken;
-
-import java.security.PublicKey;
-import java.security.cert.X509Certificate;
-import java.util.Collections;
-import java.util.Set;
 
 @CordaService
 @Slf4j
@@ -51,22 +49,15 @@ public class VCService extends SingletonSerializeAsToken {
 	private final VCMapper mapper;
 
 	@Getter
-	private final VerifiableCredentialRegistry registry;
-
-	@Getter
-	private final ObjectMapper claimMapper;
-
 	private final CordaPartyRegistry partyRegistry;
 
 	public VCService(AppServiceHub serviceHub) {
 		this.serviceHub = serviceHub;
 		this.vault = new VCVault(serviceHub);
 		this.univeralResolver = new DefaultUniversalResolver();
-		this.claimMapper = new ObjectMapper();
-		this.partyRegistry = new CordaPartyRegistry(serviceHub.getIdentityService());
-		this.registry = new VerifiableCredentialRegistry(partyRegistry);
+		this.partyRegistry = new CordaPartyRegistry(new CordaPartySupplier(serviceHub.getIdentityService()));
 		this.crypto = new VCCrypto(univeralResolver);
-		this.mapper = new VCMapper(registry, claimMapper);
+		this.mapper = new VCMapper(partyRegistry);
 	}
 
 	public void setNetworkMapUrl(String networkMapUrl) {
@@ -78,11 +69,11 @@ public class VCService extends SingletonSerializeAsToken {
 	}
 
 	public void setBaseUrl(String baseUrl) {
-		registry.setBaseUrl(baseUrl);
+		mapper.getRegistry().setBaseUrl(baseUrl);
 	}
 
 	public String getBaseUrl() {
-		return registry.getBaseUrl();
+		return mapper.getRegistry().getBaseUrl();
 	}
 
 	public VerifiableCredential sign(VerifiableCredential verifiableCredential) {

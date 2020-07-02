@@ -1,8 +1,8 @@
 package io.cord3c.ssi.networkmap.resolver.repository;
 
-import io.cord3c.rest.client.map.NodeDTO;
-import io.cord3c.rest.client.map.NodeRepository;
-import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.api.map.NodeDTO;
+import io.cord3c.rest.api.map.NodeRepository;
+import io.cord3c.rest.api.map.PartyDTO;
 import io.cord3c.rest.server.internal.CordaMapper;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ReadOnlyResourceRepositoryBase;

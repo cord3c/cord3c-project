@@ -1,18 +1,17 @@
 package io.cord3c.ssi.api.resolver;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import com.google.common.base.Verify;
 import io.cord3c.ssi.api.did.DID;
 import io.cord3c.ssi.api.did.DIDDocument;
 import io.cord3c.ssi.api.internal.DIDGenerator;
+import io.cord3c.ssi.api.internal.IOUtils;
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 @Data
 public class WebDriver implements DIDDriver {

@@ -3,7 +3,7 @@ package io.cord3c.example.systemtest.node;
 import io.cord3c.example.systemtest.SecretExtension;
 import io.cord3c.example.systemtest.SystemTestConfiguration;
 import io.cord3c.rest.client.NodeRestClient;
-import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.api.map.PartyDTO;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.resource.list.ResourceList;
 import org.assertj.core.api.WithAssertions;

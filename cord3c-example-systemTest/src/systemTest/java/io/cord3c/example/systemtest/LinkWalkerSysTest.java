@@ -24,7 +24,7 @@ public class LinkWalkerSysTest implements WithAssertions {
 
 	@Test
 	public void test() {
-		HttpAdapter httpAdapter = client.getCrnk().getHttpAdapter();
+		HttpAdapter httpAdapter = client.getClient().getHttpAdapter();
 		RandomWalkLinkChecker linkChecker = new RandomWalkLinkChecker(httpAdapter) {
 
 			@Override

@@ -15,6 +15,7 @@ import net.minidev.json.JSONObject;
 
 import java.security.PublicKey;
 import java.security.interfaces.ECPrivateKey;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -43,7 +44,13 @@ public class JWSCrypto {
 		String proofType = registry.toProofType(alg);
 
 		String token = jwsObject.serialize();
-		Proof proof = new Proof(proofType, OffsetDateTime.now().toInstant(), W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD, credential.getIssuer(), token);
+		Proof proof = new Proof();
+		proof.setType(proofType);
+		proof.setCreated(Instant.now());
+		proof.setProofPurpose( W3CHelper.PROOF_PURPOSE_ASSERTION_METHOD);
+		proof.setVerificationMethod(credential.getIssuer()); // FIXME
+		proof.setJws(token);
+
 		VerifiableCredential clone = credential.clone();
 		clone.setProof(proof);
 		return clone;
