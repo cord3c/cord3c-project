@@ -1,33 +1,34 @@
 package io.cord3c.rest.server.internal;
 
-import io.cord3c.rest.client.VaultStateDTO;
-import io.cord3c.rest.client.VaultStateRepository;
-import io.crnk.core.engine.internal.utils.PreconditionUtil;
-import io.crnk.core.queryspec.QuerySpec;
-import io.crnk.core.resource.list.ResourceList;
+import io.cord3c.rest.api.VaultStateDTO;
+import io.cord3c.rest.api.VaultStateRepository;
 import io.crnk.data.jpa.JpaEntityRepositoryBase;
 import io.crnk.data.jpa.JpaRepositoryConfig;
 import io.crnk.data.jpa.mapping.JpaMapper;
 import io.crnk.data.jpa.query.Tuple;
 import lombok.RequiredArgsConstructor;
-import net.corda.core.node.AppServiceHub;
 import net.corda.core.schemas.PersistentStateRef;
 import net.corda.node.services.vault.VaultSchemaV1;
 
-import javax.persistence.EntityManager;
-
-public class VaultStateRepositoryImpl extends JpaEntityRepositoryBase<VaultStateDTO, PersistentStateRef> implements VaultStateRepository {
+public class VaultStateRepositoryImpl extends JpaEntityRepositoryBase<VaultStateDTO, PersistentStateRef> implements
+		VaultStateRepository {
 
 
 	public VaultStateRepositoryImpl(CordaMapper cordaMapper) {
 		super(JpaRepositoryConfig.builder(VaultSchemaV1.VaultStates.class, VaultStateDTO.class,
-				new VaultStateMapper(cordaMapper)).build());
+				new VaultStateMapper(toVaultMapper(cordaMapper))).build());
+	}
+
+	private static VaultMapper toVaultMapper(CordaMapper cordaMapper) {
+		VaultMapperImpl mapper = new VaultMapperImpl();
+		mapper.setCordaMapper(cordaMapper);
+		return mapper;
 	}
 
 	@RequiredArgsConstructor
 	public static class VaultStateMapper implements JpaMapper<VaultSchemaV1.VaultStates, VaultStateDTO> {
 
-		private final CordaMapper mapper;
+		private final VaultMapper mapper;
 
 		@Override
 		public VaultStateDTO map(Tuple tuple) {

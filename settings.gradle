@@ -5,6 +5,7 @@ include ':cord3c-example-base-image'
 include ':cord3c-example-systemTest'
 include ':cord3c-common-test'
 include ':cord3c-rest-client'
+include ':cord3c-rest-api'
 include ':cord3c-rest-server'
 include ':cord3c-server-http'
 include ':cord3c-monitor-ping'
@@ -31,25 +32,20 @@ gradle.beforeProject { Project project ->
 				maven {
 					url('https://plugins.gradle.org/m2')
 				}
-				// get latest crnk builds here:
-				// maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
+				maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
 			}
 		}
 		repositories {
 			mavenLocal()
 			jcenter()
 
-			maven { url 'https://repo.gradle.org/gradle/libs-releases' }
-			maven { url 'https://plugins.gradle.org/m2/' }
 			maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
 			maven { url 'https://dl.bintray.com/rmee/mavenLatest/' }
+			maven { url 'https://repo.gradle.org/gradle/libs-releases' }
+			maven { url 'https://plugins.gradle.org/m2/' }
 
 			maven { url 'https://software.r3.com/artifactory/corda-dependencies' }
 			maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
-
-
-			// get latest crnk builds here:
-			// maven { url 'https://dl.bintray.com/crnk-project/mavenLatest/' }
 		}
 		version = rootProject.version
 		group = rootProject.group

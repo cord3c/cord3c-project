@@ -1,22 +1,20 @@
 package io.cord3c.ssi.api.internal.crypto;
 
-import com.google.common.base.Verify;
-import com.nimbusds.jose.JWSAlgorithm;
-import io.cord3c.ssi.api.did.DIDPublicKey;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import net.i2p.crypto.eddsa.EdDSAPublicKey;
-import org.bouncycastle.jcajce.provider.asymmetric.X509;
-import sun.security.x509.X509Key;
-
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.spec.ECGenParameterSpec;
-import java.security.spec.EllipticCurve;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import com.nimbusds.jose.JWSAlgorithm;
+import io.cord3c.ssi.api.did.DIDPublicKey;
+import lombok.SneakyThrows;
+import net.i2p.crypto.eddsa.EdDSAPublicKey;
 
 /**
  * see https://w3c-ccg.github.io/ld-cryptosuite-registry/.
@@ -44,73 +42,69 @@ public class CryptoSuiteRegistry {
 
 	private static final String SECP256R1_CURVE = "secp256r1";
 
-	private Map<String, String> toKeyTypeMapping = new HashMap<>();
-
-	private Map<String, String> keyToProofTypeMapping = new HashMap<>();
+	private Map<String, CryptoScheme> keyMapping = new HashMap<>();
 
 	private Map<JWSAlgorithm, String> algToProofTypeMapping = new HashMap<>();
 
 	private Map<String, JWSAlgorithm> proofTypeToAlgMapping = new HashMap<>();
 
-	private List<CryptoRegistration> registrations = new ArrayList<>();
-
-	@Data
-	@RequiredArgsConstructor
-	class CryptoRegistration {
-
-		private final Class keyImplementationType;
-
-		private final String curve;
-
-		private final String keyType;
-
-		private final String proofType;
-
-		private final JWSAlgorithm jwsAlgorithm;
-
-		private final Integer keySize;
-
-	}
+	private List<CryptoScheme> schemes = new ArrayList<>();
 
 	public CryptoSuiteRegistry() {
-		registerProofType(EdDSAPublicKey.class, null, JWS_VERIFICATION_KEY_2020, JSON_WEB_SIGNATURE_2020, JWSAlgorithm.EdDSA, null);
-		registerProofType(ECPublicKey.class, SECP256K1_CURVE, SECP256K1_VERIFICATION_KEY, SECP256K1_SIGNATURE, JWSAlgorithm.ES256, 256);
-		registerProofType(ECPublicKey.class, SECP256R1_CURVE, SECP256R1_VERIFICATION_KEY, SECP256R1_SIGNATURE, JWSAlgorithm.ES256K, 256);
+		registerProofType(EdDSAPublicKey.class, null, JWS_VERIFICATION_KEY_2020, JSON_WEB_SIGNATURE_2020, JWSAlgorithm.EdDSA,
+				null, "EdDSA");
+		registerProofType(ECPublicKey.class, SECP256K1_CURVE, SECP256K1_VERIFICATION_KEY, SECP256K1_SIGNATURE,
+				JWSAlgorithm.ES256,
+				256, "EC");
+		registerProofType(ECPublicKey.class, SECP256R1_CURVE, SECP256R1_VERIFICATION_KEY, SECP256R1_SIGNATURE,
+				JWSAlgorithm.ES256K, 256, "EC");
 	}
 
-	private void registerProofType(Class keyImplementationType, String curve, String keyType, String proofType, JWSAlgorithm alg, Integer keySize) {
-		registrations.add(new CryptoRegistration(keyImplementationType, curve, keyType, proofType, alg, keySize));
-		keyToProofTypeMapping.put(keyType, proofType);
+	private void registerProofType(Class keyImplementationType, String curve, String keyType, String proofType, JWSAlgorithm alg,
+			Integer keySize, String javaAlg) {
+
+		CryptoScheme scheme = new CryptoScheme(keyImplementationType, curve, keyType, proofType, alg, keySize, javaAlg);
+		schemes.add(scheme);
+		keyMapping.put(keyType, scheme);
 		algToProofTypeMapping.put(alg, proofType);
 		proofTypeToAlgMapping.put(proofType, alg);
 	}
 
 	public String toKeyType(PublicKey publicKey) {
-		Optional<String> keyType = registrations.stream()
+		Optional<String> keyType = schemes.stream()
 				.filter(it -> it.getKeyImplementationType().isAssignableFrom(publicKey.getClass()))
-				.filter(it -> it.curve == null || publicKey.toString().toLowerCase().contains(it.curve)) // unfortunately no clean API...
+				.filter(it -> it.getCurve() == null || publicKey.toString().toLowerCase()
+						.contains(it.getCurve())) // unfortunately no clean API...
 				.map(it -> it.getKeyType()).findFirst();
 
-		Verify.verify(keyType.isPresent(), "unknown public key: %s, known keys: {}", publicKey, registrations);
+		if (!keyType.isPresent()) {
+			throw new IllegalStateException(String.format("unknown public key: %s, known keys: %s", publicKey, schemes));
+		}
 		return keyType.get();
 	}
 
-	public String toProofType(DIDPublicKey publicKey) {
+	public CryptoScheme findScheme(DIDPublicKey publicKey) {
 		String keyType = publicKey.getType();
-		String proofType = keyToProofTypeMapping.get(keyType);
-		Verify.verify(proofType != null, "key of type %s not registered", keyType);
-		return proofType;
+		CryptoScheme scheme = keyMapping.get(keyType);
+		if (scheme == null) {
+			throw new IllegalStateException(String.format("key of type %s not registered", keyType));
+		}
+		return scheme;
 	}
 
 	public String toProofType(JWSAlgorithm alg) {
 		String proofType = algToProofTypeMapping.get(alg);
-		Verify.verify(proofType != null, "alg %s not registered", alg);
+		if (proofType == null) {
+			throw new IllegalStateException(String.format("alg %s not registered", alg));
+		}
 		return proofType;
 	}
 
 	public JWSAlgorithm toJwsAlg(String proofType) {
 		JWSAlgorithm alg = proofTypeToAlgMapping.get(proofType);
-		Verify.verify(proofType != null, "proofType %s not registered", proofType);
+		if (alg == null) {
+			throw new IllegalStateException(String.format("proofType %s not registered", proofType));
+		}
 		return alg;
 	}
 

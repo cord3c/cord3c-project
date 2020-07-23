@@ -1,6 +1,14 @@
 package io.cord3c.server.http;
 
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.ServiceLoader;
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+import javax.servlet.http.HttpServlet;
+
 import com.google.auto.service.AutoService;
+import io.cord3c.server.http.internal.PropertyUtils;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +18,9 @@ import net.corda.core.serialization.SingletonSerializeAsToken;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletHandler;
-
-import java.util.Iterator;
-import java.util.ServiceLoader;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 @CordaService
 @Slf4j
@@ -22,35 +29,51 @@ public class HttpService extends SingletonSerializeAsToken {
 
 	public static int DEFAULT_PORT = 8080;
 
-	private static Server server = new Server();
-
-	private static AppServiceHub serviceHub;
+	private Server server = new Server();
 
 	@Getter
-	private int port = DEFAULT_PORT;
+	private int port;
 
 	@SneakyThrows
 	public HttpService(AppServiceHub appServiceHub) {
-		if (serviceHub == null) {
-			serviceHub = appServiceHub;
-			ServletHandler servletHandler = new ServletHandler();
+		ServletHandler servletHandler = new ServletHandler();
 
-			ServiceLoader<HttpServletFactory> loader = ServiceLoader.load(HttpServletFactory.class);
-			Iterator<HttpServletFactory> iterator = loader.iterator();
-			while (iterator.hasNext()) {
-				HttpServletFactory servletFactory = iterator.next();
-				servletHandler.addServletWithMapping(servletFactory.getImplementation(appServiceHub), servletFactory.getPattern());
-			}
+		Iterator<HttpFilterFactory> filterFactories = ServiceLoader.load(HttpFilterFactory.class).iterator();
+		while (filterFactories.hasNext()) {
+			HttpFilterFactory filterFactory = filterFactories.next();
+			Filter filter = filterFactory.getImplementation(appServiceHub);
+			servletHandler.addFilterWithMapping(new FilterHolder(filter), filterFactory.getPathSpec(),
+					EnumSet.allOf(DispatcherType.class));
+		}
 
-			ServerConnector connector = new ServerConnector(server);
-			connector.setPort(port);
+		Iterator<HttpServletFactory> servletFactories = ServiceLoader.load(HttpServletFactory.class).iterator();
 
-			server.setHandler(servletHandler);
-			server.setConnectors(new Connector[]{connector});
-			server.start();
-			log.info("HTTP server running on http://127.0.0.1:" + port);
-		} else {
-			log.warn("HttpService instantiated multiple times");
+		while (servletFactories.hasNext()) {
+			HttpServletFactory servletFactory = servletFactories.next();
+			HttpServlet servlet = servletFactory.getImplementation(appServiceHub);
+			servletHandler.addServletWithMapping(new ServletHolder(servlet), servletFactory.getPattern());
+		}
+
+		ServerConnector connector = new ServerConnector(server);
+		if (!existsClass("org.junit.jupiter.api.Test") || PropertyUtils.getProperty("cord3c.http.port", null) != null) {
+			connector.setPort(Integer.parseInt(PropertyUtils.getProperty("cord3c.http.port", Integer.toString(DEFAULT_PORT))));
+		}
+
+		server.setHandler(servletHandler);
+		server.setConnectors(new Connector[]{connector});
+		server.start();
+
+		port = connector.getLocalPort();
+		log.info("HTTP server running on http://127.0.0.1:" + port);
+
+	}
+
+	private boolean existsClass(String name) {
+		try {
+			Class.forName(name);
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
 		}
 	}
 

@@ -1,24 +1,35 @@
 package io.cord3c.ssi.corda.internal.information;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.google.common.base.Verify;
-import io.cord3c.ssi.annotations.*;
+import io.cord3c.ssi.annotations.Claim;
+import io.cord3c.ssi.annotations.Id;
+import io.cord3c.ssi.annotations.IssuanceTimestamp;
+import io.cord3c.ssi.annotations.Issuer;
+import io.cord3c.ssi.annotations.Json;
+import io.cord3c.ssi.annotations.Subject;
+import io.cord3c.ssi.annotations.VerifiableCredentialRegistration;
+import io.cord3c.ssi.annotations.VerifiableCredentialType;
 import io.cord3c.ssi.api.internal.PropertyUtils;
 import io.cord3c.ssi.api.internal.W3CHelper;
+import io.cord3c.ssi.corda.internal.VerifiableCredentialUtils;
 import io.cord3c.ssi.corda.internal.party.PartyAdapterAccessor;
 import io.cord3c.ssi.corda.internal.party.PartyRegistry;
-import io.cord3c.ssi.corda.internal.VerifiableCredentialUtils;
 import io.crnk.core.engine.information.bean.BeanAttributeInformation;
 import io.crnk.core.engine.information.bean.BeanInformation;
 import io.crnk.core.engine.internal.utils.UrlUtils;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.corda.core.identity.Party;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
-@RequiredArgsConstructor
 public class VerifiableCredentialRegistry {
 
 	@Getter
@@ -29,18 +40,39 @@ public class VerifiableCredentialRegistry {
 
 	private Map<Class, VerifiableCredentialInformation> credentials = new ConcurrentHashMap<>();
 
+	public VerifiableCredentialRegistry(PartyRegistry partyRegistry) {
+		this.partyRegistry = Objects.requireNonNull(partyRegistry);
+
+		ServiceLoader<VerifiableCredentialRegistration> registrations =
+				ServiceLoader.load(VerifiableCredentialRegistration.class);
+		for (VerifiableCredentialRegistration registration : registrations) {
+			for (Class type : registration.getTypes()) {
+				get(type);
+			}
+		}
+	}
 
 	public VerifiableCredentialInformation get(Class implementationClass) {
 		if (!credentials.containsKey(implementationClass)) {
 			credentials.put(implementationClass, constructInformation(implementationClass));
 		}
 		VerifiableCredentialInformation information = credentials.get(implementationClass);
+		if (information == null) {
+			throw new IllegalStateException(
+					"no information registered about credentials of type " + implementationClass + ", available=" + credentials
+							.keySet());
+		}
 		Verify.verifyNotNull(information);
 		return information;
 	}
 
 	public VerifiableCredentialInformation get(List<String> types) {
-		Optional<VerifiableCredentialInformation> information = credentials.values().stream().filter(it -> it.getTypes().equals(types)).findFirst();
+		Optional<VerifiableCredentialInformation> information =
+				credentials.values().stream().filter(it -> it.getTypes().equals(types)).findFirst();
+		if (!information.isPresent()) {
+			throw new IllegalStateException(
+					"no information registered about credentials of type " + types + ", available=" + credentials.keySet());
+		}
 		return information.get();
 	}
 
@@ -48,11 +80,13 @@ public class VerifiableCredentialRegistry {
 		VerifiableCredentialInformation information = new VerifiableCredentialInformation();
 		information.setImplementationType(implementationClass);
 		information.getTypes().addAll(deriveTypes(implementationClass));
-		information.setTimestampAccessor(VerifiableCredentialUtils.getAccessorForAnnotation(IssuanceTimestamp.class, implementationClass));
+		information.setTimestampAccessor(
+				VerifiableCredentialUtils.getAccessorForAnnotation(IssuanceTimestamp.class, implementationClass));
 		information.getContexts().addAll(createContexts());
 		information.setIssuerAccessor(createPartyAccessor(Issuer.class, implementationClass));
 		information.setSubjectAccessor(createPartyAccessor(Subject.class, implementationClass));
 		information.setIdAccessor(createIdAccessor(information));
+		information.setJsonAccessor(createJsonAccessor(information));
 
 		BeanInformation beanInformation = BeanInformation.get(implementationClass);
 		for (String name : beanInformation.getAttributeNames()) {
@@ -74,8 +108,13 @@ public class VerifiableCredentialRegistry {
 		return information;
 	}
 
+	private ValueAccessor<String> createJsonAccessor(VerifiableCredentialInformation information) {
+		return VerifiableCredentialUtils.getAccessorForAnnotation(Json.class, information.getImplementationType(), false);
+	}
+
 	private ValueAccessor<String> createIdAccessor(VerifiableCredentialInformation information) {
-		ValueAccessor<String> idElementAccessor = VerifiableCredentialUtils.getAccessorForAnnotation(Id.class, information.getImplementationType());
+		ValueAccessor<String> idElementAccessor =
+				VerifiableCredentialUtils.getAccessorForAnnotation(Id.class, information.getImplementationType());
 		return new ValueAccessor<String>() {
 			@Override
 			public String getValue(Object state) {
@@ -93,7 +132,8 @@ public class VerifiableCredentialRegistry {
 				if (fieldValue != null) {
 					int sep = fieldValue.lastIndexOf("/");
 					idElementAccessor.setValue(state, fieldValue.substring(sep + 1));
-				} else {
+				}
+				else {
 					idElementAccessor.setValue(state, null);
 				}
 			}
@@ -108,6 +148,7 @@ public class VerifiableCredentialRegistry {
 	private ValueAccessor<String> createPartyAccessor(Class annotation, Class implementationClass) {
 		ValueAccessor accessor = VerifiableCredentialUtils.getAccessorForAnnotation(annotation, implementationClass);
 		if (accessor.getImplementationClass() == Party.class) {
+			Objects.requireNonNull(partyRegistry);
 			accessor = new PartyAdapterAccessor(accessor, partyRegistry);
 		}
 		return accessor;
@@ -125,7 +166,8 @@ public class VerifiableCredentialRegistry {
 		List<String> types = new ArrayList<>();
 		types.add(W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL);
 
-		VerifiableCredentialType annotation = (VerifiableCredentialType) implementationClass.getAnnotation(VerifiableCredentialType.class);
+		VerifiableCredentialType annotation =
+				(VerifiableCredentialType) implementationClass.getAnnotation(VerifiableCredentialType.class);
 		String type = annotation.type();
 		if (!type.isEmpty()) {
 			types.add(type);

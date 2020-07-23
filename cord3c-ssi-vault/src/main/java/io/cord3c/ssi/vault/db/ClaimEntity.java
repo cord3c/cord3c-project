@@ -1,5 +1,13 @@
 package io.cord3c.ssi.vault.db;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,8 +20,6 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
-
-import javax.persistence.*;
 
 /**
  * Represents a state in the history of a given identity.
@@ -48,7 +54,7 @@ public class ClaimEntity {
 	private String jsonValue;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({@JoinColumn(name = "credential_hash_id", insertable = false, updatable = false)})
+	@JoinColumns({ @JoinColumn(name = "credential_hash_id", insertable = false, updatable = false) })
 	@JsonApiRelation(idField = "credentialHashId", opposite = "claims", serialize = SerializeType.ONLY_ID)
 	@ToString.Exclude
 	private CredentialEntity credential;
@@ -60,31 +66,46 @@ public class ClaimEntity {
 	public static String selectField(JsonNode value) {
 		if (value.isLong()) {
 			return Fields.longValue;
-		} else if (value.isDouble()) {
+		}
+		else if (value.isDouble()) {
 			return Fields.doubleValue;
-		} else if (value.isTextual()) {
+		}
+		else if (value.isTextual()) {
 			return Fields.stringValue;
-		} else if (value.isNull()) {
+		}
+		else if (value.isNull()) {
 			throw new UnsupportedOperationException("filtering by null not implemented");
-		} else if (value.isBoolean()) {
+		}
+		else if (value.isBoolean()) {
 			return Fields.booleanValue;
-		} else {
+		}
+		else {
 			return Fields.jsonValue;
 		}
+	}
+
+	public static String selectField(Object value) {
+		JsonNode jsonNode = objectMapper.valueToTree(value);
+		return selectField(jsonNode);
 	}
 
 	public static Object toValue(JsonNode value) {
 		if (value.isLong()) {
 			return value.longValue();
-		} else if (value.isDouble()) {
+		}
+		else if (value.isDouble()) {
 			return value.doubleValue();
-		} else if (value.isTextual()) {
+		}
+		else if (value.isTextual()) {
 			return value.textValue();
-		} else if (value.isNull()) {
+		}
+		else if (value.isNull()) {
 			throw new UnsupportedOperationException("filtering by null not implemented");
-		} else if (value.isBoolean()) {
+		}
+		else if (value.isBoolean()) {
 			return value.booleanValue();
-		} else {
+		}
+		else {
 			return value.textValue();
 		}
 	}
@@ -115,15 +136,20 @@ public class ClaimEntity {
 		doubleValue = null;
 		if (value.isLong()) {
 			setLongValue(value.longValue());
-		} else if (value.isDouble()) {
+		}
+		else if (value.isDouble()) {
 			setDoubleValue(value.doubleValue());
-		} else if (value.isTextual()) {
+		}
+		else if (value.isTextual()) {
 			setStringValue(value.textValue());
-		} else if (value.isNull()) {
+		}
+		else if (value.isNull()) {
 			// nothing to do
-		} else if (value.isBoolean()) {
+		}
+		else if (value.isBoolean()) {
 			setBooleanValue(value.booleanValue());
-		} else {
+		}
+		else {
 			setJsonValue(objectMapper.writeValueAsString(value));
 		}
 	}

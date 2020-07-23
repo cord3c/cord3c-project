@@ -1,0 +1,21 @@
+apply plugin: JavaDefaultsPlugin
+apply plugin: PublishingDefaultsPlugin
+
+dependencies {
+	compileOnly "io.crnk:crnk-core:${CRNK_VERSION}"
+	compileOnly "io.crnk:crnk-client:${CRNK_VERSION}"
+
+	compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
+	compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$JACKSON_VERSION"
+	compileOnly "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
+
+	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+}

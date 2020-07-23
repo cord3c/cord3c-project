@@ -4,7 +4,7 @@ import io.cord3c.example.systemtest.SecretExtension;
 import io.cord3c.example.systemtest.SystemTestConfiguration;
 import io.cord3c.example.systemtest.SystemTestProperties;
 import io.cord3c.rest.client.NetworkMapRestClient;
-import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.api.map.PartyDTO;
 import io.cord3c.ssi.api.did.Authentication;
 import io.cord3c.ssi.api.did.DIDDocument;
 import io.cord3c.ssi.api.did.DIDPublicKey;

@@ -5,12 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cord3c.common.test.VCTestUtils;
 import io.cord3c.monitor.ping.PingFlow;
 import io.cord3c.monitor.ping.PingInput;
-import io.cord3c.rest.client.*;
-import io.cord3c.rest.client.map.NodeDTO;
-import io.cord3c.rest.client.map.NotaryDTO;
-import io.cord3c.rest.client.map.PartyDTO;
+import io.cord3c.rest.api.FlowExecutionDTO;
+import io.cord3c.rest.api.HostAndPort;
+import io.cord3c.rest.api.VaultStateDTO;
+import io.cord3c.rest.api.map.NodeDTO;
+import io.cord3c.rest.api.map.NotaryDTO;
+import io.cord3c.rest.api.map.PartyDTO;
+import io.cord3c.rest.client.NodeRestClient;
 import io.cord3c.rest.server.internal.RestServletFactory;
 import io.cord3c.server.http.HttpService;
+import io.cord3c.ssi.api.rest.VCRepository;
+import io.cord3c.ssi.api.rest.VerifiableCredentialDTO;
 import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.crnk.core.queryspec.FilterOperator;
 import io.crnk.core.queryspec.PathSpec;
@@ -83,7 +88,7 @@ public class RestServiceTest implements WithAssertions {
 		assertThat(links.has("nodeInfo")).isTrue();
 		assertThat(links.has("notary")).isTrue();
 		assertThat(links.has("party")).isTrue();
-		assertThat(links.has("vault")).isTrue();
+		assertThat(links.has("vaultState")).isTrue();
 	}
 
 
@@ -94,11 +99,11 @@ public class RestServiceTest implements WithAssertions {
 		VCRepository repository = client.getCredentials();
 		repository.create(new VerifiableCredentialDTO(credential));
 
+		verifyFindByClaim(credential, true);
 		verifyFindAllVCs(credential);
 		verifyFindById(credential);
 		verifyFindByCredentialAttribute(credential, true);
 		verifyFindByCredentialAttribute(credential, false);
-		verifyFindByClaim(credential, true);
 		verifyFindByClaim(credential, false);
 	}
 
@@ -124,7 +129,7 @@ public class RestServiceTest implements WithAssertions {
 		VerifiableCredentialDTO dto = new VerifiableCredentialDTO(credential);
 
 		VCRepository repository = client.getCredentials();
-		VerifiableCredential searchedCredential = repository.findOne(dto.getId(), new QuerySpec(VerifiableCredentialDTO.class)).getCredential();
+		VerifiableCredential searchedCredential = repository.findOne(dto.getHashId(), new QuerySpec(VerifiableCredentialDTO.class)).getCredential();
 		assertThat(searchedCredential).isEqualToComparingFieldByField(credential);
 	}
 
@@ -160,10 +165,10 @@ public class RestServiceTest implements WithAssertions {
 		querySpec.includeRelation(PathSpec.of(NodeDTO.Fields.legalIdentitiesAndCerts));
 		ResourceList<NodeDTO> nodes = client.getNodes().findAll(querySpec);
 		assertThat(nodes).hasSize(2);
-		NodeDTO node = nodes.get(1);
+		NodeDTO node = nodes.get(0);
 		assertThat(node.getAddresses()).hasSize(1);
 		assertThat(node.getLegalIdentitiesAndCerts()).hasSize(1);
-		ServerAddress serverAddress = node.getAddresses().get(0);
+		HostAndPort serverAddress = node.getAddresses().get(0);
 		assertThat(serverAddress.getHost()).isEqualTo("mock.node");
 		assertThat(serverAddress.getPort()).isEqualTo(1000);
 		PartyDTO party = node.getLegalIdentitiesAndCerts().get(0);
@@ -186,7 +191,7 @@ public class RestServiceTest implements WithAssertions {
 		QuerySpec querySpec = new QuerySpec(PartyDTO.class);
 		ResourceList<PartyDTO> parties = client.getParties().findAll(querySpec);
 		assertThat(parties).hasSize(2);
-		PartyDTO party = parties.get(1);
+		PartyDTO party = parties.get(0);
 		assertThat(party.getName().getCountry()).isEqualTo("US");
 		assertThat(party.getName().getLocality()).isEqualTo("Central City");
 		assertThat(party.getName().getOrganisation()).isEqualTo("STAR Labs");
@@ -219,6 +224,6 @@ public class RestServiceTest implements WithAssertions {
 	private String getUrl() {
 		ServiceHub serviceHub = node.getServices();
 		HttpService httpService = serviceHub.cordaService(HttpService.class);
-		return "http://127.0.0.1:" + httpService.getPort() + "/api/node";
+		return "http://127.0.0.1:" + httpService.getPort() + "/api/";
 	}
 }

@@ -11,6 +11,7 @@ dependencies {
 	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
 
 	api project(":cord3c-ssi-api")
+	api project(":cord3c-rest-api")
 
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 }

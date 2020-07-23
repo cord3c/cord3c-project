@@ -31,14 +31,17 @@ shadowJar {
 	archiveBaseName = 'cord3c-monitor-metrics'
 }
 
+def cordappArtifact = artifacts.add('archives', shadowJar.outputs.files.singleFile) {
+	type 'cordapp'
+	classifier 'cordapp'
+	builtBy shadowJar
+}
+
 publishing {
 	publications {
 		maven(MavenPublication) {
 			from components.java
-		}
-		shadow(MavenPublication) {
-			project.shadow.component(it)
-			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+			artifact cordappArtifact
 		}
 	}
 }

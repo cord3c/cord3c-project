@@ -1,7 +1,6 @@
 import io.corda3c.gradle.CordappPlugin
 
 apply plugin: JavaDefaultsPlugin
-apply plugin: PublishingDefaultsPlugin
 apply plugin: net.corda.plugins.QuasarPlugin
 
 dependencies {
@@ -26,18 +25,6 @@ apply plugin: 'com.github.johnrengelman.shadow'
 shadowJar {
 	archiveClassifier = 'cordapp'
 	archiveBaseName = 'cord3c-example'
-}
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-		shadow(MavenPublication) {
-			project.shadow.component(it)
-			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
-		}
-	}
 }
 
 apply plugin: CordappPlugin

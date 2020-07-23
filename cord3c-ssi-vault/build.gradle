@@ -1,6 +1,12 @@
+import com.github.rmee.jpa.schemagen.SchemaTargetType
+
 apply plugin: JavaDefaultsPlugin
 apply plugin: PublishingDefaultsPlugin
 apply plugin: net.corda.plugins.QuasarPlugin
+
+configurations {
+	schemaGen.extendsFrom bom
+}
 
 dependencies {
 	api project(':cord3c-ssi-api')
@@ -10,15 +16,17 @@ dependencies {
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-rpc:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-serialization:${CORDA_VERSION}"
-
 	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
-
-	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 
 	compileOnly 'org.slf4j:slf4j-api'
 	implementation 'io.crnk:crnk-core' // consider copy/pasting BeanInformation implementation
 	compileOnly 'javax.validation:validation-api'
 	compileOnly 'org.hibernate.validator:hibernate-validator'
+
+	schemaGen "net.corda:corda-core:${CORDA_VERSION}"
+	schemaGen "org.hibernate:hibernate-core:5.4.10.Final"
+	schemaGen "org.liquibase:liquibase-core:$LIQUIBASE_VERSION"
+	schemaGen "com.h2database:h2:$H2_VERSION"
 
 	testImplementation project(':cord3c-common-test')
 }
@@ -30,3 +38,30 @@ publishing {
 		}
 	}
 }
+
+apply plugin: 'jpa-schema-gen'
+jpaSchemaGen {
+	packageName = 'ddl.vc.initial'
+	persistenceUnitName = 'VC-UNIT'
+	target = SchemaTargetType.LIQUIBASE
+	version = '0.0.1'
+	constraintNamePrefix = 'VC_'
+	forked = true
+	configuration = 'schemaGen'
+	outputDirectory = file('build/generated/sources/schema/')
+
+	// not 100% clean, e.g. UUID handling differs for dialects and we would need the generic UUID type of liquibase
+	// but direct liquibase/hibernate integration not well maintained
+	dialect = 'org.hibernate.dialect.PostgreSQL94Dialect'
+	liquibase {
+		fileName = 'generated-initial-changelog.xml'
+	}
+}
+
+sourceSets {
+	test {
+		resources.srcDir file('build/generated/sources/schema/')
+	}
+}
+
+processTestResources.dependsOn generateSchema

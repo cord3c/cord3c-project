@@ -8,10 +8,14 @@ dependencies {
 		api project(':cord3c-monitor-health')
 		api project(':cord3c-monitor-metrics')
 		api project(':cord3c-monitor-ping')
+		api project(':cord3c-server-http')
 		api project(':cord3c-rest-client')
 		api project(':cord3c-rest-server')
 		api project(':cord3c-ssi-api')
-		api project(':cord3c-ssi-serializer')
+		api project(':cord3c-ssi-annotations')
+		api project(':cord3c-ssi-serialization')
+		api project(':cord3c-ssi-service')
+		api project(':cord3c-ssi-vault')
 		api project(':cord3c-ssi-networkmap-adapter')
 	}
 }

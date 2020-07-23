@@ -14,8 +14,6 @@ dependencies {
 
 	compileOnly "org.mapstruct:mapstruct-jdk8:$MAPSTRUCT_VERSION"
 
-	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
-
 	compileOnly 'org.slf4j:slf4j-api'
 	implementation 'io.crnk:crnk-core' // consider copy/pasting BeanInformation implementation
 	compileOnly 'javax.validation:validation-api'

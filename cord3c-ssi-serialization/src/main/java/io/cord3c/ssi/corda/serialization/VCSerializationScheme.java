@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.cord3c.ssi.api.SSIFactory;
 import io.cord3c.ssi.corda.internal.WireTransactionDeserializer;
 import io.cord3c.ssi.corda.internal.WireTransactionSerializer;
-import io.cord3c.ssi.corda.internal.information.VerifiableCredentialRegistry;
 import io.cord3c.ssi.corda.internal.party.PartyRegistry;
 import io.cord3c.ssi.corda.state.VCMapper;
 import lombok.SneakyThrows;
@@ -34,11 +32,8 @@ public class VCSerializationScheme implements SerializationScheme {
 	private final VCMapper credentialMapper;
 
 	public VCSerializationScheme(PartyRegistry partyRegistry, String baseUrl) {
-		SSIFactory factory = new SSIFactory();
-		VerifiableCredentialRegistry registry = new VerifiableCredentialRegistry(partyRegistry);
-		registry.setBaseUrl(baseUrl);
-		ObjectMapper claimMapper = factory.getClaimMapper();
-		credentialMapper = new VCMapper(registry, claimMapper);
+		credentialMapper = new VCMapper(partyRegistry);
+		credentialMapper.getRegistry().setBaseUrl(baseUrl);
 
 		SimpleModule cordaModule = new SimpleModule("corda");
 		cordaModule.addSerializer(new WireTransactionSerializer("networkmap.local", baseUrl, credentialMapper));
@@ -58,17 +53,20 @@ public class VCSerializationScheme implements SerializationScheme {
 	@NotNull
 	@Override
 	@SneakyThrows
-	public <T> T deserialize(@NotNull ByteSequence byteSequence, @NotNull Class<T> clazz, @NotNull SerializationContext context) throws NotSerializableException {
+	public <T> T deserialize(@NotNull ByteSequence byteSequence, @NotNull Class<T> clazz, @NotNull SerializationContext context)
+			throws NotSerializableException {
 		log.info("deserialize {}", clazz);
 
 		ObjectReader objectReader = objectMapper.readerFor(clazz);
-		return (T) objectReader.readValue(byteSequence.getBytes(), byteSequence.getOffset() + MAGIC.length, byteSequence.getSize() - MAGIC.length);
+		return (T) objectReader.readValue(byteSequence.getBytes(), byteSequence.getOffset() + MAGIC.length,
+				byteSequence.getSize() - MAGIC.length);
 	}
 
 	@NotNull
 	@Override
 	@SneakyThrows
-	public <T> SerializedBytes<T> serialize(@NotNull T obj, @NotNull SerializationContext context) throws NotSerializableException {
+	public <T> SerializedBytes<T> serialize(@NotNull T obj, @NotNull SerializationContext context)
+			throws NotSerializableException {
 		log.info("serialize {}", obj);
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();

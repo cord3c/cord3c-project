@@ -3,13 +3,9 @@ apply plugin: PublishingDefaultsPlugin
 
 dependencies {
 	api 'com.nimbusds:nimbus-jose-jwt:8.19'
-	implementation "com.fasterxml.jackson.core:jackson-databind:$JACKSON_VERSION"
-	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
-	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
-	implementation 'commons-io:commons-io:1.3.2'
-
-	implementation 'com.google.guava:guava:29.0-jre'
-
+	compileOnly "com.fasterxml.jackson.core:jackson-databind:$JACKSON_VERSION"
+	compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
+	compileOnly "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
 	compileOnly "io.crnk:crnk-core:${CRNK_VERSION}"
 
 	implementation 'co.nstant.in:cbor:0.9'
@@ -17,8 +13,13 @@ dependencies {
 	compileOnly "net.corda:corda-core:$CORDA_VERSION"
 
 	implementation "org.bouncycastle:bcpkix-jdk15on:$BOUNCYCASTLE_VERSION"
+	implementation "net.i2p.crypto:eddsa:0.3.0"
 
 	testImplementation "net.corda:corda-core:$CORDA_VERSION"
+	testImplementation "com.fasterxml.jackson.core:jackson-databind:$JACKSON_VERSION"
+	testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$JACKSON_VERSION"
+	testImplementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
+	testImplementation "io.crnk:crnk-core:${CRNK_VERSION}"
 }
 
 publishing {

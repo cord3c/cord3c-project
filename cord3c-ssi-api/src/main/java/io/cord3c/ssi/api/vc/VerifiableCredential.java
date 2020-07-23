@@ -1,5 +1,17 @@
 package io.cord3c.ssi.api.vc;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -20,13 +32,6 @@ import lombok.SneakyThrows;
 import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
 import net.corda.core.serialization.CordaSerializable;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.time.Instant;
-import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -76,33 +81,42 @@ public class VerifiableCredential {
 	public void validate() {
 		// @context
 		Verify.verify(!contexts.isEmpty(), "'@context' property MUST be one or more URIs");
-		Verify.verify(contexts.get(0).equals(W3CHelper.VC_CONTEXT_V1), "'@context' property's first value MUST be " + W3CHelper.VC_CONTEXT_V1);
+		Verify.verify(contexts.get(0).equals(W3CHelper.VC_CONTEXT_V1),
+				"'@context' property's first value MUST be " + W3CHelper.VC_CONTEXT_V1);
 
 		// id
 		// MUST be a single URI (-> error will get thrown during deserialization)
 
 		// type
 		Verify.verify(!types.isEmpty(), "'type' property MUST be one or more URIs");
-		Verify.verify(types.contains(W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL), "'type' property for Credential MUST be " + W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL + " plus specific type");
+		Verify.verify(types.contains(W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL),
+				"'type' property for Credential MUST be " + W3CHelper.DEFAULT_VERIFIABLE_CREDENTIAL + " plus specific type");
 
 		// credentialSubject
-		Verify.verify(getClaims().containsKey(W3CHelper.CLAIM_SUBJECT_ID), "'claims' property MUST contain '" + W3CHelper.CLAIM_SUBJECT_ID + "' property");
+		Verify.verify(getClaims().containsKey(W3CHelper.CLAIM_SUBJECT_ID),
+				"'claims' property MUST contain '" + W3CHelper.CLAIM_SUBJECT_ID + "' property");
 
 		// issuer
 		Verify.verifyNotNull(issuer, "'issuer' property MUST be present");
 		if (!issuer.contains("did:")) {
 			try {
 				new URL(issuer).toURI();
-			} catch (MalformedURLException | URISyntaxException e) {
+			}
+			catch (MalformedURLException | URISyntaxException e) {
 				if (e instanceof MalformedURLException && e.getMessage().contains("no protocol: " + issuer)) {
 					try {
 						UUID.fromString(issuer);
-					} catch (IllegalArgumentException e2) {
+					}
+					catch (IllegalArgumentException e2) {
 						throw new IllegalStateException("'issuer' property MUST be a valid URI", e);
 					}
 					// FIXME allu/06-05-2020
-					log.info("'issuer' property is {}, this isn't a valid format, but this only happens on systemTestALL_IN_ONE for some reason", issuer);
-				} else {
+					log.info(
+							"'issuer' property is {}, this isn't a valid format, but this only happens on systemTestALL_IN_ONE "
+									+ "for some reason",
+							issuer);
+				}
+				else {
 					throw new IllegalStateException("'issuer' property MUST be a valid URI", e);
 				}
 			}
@@ -161,7 +175,8 @@ public class VerifiableCredential {
 	}
 
 	/**
-	 * See https://tools.ietf.org/html/draft-sporny-hashlink-04 and https://www.w3.org/TR/vc-data-model/#content-integrity-protection
+	 * See https://tools.ietf.org/html/draft-sporny-hashlink-04 and https://www.w3
+	 * .org/TR/vc-data-model/#content-integrity-protection
 	 *
 	 * @return url protected with a hash link, e.g. https://www.w3.org/2018/credentials/examples/v1?hl=z8guWNzUBnZBu3aq31
 	 */
@@ -171,7 +186,12 @@ public class VerifiableCredential {
 	}
 
 	public String toHashId() {
-		return HashLink.create(toJsonString());
+		if (proof == null) {
+			return HashLink.create(toJsonString());
+		}
+		VerifiableCredential clone = clone();
+		clone.setProof(null);
+		return clone.toHashId();
 	}
 
 }

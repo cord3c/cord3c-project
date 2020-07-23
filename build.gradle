@@ -10,9 +10,11 @@ buildscript {
 		classpath "io.crnk:crnk-gen-gradle:$CRNK_VERSION"
 		classpath "net.rdrei.android.buildtimetracker:gradle-plugin:0.11.1"
 		classpath "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:$TESTSETS_VERSION"
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
 
 		classpath "com.github.rmee:kubectl:${RMEE_GRADLE_VERSION}"
 		classpath "com.github.rmee:helm:${RMEE_GRADLE_VERSION}"
+		classpath "com.github.rmee:jpa-schema-gen:${RMEE_GRADLE_VERSION}"
 	}
 }
 
@@ -31,14 +33,18 @@ jdk {
 
 // note that a production build creates javadoc, sources jars and signatures undesired during development
 // for performance reasons
-def isProductionBuild = System.env.NEXUS_DEPLOY_USER != null
+def isProductionBuild = System.env.BINTRAY_TOKEN != null
 ext {
 	timestampedVersion = isProductionBuild
 }
 
 apply plugin: 'org.ajoberstar.grgit'
 def gitCommitTimestamp = grgit.head().date.format("yyyyMMddHHmmss")
-version = BUILD_VERSION_PREFIX + "." + gitCommitTimestamp
+if(isProductionBuild) {
+	version = BUILD_VERSION_PREFIX + "." + gitCommitTimestamp
+}else{
+	version = '0.0.0-SNAPSHOT'
+}
 group = GROUP_ID
 
 if (JavaVersion.current().isJava8Compatible()) {

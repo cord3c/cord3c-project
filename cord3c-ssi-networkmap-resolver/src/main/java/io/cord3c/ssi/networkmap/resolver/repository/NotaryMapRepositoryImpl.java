@@ -1,10 +1,10 @@
 package io.cord3c.ssi.networkmap.resolver.repository;
 
 import com.google.common.base.Verify;
-import io.cord3c.rest.client.map.NetworkParametersDTO;
-import io.cord3c.rest.client.map.NetworkParametersRepository;
-import io.cord3c.rest.client.map.NotaryDTO;
-import io.cord3c.rest.client.map.NotaryRepository;
+import io.cord3c.rest.api.map.NetworkParametersDTO;
+import io.cord3c.rest.api.map.NetworkParametersRepository;
+import io.cord3c.rest.api.map.NotaryDTO;
+import io.cord3c.rest.api.map.NotaryRepository;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ReadOnlyResourceRepositoryBase;
 import io.crnk.core.resource.list.ResourceList;

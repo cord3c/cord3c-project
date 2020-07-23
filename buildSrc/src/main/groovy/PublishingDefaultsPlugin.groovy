@@ -1,73 +1,117 @@
-import com.google.cloud.tools.jib.gradle.JibPlugin
 import org.gradle.api.Incubating
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.credentials.HttpHeaderCredentials
-import org.gradle.api.tasks.Exec
-import org.gradle.authentication.http.HttpHeaderAuthentication
+import org.gradle.api.publish.maven.MavenPublication
 
 @Incubating
 class PublishingDefaultsPlugin implements Plugin<Project> {
 
-    @Override
-    void apply(Project project) {
-        project.with {
-            apply plugin: 'maven-publish'
+	@Override
+	void apply(Project project) {
+		project.with {
+			apply plugin: 'maven-publish'
 
-				/*
-            // allow login to docker (define task in root to avoid repeated logins)
-            def rootTasks = rootProject.tasks
-            if (!rootTasks.getAsMap().containsKey("dockerLogin")) {
-                def registryHost = DOCKER_REGISTRY.substring(0, DOCKER_REGISTRY.indexOf("/"))
-                def rootDockerLogin = rootTasks.create("dockerLogin", Exec)
-                rootDockerLogin.commandLine 'docker', 'login', registryHost, '--username', dockerPublishUser, '--password', dockerPublishPass
-            }
-            def dockerLogin = tasks.create("dockerLogin")
-            dockerLogin.dependsOn(rootProject.tasks.getByName('dockerLogin'))
+			apply plugin: 'com.jfrog.bintray'
 
-            // for development purposes we must only publish docker images for deployment
-            if (ciBuild || System.getenv("CI_VERSION") != null) {
-                publishing {
-                    repositories {
-                        maven {
-                            url = MAVEN_REPOSITORY_URL
+			// Create the pom configuration:
+			def pomConfig = {
+				licenses {
+					license {
+						name "The Apache Software License, Version 2.0"
+						url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+						distribution "repo"
+					}
+				}
+				developers {
+					developer {
+						id 'cord3c.io'
+						name 'cord3c.io'
+						email 'info@cord3c.io'
+					}
+				}
 
-                            // https://gitlab.com/help/user/project/packages/maven_repository.md
-                            // https://stackoverflow.com/questions/51137958/gitlab-ci-secret-variables-for-gradle-publish
+				scm {
+					url "https://github.com/cord3c/cord3c-project"
+				}
+			}
 
-                            if (mavenTokenHttpHeaderValue != null) {
-                                credentials(HttpHeaderCredentials) {
-                                    name = mavenTokenHttpHeaderName
-                                    value = mavenTokenHttpHeaderValue
-                                }
-                                authentication {
-                                    header(HttpHeaderAuthentication)
-                                }
-                            } else if (mavenPublishUser != null) {
-                                credentials {
-                                    username = mavenPublishUser
-                                    password = mavenPublishPass
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+			def bom = project.name == 'cord3c-bom'
+			if (!bom) {
+				publishing {
+					publications {
+						mavenJava(MavenPublication) {
+							from components.java
 
-            afterEvaluate {
-                plugins.withType(JibPlugin) {
-                    jib {
-                        to {
-                            auth {
-                                username = dockerPublishUser
-                                password = dockerPublishPass
-                            }
-                        }
-                    }
-                }
-            }
+							/*artifact sourcesJar {
+								classifier "sources"
+							}
 
-				 */
-        }
-    }
+							artifact javadocJar {
+								classifier "javadoc"
+							}*/
+
+							groupId GROUP_ID
+							artifactId project.name
+							version rootProject.version
+
+							pom.withXml {
+								def root = asNode()
+								root.appendNode('description', 'cord3c SSI, HTTP, Rest, monitoring support for Corda')
+								root.appendNode('name', 'cord3c')
+								root.appendNode('url', 'https://www.cord3c.io')
+								root.children().last() + pomConfig
+							}
+						}
+					}
+				}
+			}
+
+			def releaseBuild = project.hasProperty('stable')
+
+			bintray {
+				user = System.env.BINTRAY_USER
+				key = System.env.BINTRAY_TOKEN
+
+				publications = ['mavenJava']
+
+				pkg {
+					repo = releaseBuild ? 'maven' : 'mavenLatest'
+					name = project.name
+					userOrg = 'cord3c'
+					licenses = ['Apache-2.0']
+					vcsUrl = 'https://github.com/cord3c/cord3c-project.git'
+					websiteUrl = 'http://www.cord3c.io'
+					desc = 'cord3c SSI, HTTP, Rest, monitoring support for Corda'
+					labels = ['corda', 'rest', 'http', 'ssi', 'did', 'vc']
+
+					githubRepo = 'cord3c/cord3c-project'
+					githubReleaseNotesFile = 'README.md'
+
+					publish = !releaseBuild
+
+					version {
+						name = project.version
+						desc = 'cord3c SSI, HTTP, Rest, monitoring support for Corda'
+						released = new Date()
+						vcsTag = "v$project.version"
+
+						/*
+						mavenCentralSync {
+							sync = false //[Default: true] Determines whether to sync the version to Maven Central.
+							user = System.env.NEXUS_DEPLOY_USER
+							password = System.env.NEXUS_DEPLOY_PASS
+							close = '1'
+						}*/
+					}
+
+
+				}
+			}
+
+			tasks.bintrayUpload.dependsOn assemble, publishToMavenLocal
+
+			publish.dependsOn tasks.bintrayUpload
+
+		}
+	}
 }

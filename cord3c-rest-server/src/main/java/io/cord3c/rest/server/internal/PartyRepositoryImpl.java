@@ -1,8 +1,8 @@
 package io.cord3c.rest.server.internal;
 
 import com.google.common.base.Verify;
-import io.cord3c.rest.client.map.PartyDTO;
-import io.cord3c.rest.client.map.PartyRepository;
+import io.cord3c.rest.api.map.PartyDTO;
+import io.cord3c.rest.api.map.PartyRepository;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ReadOnlyResourceRepositoryBase;
 import io.crnk.core.resource.list.ResourceList;

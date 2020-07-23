@@ -1,9 +1,9 @@
 package io.cord3c.rest.client;
 
-import io.cord3c.rest.client.map.NetworkParametersRepository;
-import io.cord3c.rest.client.map.NodeRepository;
-import io.cord3c.rest.client.map.NotaryRepository;
-import io.cord3c.rest.client.map.PartyRepository;
+import io.cord3c.rest.api.map.NetworkParametersRepository;
+import io.cord3c.rest.api.map.NodeRepository;
+import io.cord3c.rest.api.map.NotaryRepository;
+import io.cord3c.rest.api.map.PartyRepository;
 import io.crnk.client.CrnkClient;
 import lombok.Getter;
 

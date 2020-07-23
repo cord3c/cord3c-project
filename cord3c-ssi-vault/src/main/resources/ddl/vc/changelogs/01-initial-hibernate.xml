@@ -1,0 +1,60 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet author="hibernate" id="0.0.1-11">
+		<createTable catalogName="TEST" schemaName="PUBLIC" tableName="C3C_CLAIM">
+			<column name="CREDENTIAL_HASH_ID" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="VC_CONSTRAINT_F"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="VC_CONSTRAINT_F"/>
+			</column>
+			<column name="BOOLEANVALUE" type="BOOLEAN"/>
+			<column name="DOUBLEVALUE" type="DOUBLE(17)"/>
+			<column name="JSONVALUE" type="VARCHAR(255)"/>
+			<column name="LONGVALUE" type="BIGINT"/>
+			<column name="STRINGVALUE" type="VARCHAR(255)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="hibernate" id="0.0.1-12">
+		<createTable catalogName="TEST" schemaName="PUBLIC" tableName="C3C_CREDENTIAL">
+			<column name="HASHID" type="VARCHAR(255)">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="VC_CONSTRAINT_D"/>
+			</column>
+			<column name="CREDENTIALID" type="VARCHAR(255)"/>
+			<column name="EXPIRATIONDATE" type="TIMESTAMP"/>
+			<column name="ISSUANCEDATE" type="TIMESTAMP"/>
+			<column name="ISSUER" type="VARCHAR(255)"/>
+			<column name="JSONVALUE" type="CLOB"/>
+			<column name="CREATED" type="TIMESTAMP"/>
+			<column name="JWS" type="CLOB"/>
+			<column name="PROOFPURPOSE" type="VARCHAR(255)"/>
+			<column name="TYPE" type="VARCHAR(255)"/>
+			<column name="VERIFICATIONMETHOD" type="VARCHAR(255)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="hibernate" id="0.0.1-13">
+		<createTable catalogName="TEST" schemaName="PUBLIC" tableName="C3C_CREDENTIAL_CONTEXT">
+			<column name="CREDENTIALENTITY_HASHID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CONTEXTS" type="VARCHAR(255)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="hibernate" id="0.0.1-14">
+		<createTable catalogName="TEST" schemaName="PUBLIC" tableName="C3C_CREDENTIAL_TYPE">
+			<column name="CREDENTIALENTITY_HASHID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="TYPES" type="VARCHAR(255)"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="hibernate" id="0.0.1-15">
+		<addForeignKeyConstraint baseColumnNames="CREDENTIALENTITY_HASHID" baseTableCatalogName="TEST" baseTableName="C3C_CREDENTIAL_TYPE" baseTableSchemaName="PUBLIC" constraintName="FK26MT1EV8TI29QA2NUJ3KIFD8G" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="HASHID" referencedTableCatalogName="TEST" referencedTableName="C3C_CREDENTIAL" referencedTableSchemaName="PUBLIC" validate="true"/>
+	</changeSet>
+	<changeSet author="hibernate" id="0.0.1-16">
+		<addForeignKeyConstraint baseColumnNames="CREDENTIAL_HASH_ID" baseTableCatalogName="TEST" baseTableName="C3C_CLAIM" baseTableSchemaName="PUBLIC" constraintName="FKF54CN6LG5BTDEA0NRYD0E7GQH" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="HASHID" referencedTableCatalogName="TEST" referencedTableName="C3C_CREDENTIAL" referencedTableSchemaName="PUBLIC" validate="true"/>
+	</changeSet>
+	<changeSet author="hibernate" id="0.0.1-17">
+		<addForeignKeyConstraint baseColumnNames="CREDENTIALENTITY_HASHID" baseTableCatalogName="TEST" baseTableName="C3C_CREDENTIAL_CONTEXT" baseTableSchemaName="PUBLIC" constraintName="FKGESBIPOLAH3SCH2B2SIY8LLKP" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="HASHID" referencedTableCatalogName="TEST" referencedTableName="C3C_CREDENTIAL" referencedTableSchemaName="PUBLIC" validate="true"/>
+	</changeSet>
+</databaseChangeLog>

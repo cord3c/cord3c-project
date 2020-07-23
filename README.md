@@ -5,22 +5,9 @@
 [Corda](https://github.com/corda/corda/) is an open source blockchain/DLT project
 with a strong focus on privacy and scalability to address the needs of enterprises.
 Target market of Corda are business-to-business transactions in finance and
-insurance markets. However, its architecture also make it applicable
+insurance markets. Its architecture makes it equally well applicable
 to a wide range of other markets. This project aims at
-unlocking some of that potential with a number of extensions. Primary focus
-lies bringing various RFCs and W3C specifications to Corda with the goal to:
-
-- allow involvement of end-users and IoT devices in business processes.
-- follow the principles of self-sovereign identity (SSI) to
-  let users have ownership of their data and gain further
-  security and privacy along the way.
-- allow interoperability across different kinds of devices beyond the Java ecosystem.
-- improve speed and reduce storage requirements to process transactions to
-  cover the most demanding use cases.
-- avoid the lock-in to any single vendor by following further open standards.
-
-This is achieved due to the flexible nature of the Corda and its flow framework.
-Our steps are:
+unlocking some of that potential. Our steps are:
 
 - *Native support for W3C [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/) (VCs)
   and [Decentralized Identifiers](https://www.w3.org/TR/did-core/)* (DIDs) to make identities and claims about those identities
@@ -38,21 +25,27 @@ Our steps are:
 - Support for [hashlink](https://tools.ietf.org/html/draft-sporny-hashlink-04) to implement
   [content integrity protection](https://www.w3.org/TR/vc-data-model/#content-integrity-protection)
   for W3C VCs.
-- Adoptions of [JSON Web Signatures](https://tools.ietf.org/html/rfc7515) to *ease signing and verifying of
-  transactions by any device*, from a Corda server to browsers, mobiles and IoT devices.
+- Adoptions of [JSON Web Signatures](https://tools.ietf.org/html/rfc7515) for VCs to *ease signing and verifying
+  by any device*, from a Corda server to browsers, mobiles and IoT devices.
 - A *REST API* following the open [JSON:API](https://jsonapi.org/) specification complementing the proprietary
   Corda RPC protocol to ease working with Corda across a wider range of clients.
 - A monitoring endpoint offering health checking and [Prometheus-based metrics](https://prometheus.io/).
 
-In an experimental state we also start using:
+In a second step we consider deeper integration of VCs into
+Corda to support:
 
-- *JSON as data format* for states and transactions. Renders Corda transactions human-readable!
-  Non-Java application can start creating, retrieving and verifying data with little effort.
-  Existing tools allow to customize the mapping of data to Java objects while helping with aspects
-  like compatibility, versioning and upgrades.
-- Blurring the boundaries between Corda transactions/states and W3C VCs by modelling the former with the later.
-  The benefits are two-fold: let W3C VCs gain Corda functionality like notarization and
-  and UXTO and let W3C VC implementations consume transactions vice versa.
+1. Every issued VC is available as Corda transaction with the VC as output state. VCs
+   can be used as reference state in Corda transactions. HashLinks are used to construct
+   PersistStateRef.
+2. VCs gain a [lifecycle status](https://www.w3.org/TR/vc-data-model/#status) by
+   carrying the `consumed` or `unconsumed` status.
+3. Blurring the boundaries between Corda transactions/states and W3C VCs by modelling
+   the former with the later. The benefits are two-fold: let W3C VCs gain Corda functionality
+   like notarization and UXTO and let W3C VC implementations consume transactions vice versa.
+    *JSON as data format* renders transactions human-readable! Non-Java application can start
+    creating, retrieving and verifying data with little effort.
+    Existing tools allow to customize the mapping of data to Java objects while helping with aspects
+    like compatibility, versioning and upgrades.
 
 This project is under early but active development. Feedback very welcomed.
 
@@ -65,7 +58,7 @@ This project hosts a [cord3c-example-cordapp](https://github.com/cord3c/cord3c-p
 to showcase a cordapp that makes use of all the features. It is containerized with
 [cord3c-example-node](https://github.com/cord3c/cord3c-project/tree/master/cord3c-example-node).
 The application gets deployed to DigitalOcean and system testing happens with
-[cord3c-example-node](https://github.com/cord3c/cord3c-project/tree/master/cord3c-example-systemTest), which
+[cord3c-example-systemTest](https://github.com/cord3c/cord3c-project/tree/master/cord3c-example-systemTest), which
 is also a good example how external consumers can interact with the REST API of the Corda node.
 
 The endpoint is publicly accessible for anybody to look around. Some interesting links to visit:
@@ -76,8 +69,11 @@ The endpoint is publicly accessible for anybody to look around. Some interesting
 - http://174.138.101.25/parties/DL8VrsqpbxTCLL9gnnJYTqreeY5Y98yQ2645f1EE8zqTox serves the DID for the party having the short name `DL8VrsqpbxTCLL9gnnJYTqreeY5Y98yQ2645f1EE8zqTox`
 - http://174.138.101.25/api/map/party lists all the parties, including their DID.
 - http://174.138.101.25/api/node/verifiableCredential lists all recorded VCs.
-- http://174.138.101.25/api/node/verifiableCredential?filter[credential.issuanceDate][GT]=2020-06-14T11:42:05.812Z&sort=credential.issuer as example for sorting and filtering with JSON:API (any other endpoint can also be searched and filtered).
-- http://174.138.101.25/api/node/flow endpoint to post new flows and get currently and recently run flows.
+- http://174.138.101.25/api/node/verifiableCredential?filter[credential.issuanceDate][GT]=2020-06-14T11:42:05.812Z&sort=credential.issuer&page[limit]=10 as example for sorting
+  and filtering with JSON:API (any other endpoint can also be searched and filtered). More information
+  about the available parameters can be found
+  [here](http://www.crnk.io/releases/stable/documentation/#_basic_filtering).
+- http://174.138.101.25/api/node/flow endpoint to post new flows and get currently and recently ran flows.
 
 FIXME: move to HTTPS to make DIDs discoverable from https://uniresolver.io/ and other implementations using did:web:174.138.101.25 (or a domain name)
 FIXME: add curl example to trigger flows, else?
@@ -104,9 +100,6 @@ cord3c make use of Gradle for its build. To build the project run:
 ```
 ./gradlew build
 ```
-
-
-
 
 
 

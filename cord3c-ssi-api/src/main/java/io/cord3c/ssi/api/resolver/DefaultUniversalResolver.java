@@ -1,15 +1,13 @@
 package io.cord3c.ssi.api.resolver;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.google.common.base.Verify;
 import io.cord3c.ssi.api.did.DID;
 import io.cord3c.ssi.api.did.DIDDocument;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @AllArgsConstructor
 public class DefaultUniversalResolver implements UniversalResolver {

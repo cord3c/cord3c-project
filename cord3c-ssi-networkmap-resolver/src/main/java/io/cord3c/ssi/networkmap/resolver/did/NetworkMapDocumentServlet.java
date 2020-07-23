@@ -29,7 +29,7 @@ public class NetworkMapDocumentServlet extends HttpServlet {
 		X509Certificate rootCertificate = properties.getRootCertificate();
 
 		String did = DIDGenerator.toWellKnownDid(properties.getExternalUrl());
-		DIDPublicKey publicKey = crypto.toDidPublicKey(rootCertificate.getPublicKey(), did);
+		DIDPublicKey publicKey = crypto.toDidKey(rootCertificate.getPublicKey(), did);
 
 		DIDDocument doc = new DIDDocument();
 		doc.setContext(W3CHelper.DID_CONTEXT_V1);

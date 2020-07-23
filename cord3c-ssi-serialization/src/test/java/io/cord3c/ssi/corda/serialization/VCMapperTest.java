@@ -65,7 +65,11 @@ public class VCMapperTest implements WithAssertions {
 		assertThat(credential.getId()).isEqualTo("http://localhost/test/foo");
 
 		VCTestState mappedState = mapper.fromCredential(credential);
+		assertThat(mappedState.getJson()).isNotNull();
+		state.setJson(mappedState.getJson()); // make object equal
 		assertThat(mappedState).isEqualToComparingFieldByField(state);
+
+		assertThat(VerifiableCredential.fromJson(mappedState.getJson())).isEqualTo(credential);
 	}
 
 	private Party mockParty(String name) {

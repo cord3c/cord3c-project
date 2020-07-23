@@ -38,7 +38,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot'
 
 	implementation "info.picocli:picocli:4.1.4"
-	implementation "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
+	compileOnly "org.mapstruct:mapstruct-jdk8:${MAPSTRUCT_VERSION}"
 
 	implementation 'io.crnk:crnk-core'
 	implementation 'io.crnk:crnk-home'
@@ -54,6 +54,7 @@ dependencies {
 	implementation 'org.slf4j:log4j-over-slf4j'
 
 	testImplementation "net.corda:corda-node-driver:${CORDA_VERSION}"
+	testImplementation project(':cord3c-rest-client')
 }
 
 publishing {

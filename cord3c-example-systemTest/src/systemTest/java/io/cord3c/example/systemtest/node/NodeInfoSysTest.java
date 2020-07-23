@@ -2,8 +2,9 @@ package io.cord3c.example.systemtest.node;
 
 import io.cord3c.example.systemtest.SecretExtension;
 import io.cord3c.example.systemtest.SystemTestConfiguration;
+import io.cord3c.rest.api.map.MyInfoDTO;
+import io.cord3c.rest.api.map.NodeDTO;
 import io.cord3c.rest.client.NodeRestClient;
-import io.cord3c.rest.client.map.NodeDTO;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.resource.list.ResourceList;
 import org.assertj.core.api.WithAssertions;
@@ -29,5 +30,15 @@ public class NodeInfoSysTest implements WithAssertions {
 		NodeDTO node = nodes.get(0);
 		assertThat(node.getId()).isEqualTo("starlabs_centralcity_us");
 		assertThat(node.getAddresses()).hasSize(1);
+	}
+
+	@Test
+	public void verifyMyInfo() {
+		MyInfoDTO myInfo = client.getMyInfo();
+
+		assertThat(myInfo).isNotNull();
+		assertThat(myInfo.getId()).isEqualTo("me");
+		assertThat(myInfo.getNode()).isNotNull();
+		assertThat(myInfo.getNode().getLegalIdentitiesAndCerts()).hasSize(1);
 	}
 }

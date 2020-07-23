@@ -6,7 +6,7 @@ apply plugin: PublishingDefaultsPlugin
 dependencies {
 	implementation 'org.eclipse.jetty:jetty-server:9.4.3.v20170317'
 	implementation 'org.eclipse.jetty:jetty-servlet:9.4.3.v20170317'
-
+	api 'javax.servlet:javax.servlet-api'
 
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-node:${CORDA_VERSION}"
@@ -26,14 +26,17 @@ shadowJar {
 	archiveBaseName = 'cord3c-server-http'
 }
 
+def cordappArtifact = artifacts.add('archives', shadowJar.outputs.files.singleFile) {
+	type 'cordapp'
+	classifier 'cordapp'
+	builtBy shadowJar
+}
+
 publishing {
 	publications {
 		maven(MavenPublication) {
 			from components.java
-		}
-		shadow(MavenPublication) {
-			project.shadow.component(it)
-			it.artifacts.first().classifier tasks.shadowJar.archiveClassifier.get()
+			artifact cordappArtifact
 		}
 	}
 }
@@ -53,4 +56,3 @@ cordapp {
 		enabled false
 	}
 }
-

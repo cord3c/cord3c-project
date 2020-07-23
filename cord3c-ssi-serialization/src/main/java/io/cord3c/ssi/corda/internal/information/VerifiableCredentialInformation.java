@@ -21,6 +21,8 @@ public class VerifiableCredentialInformation {
 
 	private ValueAccessor<String> issuerAccessor;
 
+	private ValueAccessor<String> jsonAccessor;
+
 	private ValueAccessor<String> subjectAccessor;
 
 	private List<String> contexts = new ArrayList<>();

@@ -5,9 +5,9 @@ import io.cord3c.ssi.api.vc.VerifiableCredential;
 import io.cord3c.ssi.vault.db.ClaimEntity;
 import io.cord3c.ssi.vault.db.CredentialEntity;
 import io.cord3c.ssi.vault.db.VCSchemaMapper;
+import io.cord3c.ssi.vault.db.VCSchemaMapperImpl;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 
 public class VCSchemaMapperTest implements WithAssertions {
 
@@ -16,7 +16,7 @@ public class VCSchemaMapperTest implements WithAssertions {
 	public void verify() {
 		VerifiableCredential credential = VCTestUtils.generateMockCredentials();
 
-		VCSchemaMapper mapper = Mappers.getMapper(VCSchemaMapper.class);
+		VCSchemaMapper mapper = new VCSchemaMapperImpl();
 		CredentialEntity entity = new CredentialEntity();
 		mapper.toEntity(entity, credential);
 

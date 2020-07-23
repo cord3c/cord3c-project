@@ -1,10 +1,21 @@
 package io.cord3c.rest.server.internal;
 
+import java.lang.reflect.Constructor;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import io.cord3c.rest.client.FlowExecutionDTO;
-import io.cord3c.rest.client.FlowExecutionRepository;
+import io.cord3c.rest.api.FlowExecutionDTO;
+import io.cord3c.rest.api.FlowExecutionRepository;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryBase;
 import io.crnk.core.resource.list.ResourceList;
@@ -16,16 +27,7 @@ import net.corda.core.messaging.FlowHandle;
 import net.corda.core.node.AppServiceHub;
 import net.corda.core.utilities.ProgressTracker;
 import net.corda.core.utilities.Try;
-import net.corda.node.internal.AbstractNode;
 import net.corda.node.services.statemachine.StateMachineManager;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExecutionDTO, UUID>
@@ -52,13 +54,12 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 	@SneakyThrows
 	private static StateMachineManager toStateMachineManager(AppServiceHub serviceHub) {
 		// TODO https://github.com/corda/corda/issues/5931 to get progress and other useful information
-		Object internalServiceHub = getField(serviceHub, "serviceHub");
-		AbstractNode node = (AbstractNode) getField(internalServiceHub, "this$0");
-		return (StateMachineManager) getField(AbstractNode.class, node, "smm");
+		return ServiceHubUtils.getStateMachineManager(serviceHub);
 	}
 
 
-	public FlowExecutionRepositoryImpl(AppServiceHub serviceHub, StateMachineManager stateMachineManager, ObjectMapper objectMapper, CordaMapper cordaMapper) {
+	public FlowExecutionRepositoryImpl(AppServiceHub serviceHub, StateMachineManager stateMachineManager,
+			ObjectMapper objectMapper, CordaMapper cordaMapper) {
 		super(FlowExecutionDTO.class);
 		this.serviceHub = serviceHub;
 		this.objectMapper = objectMapper;
@@ -80,7 +81,8 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 		dataFeed.getUpdates().subscribe(change -> {
 			if (change instanceof StateMachineManager.Change.Add) {
 				addFlow(change.getLogic());
-			} else if (change instanceof StateMachineManager.Change.Removed) {
+			}
+			else if (change instanceof StateMachineManager.Change.Removed) {
 				StateMachineManager.Change.Removed removed = (StateMachineManager.Change.Removed) change;
 				removeFlow(change.getLogic(), removed.getResult());
 			}
@@ -89,6 +91,8 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 
 	protected void addFlow(FlowLogic flowLogic) {
 		checkGc();
+
+		log.debug("adding flow {}", flowLogic);
 
 		UUID id = flowLogic.getRunId().getUuid();
 		FlowExecutionDTO flowExecution;
@@ -110,10 +114,12 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 
 			FlowExecutionDTO finalFlowExecution = flowExecution;
 			progressTracker.getChanges().subscribe(change -> {
+				log.debug("progress change {} for {}", change, flowLogic);
 				if (change instanceof ProgressTracker.Change.Position) {
 					ProgressTracker.Change.Position position = (ProgressTracker.Change.Position) change;
 					finalFlowExecution.setCurrentStep(position.getNewStep() != null ? position.getNewStep().getLabel() : null);
 					finalFlowExecution.setLastModified(Instant.now());
+					log.debug("setting current set to {}",  finalFlowExecution.getCurrentStep());
 				}
 			});
 		}
@@ -122,17 +128,22 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 	protected void removeFlow(FlowLogic<?> flow, Try result) {
 		checkGc();
 
+		log.debug("remove flow {} with result {}",  flow, result);
+
 		UUID id = flow.getRunId().getUuid();
 		FlowExecutionDTO dto = flows.get(id);
 		if (dto != null) {
 			dto.setLastModified(Instant.now());
 			dto.setCurrentStep(FlowExecutionDTO.ENDED_STEP);
+			dto.setEnded(true);
 			try {
 				dto.setResult(objectMapper.valueToTree(result.getOrThrow()));
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				dto.setError(objectMapper.valueToTree(e));
 			}
-		} else {
+		}
+		else {
 			log.warn("failed to find removed flow in local cache: {}", flow);
 		}
 	}
@@ -147,7 +158,8 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 			Iterator<FlowExecutionDTO> iterator = flows.values().iterator();
 			while (iterator.hasNext()) {
 				FlowExecutionDTO dto = iterator.next();
-				if (FlowExecutionDTO.ENDED_STEP.equals(dto.getCurrentStep()) && dto.getLastModified().plus(KEEP_ENDED_FLOW_INTERVAL).compareTo(now) < 0) {
+				if (FlowExecutionDTO.ENDED_STEP.equals(dto.getCurrentStep())
+						&& dto.getLastModified().plus(KEEP_ENDED_FLOW_INTERVAL).compareTo(now) < 0) {
 					iterator.remove();
 				}
 			}
@@ -172,7 +184,8 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 			ObjectReader reader = objectMapper.readerFor(constructor.getParameterTypes()[0]);
 			Object parameters = reader.readValue(jsonParameters);
 			flowLogic = (FlowLogic) constructor.newInstance(parameters);
-		} else {
+		}
+		else {
 			flowLogic = flowClass.newInstance();
 		}
 
@@ -197,9 +210,13 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 
 	private Constructor<?> findConstructor(Class<?> flowClass) {
 		List<Constructor<?>> constructors = Arrays.asList(flowClass.getConstructors());
-		List<Constructor<?>> singleParamConstructors = constructors.stream().filter(it -> it.getParameterCount() <= 1).collect(Collectors.toList());
+		List<Constructor<?>> singleParamConstructors =
+				constructors.stream().filter(it -> it.getParameterCount() <= 1).collect(Collectors.toList());
 		if (singleParamConstructors.size() != 1) {
-			throw new UnsupportedOperationException("must have exactly one constructor with a single or no argument, found:  " + singleParamConstructors + " for " + flowClass);
+			throw new UnsupportedOperationException(
+					"must have exactly one constructor with a single or no argument, found:  " + singleParamConstructors + " "
+							+ "for "
+							+ flowClass);
 		}
 		return singleParamConstructors.get(0);
 	}
@@ -214,14 +231,4 @@ public class FlowExecutionRepositoryImpl extends ResourceRepositoryBase<FlowExec
 		return querySpec.apply(flows.values());
 	}
 
-	private static Object getField(Object object, String name) {
-		return getField(object.getClass(), object, name);
-	}
-
-	@SneakyThrows
-	private static Object getField(Class declaringClass, Object object, String name) {
-		Field field = declaringClass.getDeclaredField(name);
-		field.setAccessible(true);
-		return field.get(object);
-	}
 }
