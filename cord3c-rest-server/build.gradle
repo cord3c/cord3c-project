@@ -18,6 +18,8 @@ dependencies {
 	api "io.crnk:crnk-client:${CRNK_VERSION}"
 	api "io.crnk:crnk-home:${CRNK_VERSION}"
 
+	implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations'
+
 	compileOnly 'javax.servlet:javax.servlet-api'
 	compileOnly "net.corda:corda-core:${CORDA_VERSION}"
 	compileOnly "net.corda:corda-node:${CORDA_VERSION}"
@@ -38,7 +40,7 @@ shadowJar {
 
 	dependencies {
 		exclude(dependency {
-			return (it.moduleGroup.startsWith('com.fasterxml') || it.moduleGroup == 'org.slf4j'
+			return !it.moduleName == 'jackson-module-jaxb-annotations' && (it.moduleGroup.startsWith('com.fasterxml') || it.moduleGroup == 'org.slf4j'
 					|| it.moduleGroup == 'javax.xml.bind' || it.moduleName.startsWith('cord3c-ssi')
 					|| it.moduleGroup == 'javax.annotation' || it.moduleGroup == 'javax.activation'
 					|| it.moduleGroup == 'net.i2p.crypto')

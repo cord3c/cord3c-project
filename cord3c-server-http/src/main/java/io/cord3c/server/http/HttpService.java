@@ -55,7 +55,7 @@ public class HttpService extends SingletonSerializeAsToken {
 		}
 
 		ServerConnector connector = new ServerConnector(server);
-		if (!existsClass("org.junit.jupiter.api.Test")) {
+		if (!existsClass("org.junit.jupiter.api.Test") || PropertyUtils.getProperty("cord3c.http.port", null) != null) {
 			connector.setPort(Integer.parseInt(PropertyUtils.getProperty("cord3c.http.port", Integer.toString(DEFAULT_PORT))));
 		}
 

@@ -85,10 +85,6 @@ public class VCRepositoryImpl extends JpaEntityRepositoryBase<VerifiableCredenti
 				return true;
 			}
 		});
-
-		System.out.println("WTF: " + clone);
-		System.out.println(clone.getFilters());
-
 		return super.optimizeQuerySpec(clone);
 	}
 
