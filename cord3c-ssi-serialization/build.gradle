@@ -21,11 +21,3 @@ dependencies {
 
 	testImplementation project(':cord3c-common-test')
 }
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-	}
-}

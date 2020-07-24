@@ -21,11 +21,3 @@ dependencies {
 	testImplementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:$JACKSON_VERSION"
 	testImplementation "io.crnk:crnk-core:${CRNK_VERSION}"
 }
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-	}
-}

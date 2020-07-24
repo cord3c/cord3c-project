@@ -1,7 +1,6 @@
 import io.corda3c.gradle.CordappPlugin
 
 apply plugin: JavaDefaultsPlugin
-apply plugin: PublishingDefaultsPlugin
 
 dependencies {
 	implementation 'org.eclipse.jetty:jetty-server:9.4.3.v20170317'
@@ -26,20 +25,14 @@ shadowJar {
 	archiveBaseName = 'cord3c-server-http'
 }
 
+apply plugin: PublishingDefaultsPlugin
+
 def cordappArtifact = artifacts.add('archives', shadowJar.outputs.files.singleFile) {
 	type 'cordapp'
 	classifier 'cordapp'
 	builtBy shadowJar
 }
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-			artifact cordappArtifact
-		}
-	}
-}
+publishing.publications.mavenJava.artifact cordappArtifact
 
 apply plugin: CordappPlugin
 cordapp {

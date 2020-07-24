@@ -35,12 +35,20 @@ class PublishingDefaultsPlugin implements Plugin<Project> {
 				}
 			}
 
+
 			def bom = project.name == 'cord3c-bom'
 			if (!bom) {
+
+
+
 				publishing {
 					publications {
 						mavenJava(MavenPublication) {
 							from components.java
+
+
+
+
 
 							/*artifact sourcesJar {
 								classifier "sources"

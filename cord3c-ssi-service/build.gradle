@@ -47,15 +47,7 @@ def cordappArtifact = artifacts.add('archives', shadowJar.outputs.files.singleFi
 	classifier 'cordapp'
 	builtBy shadowJar
 }
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-			artifact cordappArtifact
-		}
-	}
-}
+publishing.publications.mavenJava.artifact cordappArtifact
 
 apply plugin: CordappPlugin
 cordapp {

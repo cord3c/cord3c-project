@@ -12,11 +12,3 @@ dependencies {
 	compileOnly "net.corda:corda-core:$CORDA_VERSION"
 	testImplementation "net.corda:corda-core:$CORDA_VERSION"
 }
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-	}
-}

@@ -57,14 +57,6 @@ dependencies {
 	testImplementation project(':cord3c-rest-client')
 }
 
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-	}
-}
-
 apply plugin: JavaImageDefaultsPlugin
 jib {
 	from {
