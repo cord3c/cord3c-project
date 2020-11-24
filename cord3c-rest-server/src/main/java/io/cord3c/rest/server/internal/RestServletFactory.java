@@ -75,6 +75,10 @@ public class RestServletFactory implements HttpServletFactory {
 
 			TransactionRunner transactionRunner = createTransactionRunner();
 
+			// paging configuration
+			boot.setMaxPageLimit(Long.parseLong(PropertyUtils.getProperty("crnk.max-page-limit", "1000")));
+			boot.setDefaultPageLimit(Long.parseLong(PropertyUtils.getProperty("crnk.default-page-limit", "20")));
+
 			boot.addModule(new CordaRestModule(serviceHub, cordaMapper));
 			boot.addModule(HomeModule.create());
 			boot.addModule(createJpaModule(transactionRunner));
