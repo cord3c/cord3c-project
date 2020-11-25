@@ -102,11 +102,13 @@ public class FlowExecutionRepositoryTest implements WithAssertions {
 		assertThat(impl.findAll(querySpec)).hasSize(1);
 
 		// entry expired, but garbage collection will not run
+		impl.lastGc = Instant.now().minus(Duration.ofMillis(5000));
 		flow.setLastModified(Instant.now().plus(Duration.ofMillis(5000)));
 		impl.checkGc();
 		assertThat(impl.findAll(querySpec)).hasSize(1);
 
 		// garbage collection not run for a long time and will finally collect
+		impl.lastGc = Instant.now().minus(Duration.ofMillis(5000));
 		flow.setLastModified(Instant.now().minus(Duration.ofMillis(5000)));
 		impl.checkGc();
 		assertThat(impl.findAll(querySpec)).isEmpty();
